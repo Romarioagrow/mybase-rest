@@ -6,16 +6,34 @@
                     <v-card height="850">
                         <div v-if="user">
                             <v-card-title>
-                                <div>Hey, {{user.name}}</div>
+                                <v-row>
+                                    <v-col cols="3">
+                                        <v-avatar class="profile" color="grey" size="164" tile>
+                                            <v-img :src="user.user_pic"></v-img>
+                                        </v-avatar>
+                                    </v-col>
+                                    <v-col>
+                                        <div>Hey, {{user.name}}</div>
+                                        <v-text-field
+                                                label="Username"
+                                                solo
+                                                class="w-25"
+                                                :value="oldName"
+                                                v-model="oldNameText"
+                                        ></v-text-field>
+                                        <v-btn outlined color="warning" @click="renameUser(user)">Rename</v-btn>
+                                    </v-col>
+                                </v-row>
+
                             </v-card-title>
                             <v-divider/>
                         </div>
 
                         <v-card-actions>
-                            <v-btn outlined block color="primary" @click="googleAuth()" v-if="!userAuth">
+                            <v-btn block color="success" @click="googleAuth()" v-if="!userAuth">
                                 Авторизация
                             </v-btn>
-                            <v-btn outlined block color="primary" @click="logout()" v-else>
+                            <v-btn outlined color="error" @click="logout()" v-else>
                                 Logout
                             </v-btn>
                         </v-card-actions>
@@ -23,30 +41,6 @@
                     </v-card>
                 </v-col>
             </v-row>
-
-
-            <!--<v-row>
-                <v-col>
-                    <h1 v-if="user">Hey, {{user.name}}</h1>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-card>
-                        <v-card-title>
-                            Google Auth
-                        </v-card-title>
-                        <v-card-actions>
-                            <v-btn outlined block color="primary" @click="googleAuth()" v-if="!userAuth">
-                                Авторизация
-                            </v-btn>
-                            <v-btn outlined block color="primary" @click="logout()" v-else>
-                                Logout
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>-->
         </v-container>
     </v-content>
 </template>
@@ -56,11 +50,14 @@
     export default {
         data () {
             return {
-                user: null
+                user: null,
+                oldNameText: ''
             }
         },
         created() {
             this.user = this.$store.state.currentUser
+            this.oldNameText = this.$store.state.currentUser.name
+            console.log(this.$store.state.currentUser)
         },
         methods: {
             googleAuth() {
@@ -69,11 +66,19 @@
             logout() {
                 this.$store.dispatch("doLogout")
                 this.user = null
+            },
+            renameUser(user) {
+                let newName = this.oldNameText
+
+                console.log(newName)
             }
         },
         computed: {
             userAuth() {
                 return this.$store.state.currentUser
+            },
+            oldName() {
+                return this.$store.state.currentUser.name
             }
         }
     }

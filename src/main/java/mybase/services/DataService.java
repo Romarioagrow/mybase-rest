@@ -6,10 +6,8 @@ import mybase.domain.SpendingItem;
 import mybase.repo.SpendingRepo;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.LocalDate;
+import java.util.*;
 
 @Log
 @Service
@@ -20,7 +18,7 @@ public class DataService {
         Map<String, Object> payload = new LinkedHashMap<>();
 
         List<SpendingItem> items = spendingRepo.findAllByUserID(userID);
-        Collections.reverse(items);
+        items.sort(Comparator.comparing(SpendingItem::getDate).reversed());
 
         double totalSpend = items.stream().mapToDouble(SpendingItem::getAmount).sum();
 
@@ -34,8 +32,11 @@ public class DataService {
         double amount = Double.parseDouble(spendingData.get("amount"));
         String type = spendingData.get("type");
         String info = spendingData.get("info");
+        String currency = spendingData.get("currency");
+        LocalDate date = LocalDate.parse(spendingData.get("date"));
 
-        SpendingItem spending = new SpendingItem(userID, amount, type, info);
+        SpendingItem spending = new SpendingItem(userID, amount, type, info, currency);
+        spending.setDate(date);
         spendingRepo.save(spending);
 
         return allUserSpending(userID);

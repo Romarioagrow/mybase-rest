@@ -30,13 +30,19 @@
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
                 <span class="hidden-sm-and-down">myBase</span>
             </v-toolbar-title>
+
             <v-spacer />
-            <div v-if="userAuth">
+
+            <div v-if="userAuth" class="mr-3">
                 {{userName}}
             </div>
+
             <v-btn icon @click="goTo('/cabinet')">
-                <v-icon v-if="userAuth">mdi-account</v-icon>
+                <v-avatar v-if="userAuth">
+                    <img :src="user.user_pic" alt="John">
+                </v-avatar>
                 <v-icon v-else>mdi-login</v-icon>
+
             </v-btn>
         </v-app-bar>
 

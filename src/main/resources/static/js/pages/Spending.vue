@@ -3,7 +3,7 @@
         <v-container fluid>
             <v-row>
                 <v-col>
-                    <div class="headline font-weight-light">Spending total: {{totalSpend}}</div>
+                    <div class="headline font-weight-light">Spending total: <span>$</span>{{totalSpend}}</div>
                 </v-col>
             </v-row>
 
@@ -23,23 +23,31 @@
                                     <v-col>
                                         <v-text-field
                                                 label="$"
+
                                                 placeholder="Your another Spending"
                                                 v-model="spendingAmount"
+                                                height="100"
+                                                class="headline"
+                                                outlined
                                         ></v-text-field>
                                     </v-col>
 
                                     <v-col>
-                                        <v-overflow-btn style="margin-top: -0.2rem;"
+                                        <v-overflow-btn
                                                         :items="spendingTypes"
                                                         label="What was that?"
                                                         v-model="spendingType"
+                                                        outlined
+                                                        height="100"
+                                                        class="subtitle-1"
                                         ></v-overflow-btn>
                                     </v-col>
 
                                     <v-col>
                                         <v-textarea
+                                                outlined
                                                 label="Info"
-                                                dense
+                                                height="100"
                                                 no-resize
                                                 rows="1"
                                                 v-model="spendingInfo"
@@ -47,8 +55,43 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
+                                    <v-col cols="3">
+                                        <v-menu
+                                                ref="menu"
+                                                v-model="menu"
+                                                :close-on-content-click="false"
+                                                :return-value.sync="date"
+                                                transition="scale-transition"
+                                                offset-y
+                                        >
+                                            <template v-slot:activator="{ on }">
+                                                <v-text-field
+                                                        v-model="date"
+                                                        label="When was that?"
+                                                        prepend-icon="mdi-calendar"
+                                                        readonly
+                                                        v-on="on"
+                                                ></v-text-field>
+                                            </template>
+                                            <v-date-picker v-model="date" no-title scrollable>
+                                                <v-spacer></v-spacer>
+                                                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                                                <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
+                                            </v-date-picker>
+                                        </v-menu>
+                                    </v-col>
+                                    <v-col cols="2">
+                                        <v-select
+                                                :items="currencies"
+                                                v-model="spendingCurrency"
+                                                label="Currency"
+                                                solo
+                                        ></v-select>
+                                    </v-col>
+                                </v-row>
+                                <v-row>
                                     <v-col>
-                                        <v-btn outlined tile @click="saveNewSpending()" :disabled="spendingAmount === ''">Save</v-btn>
+                                        <v-btn outlined block tile @click="saveNewSpending()" :disabled="spendingAmount === ''">Save</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-expansion-panel-content>
@@ -66,10 +109,11 @@
                                     <v-list-item three-line>
                                         <v-list-item-content>
                                             <div class="overline mb-4">{{spending.type}}</div>
-                                            <v-list-item-title class="headline mb-1">${{spending.amount}}</v-list-item-title>
-                                            <v-list-item-subtitle>{{spending.info}}</v-list-item-subtitle>
+                                            <v-list-item-title class="headline mb-1"> <span>{{spending.currency}}</span>{{spending.amount}}</v-list-item-title>
+                                            <v-list-item-subtitle>{{capitalize(spending.info)}}</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
+                                    <div class="ml-4"><v-card-subtitle class="m-0 p-0">{{spending.date}}</v-card-subtitle></div>
                                 </v-col>
 
                                 <v-col cols="4" >
@@ -103,12 +147,22 @@
                     { text: 'Продукты' },
                     { text: 'Еда' },
                     { text: 'Досуг' },
+                    { text: 'Съемное жилье' },
+                    { text: 'Комунальные расходы' },
                     { text: 'Другое' },
                 ],
                 spendingType: '',
                 spendingAmount: '',
                 spendingInfo: '',
-                totalSpend: 0
+                totalSpend: 0,
+
+                date: new Date().toISOString().substr(0, 10),
+                menu: false,
+                modal: false,
+                menu2: false,
+
+                currencies: ['$', '€', '£', '₽'],
+                spendingCurrency: ''
             }
         },
         created() {
@@ -136,8 +190,12 @@
                 let spendingData = {
                     'amount': this.spendingAmount,
                     'type': this.spendingType,
-                    'info': this.spendingInfo
+                    'info': this.spendingInfo,
+                    'date': this.date,
+                    'currency': this.spendingCurrency
                 }
+
+                console.log(spendingData)
 
                 let uri = '/api/data/addNewSpendingItem'
 
@@ -156,6 +214,9 @@
                     this.spendingItems = response.data['items']
                     this.totalSpend = response.data['totalSpend']
                 })
+            },
+            capitalize(string) {
+                return string.charAt(0).toUpperCase() + string.slice(1);
             }
         }
     }

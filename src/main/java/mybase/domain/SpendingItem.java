@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.io.Serializable;
+import java.time.LocalDate;
 
 @Data
 @Entity
@@ -19,12 +20,15 @@ public class SpendingItem implements Serializable {
 
     private Double amount;
 
-    private String info, type, userID;
+    private String info, type, currency, userID;
 
-    public SpendingItem(String userID, Double amount, String type, String info) {
+    private LocalDate date;
+
+    public SpendingItem(String userID, Double amount, String type, String info, String currency) {
         this.userID = userID;
         this.amount = amount;
         this.info = info;
         this.type = type;
+        this.currency = currency;
     }
 }
