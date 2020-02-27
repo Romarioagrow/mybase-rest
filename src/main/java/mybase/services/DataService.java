@@ -18,11 +18,11 @@ public class DataService {
     public Map<String, Object> allUserSpending(String userID) {
         Map<String, Object> payload = new LinkedHashMap<>();
 
-        /// Все Спендинги
+        /*Все Спендинги*/
         List<SpendingItem> items = spendingRepo.findAllByUserID(userID);
         items.sort(Comparator.comparing(SpendingItem::getDate).reversed());
 
-        /// Map с данными по валютам
+        /*Map с данными по валютам*/
         Map<String, Double> totalSpend = items.stream()
                 .collect(Collectors.groupingBy(SpendingItem::getCurrency, Collectors.summingDouble(SpendingItem::getAmount)));
 

@@ -28,7 +28,7 @@
         >
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" v-if="userAuth"/>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
-                <span class="hidden-sm-and-down">myBase</span>
+                <span class="hidden-sm-and-down" @click="goTo('/')">myBase</span>
             </v-toolbar-title>
 
             <v-spacer />
@@ -37,7 +37,10 @@
                 {{userName}}
             </div>
 
-            <v-btn icon @click="goTo('/cabinet')">
+            <v-btn
+                    icon
+                    @click="goTo('/cabinet')"
+            >
                 <v-avatar v-if="userAuth">
                     <img :src="user.user_pic" alt="John">
                 </v-avatar>
@@ -84,8 +87,6 @@
         },
         async created() {
             await this.loadUser()
-
-            //console.log(this.userAuth)
 
             if (!this.userAuth) {
                 this.$router.push('/cabinet')

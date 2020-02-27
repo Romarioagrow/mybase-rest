@@ -12,9 +12,6 @@
                         </span>
                     </div>
                 </v-col>
-                <!--<v-col>
-                    <span v-for="[product, amount] of totalSpend" :key="product">{{product}} : {{amount}}, </span>
-                </v-col>-->
             </v-row>
 
             <v-row>
@@ -28,6 +25,7 @@
                                 </template>
                             </v-expansion-panel-header>
 
+                            <!--NEW SPENDING-->
                             <v-expansion-panel-content>
                                 <v-row>
                                     <v-col>
@@ -40,18 +38,26 @@
                                                 outlined
                                         ></v-text-field>
                                     </v-col>
-
+                                    <v-col cols="2">
+                                        <v-select
+                                                :items="currencies"
+                                                v-model="spendingCurrency"
+                                                label="Currency"
+                                                outlined
+                                                height="100"
+                                                class="headline"
+                                        ></v-select>
+                                    </v-col>
                                     <v-col>
-                                        <v-overflow-btn
+                                        <v-select
                                                         :items="spendingTypes"
                                                         label="What was that?"
                                                         v-model="spendingType"
                                                         outlined
                                                         height="100"
-                                                        class="subtitle-1"
-                                        ></v-overflow-btn>
+                                                        class="title"
+                                        ></v-select>
                                     </v-col>
-
                                     <v-col>
                                         <v-textarea
                                                 outlined
@@ -75,6 +81,7 @@
                                         >
                                             <template v-slot:activator="{ on }">
                                                 <v-text-field
+                                                        outlined
                                                         v-model="date"
                                                         label="When was that?"
                                                         prepend-icon="mdi-calendar"
@@ -88,14 +95,6 @@
                                                 <v-btn text color="primary" @click="$refs.menu.save(date)">OK</v-btn>
                                             </v-date-picker>
                                         </v-menu>
-                                    </v-col>
-                                    <v-col cols="2">
-                                        <v-select
-                                                :items="currencies"
-                                                v-model="spendingCurrency"
-                                                label="Currency"
-                                                solo
-                                        ></v-select>
                                     </v-col>
                                 </v-row>
                                 <v-row>
@@ -117,14 +116,21 @@
                                 <v-col cols="8">
                                     <v-list-item three-line>
                                         <v-list-item-content>
-                                            <div class="overline mb-4">{{spending.type}}</div>
-                                            <v-list-item-title class="headline mb-1"> <span>{{spending.currency}}</span>{{spending.amount}}</v-list-item-title>
-                                            <v-list-item-subtitle>{{capitalize(spending.info)}}</v-list-item-subtitle>
+                                            <div class="overline mb-4">
+                                                {{spending.type}}
+                                            </div>
+                                            <v-list-item-title class="headline mb-1">
+                                                <span>{{spending.currency}}</span>{{spending.amount}}
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle>
+                                                {{capitalize(spending.info)}}
+                                            </v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <div class="ml-4"><v-card-subtitle class="m-0 p-0">{{spending.date}}</v-card-subtitle></div>
+                                    <div class="ml-4">
+                                        <v-card-subtitle class="m-0 p-0">{{spending.date}}</v-card-subtitle>
+                                    </div>
                                 </v-col>
-
                                 <v-col cols="4" >
                                     <v-card-actions>
                                         <v-btn outlined text @click="deleteSpending(spending.id)">X</v-btn>
