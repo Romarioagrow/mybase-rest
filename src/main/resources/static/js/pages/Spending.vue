@@ -3,8 +3,18 @@
         <v-container fluid>
             <v-row>
                 <v-col>
-                    <div class="headline font-weight-light">Spending total: <span>$</span>{{totalSpend}}</div>
+                    <div class="headline font-weight-light">
+                        Spending total
+                        <span v-for="[product, amount] of totalSpend" :key="product">
+                            &emsp;
+                            <span class="font-weight-medium">{{product}}</span> :
+                            <span>{{amount}}</span>&emsp;
+                        </span>
+                    </div>
                 </v-col>
+                <!--<v-col>
+                    <span v-for="[product, amount] of totalSpend" :key="product">{{product}} : {{amount}}, </span>
+                </v-col>-->
             </v-row>
 
             <v-row>
@@ -23,7 +33,6 @@
                                     <v-col>
                                         <v-text-field
                                                 label="$"
-
                                                 placeholder="Your another Spending"
                                                 v-model="spendingAmount"
                                                 height="100"
@@ -154,7 +163,7 @@
                 spendingType: '',
                 spendingAmount: '',
                 spendingInfo: '',
-                totalSpend: 0,
+                totalSpend: new Map(),
 
                 date: new Date().toISOString().substr(0, 10),
                 menu: false,
@@ -173,9 +182,7 @@
                 let uri = '/api/data/loadSpendingItems'
 
                 axios.get(uri, config).then(response => {
-                    this.spendingItems = response.data['items']
-                    this.totalSpend = response.data['totalSpend']
-                    console.log(this.spendingItems)
+                    this.loadSpendingData(response.data)
                 })
             },
             clearNewSpending() {
@@ -195,14 +202,10 @@
                     'currency': this.spendingCurrency
                 }
 
-                console.log(spendingData)
-
                 let uri = '/api/data/addNewSpendingItem'
 
                 axios.post(uri, spendingData, config).then(response => {
-                    console.log(response.data)
-                    this.spendingItems = response.data['items']
-                    this.totalSpend = response.data['totalSpend']
+                    this.loadSpendingData(response.data)
                     this.clearNewSpending()
                 })
             },
@@ -210,70 +213,22 @@
                 let uri = '/api/data/deleteSpendingItem'
 
                 axios.post(uri, spendingID, config).then(response => {
-                    console.log(response.data)
-                    this.spendingItems = response.data['items']
-                    this.totalSpend = response.data['totalSpend']
+                    this.loadSpendingData(response.data)
                 })
             },
             capitalize(string) {
                 return string.charAt(0).toUpperCase() + string.slice(1);
+            },
+            loadSpendingData(data) {
+                this.spendingItems = data['items']
+                let total = data['totalSpend']
+
+                this.totalSpend = new Map()
+                Object.entries(total).forEach(([key, value]) => {
+                    this.totalSpend.set(key, value)
+                });
             }
         }
     }
 </script>
-
-<style scoped>
-</style>
-
-
-<!--<v-card outlined hover>
-                        <v-card-actions>
-                            <v-btn block outlined @click="newSpendingButtonClick()">
-                                <v-icon dark>mdi-plus</v-icon>
-                            </v-btn>
-                        </v-card-actions>
-                    </v-card>-->
-<!--ADD NEW SPENDING CARD VERTICAL-->
-<!--<v-row v-if="clickNewSpending">
-    <v-col>
-        <v-card width="300" outlined
-        >
-            <v-list-item three-line>
-                <v-list-item-content>
-                    <v-text-field
-                            label="$"
-                            placeholder="Your another Spending"
-                            v-model="spendingAmount"
-                    ></v-text-field>
-
-                    <div class="overline mb-4">TYPE</div>
-                    <v-overflow-btn
-                            :items="spendingTypes"
-                            label="What was that?"
-                    ></v-overflow-btn>
-                    &lt;!&ndash;
-                    editable
-                    item-value="text"
-                    eager
-                    v-model="spendingType"
-                    &ndash;&gt;
-
-                    <div class="overline mb-4">INFO</div>
-                    <v-textarea
-                            dense
-                            no-resize
-                            rows="1"
-                            v-model="spendingInfo"
-                    ></v-textarea>
-                </v-list-item-content>
-            </v-list-item>
-
-            <v-card-actions>
-                <v-btn text @click="saveNewSpending()" :disabled="spendingAmount === ''">Save</v-btn>
-                &lt;!&ndash;<v-btn text>Reset</v-btn>&ndash;&gt;
-                <v-divider inset/>
-                <v-btn text @click="closeNewSpending()">X</v-btn>
-            </v-card-actions>
-        </v-card>
-    </v-col>
-</v-row>-->
+<style scoped></style>

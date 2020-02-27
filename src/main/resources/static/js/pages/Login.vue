@@ -30,9 +30,30 @@
                         </div>
 
                         <v-card-actions>
-                            <v-btn block color="success" @click="googleAuth()" v-if="!userAuth">
-                                Авторизация
-                            </v-btn>
+                            <div v-if="!userAuth">
+                                <v-card-title>
+                                    User Authorization
+                                </v-card-title>
+
+                                <v-row >
+                                    <v-col>
+                                        <v-btn color="primary" outlined @click="googleAuth()" height="300" width="300">
+                                            Авторизация Google
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col>
+                                        <v-btn color="red" outlined @click="googleAuth()" height="300" width="300">
+                                            Авторизация Instagram
+                                        </v-btn>
+                                    </v-col>
+                                    <v-col>
+                                        <v-btn color="blue" outlined @click="googleAuth()" height="300" width="300">
+                                            Авторизация VK
+                                        </v-btn>
+                                    </v-col>
+                                </v-row>
+                            </div>
+
                             <v-btn outlined color="error" @click="logout()" v-else>
                                 Logout
                             </v-btn>

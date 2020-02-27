@@ -24,6 +24,12 @@
                         </v-img>
                     </v-card>
                 </v-col>
+
+                <v-col v-if="!user">
+                    <v-card>
+                        <v-card-title>LOGIN</v-card-title>
+                    </v-card>
+                </v-col>
             </v-row>
         </v-container>
     </v-content>

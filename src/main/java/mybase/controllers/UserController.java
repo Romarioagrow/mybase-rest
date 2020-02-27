@@ -14,10 +14,11 @@ public class UserController {
 
     @GetMapping("/userAuthorized")
     private ResponseEntity<?> userAuthorized(@AuthenticationPrincipal MainUser user) {
-        if (user == null) {
+        return user == null ? new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) : new ResponseEntity<>(user, HttpStatus.OK);
+        /*if (user == null) {
             return new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED);
         }
-        return new ResponseEntity<>(user, HttpStatus.OK);
+        return new ResponseEntity<>(user, HttpStatus.OK);*/
     }
 
     @PostMapping("/getUser")

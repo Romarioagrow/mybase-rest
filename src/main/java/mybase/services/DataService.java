@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Log
 @Service
@@ -17,14 +18,16 @@ public class DataService {
     public Map<String, Object> allUserSpending(String userID) {
         Map<String, Object> payload = new LinkedHashMap<>();
 
+        /// Все Спендинги
         List<SpendingItem> items = spendingRepo.findAllByUserID(userID);
         items.sort(Comparator.comparing(SpendingItem::getDate).reversed());
 
-        double totalSpend = items.stream().mapToDouble(SpendingItem::getAmount).sum();
+        /// Map с данными по валютам
+        Map<String, Double> totalSpend = items.stream()
+                .collect(Collectors.groupingBy(SpendingItem::getCurrency, Collectors.summingDouble(SpendingItem::getAmount)));
 
         payload.put("items", items);
         payload.put("totalSpend", totalSpend);
-
         return payload;
     }
 
