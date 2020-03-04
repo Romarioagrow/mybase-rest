@@ -4,7 +4,7 @@ import Home      from "pages/Home.vue";
 import User      from "pages/User.vue";
 import Login      from "pages/Login.vue";
 import Posts      from "pages/Posts.vue";
-import Networks      from "pages/Networks.vue";
+import Instagram      from "pages/Instagram.vue";
 import Spending      from "pages/Spending.vue";
 
 
@@ -14,7 +14,7 @@ const routes = [
     {path: '/profile', component: User},
     {path: '/cabinet', component: Login},
     {path: '/posts', component: Posts},
-    {path: '/networks', component: Networks},
+    {path: '/instagram', component: Instagram},
     {path: '/spending', component: Spending},
 ];
 

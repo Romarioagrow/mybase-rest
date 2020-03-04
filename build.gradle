@@ -23,10 +23,12 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.thymeleaf', name: 'thymeleaf', version: '3.0.11.RELEASE'
+    compile 'org.brunocvcunha.instagram4j:instagram4j:1.13'
+    compile group: 'com.github.igor-suhorukov', name: 'instagramscraper', version: '2.2'
+    compile group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.2'
+
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.0.RELEASE')
-    compile group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.2'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-jdbc'
     implementation 'org.springframework.boot:spring-boot-starter-web'
