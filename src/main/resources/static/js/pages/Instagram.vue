@@ -3,7 +3,26 @@
         <v-container class="fill-height" fluid>
             <v-row>
                 <v-col>
-                    <v-card height="850">
+                    <v-card wight="850" outlined>
+
+                        <!--ВВОД-->
+                        <v-card-actions>
+                            <v-row>
+                                <v-col>
+                                    <v-text-field solo dense v-model="instUsername"></v-text-field>
+                                </v-col>
+                                <v-col>
+                                    <v-btn block color="error" @click="loadInstAccount()">GO</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+            <v-row>
+                <v-col>
+                    <v-card min-height="850">
 
                         <v-card-title>
                             <v-icon class="mr-3">mdi-instagram</v-icon>
@@ -11,17 +30,29 @@
                             <span v-if="!loading">{{instAccount.username}}</span>
                         </v-card-title>
 
-
                         <!--PROFILE-->
                         <div v-if="!loading">
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="3">
-                                        <v-img contain width="150" height="150" :src="instAccountPic"></v-img>
+
+                                        <v-card width="150" height="150" @click.stop="dialog = true" hover>
+                                            <v-img contain :src="instAccountPicFull"></v-img>
+                                        </v-card>
+
+                                        <v-dialog v-model="dialog" max-width="800">
+                                            <v-card>
+                                                <v-img contain :src="instAccountPicFull"></v-img>
+                                                <v-card-actions>
+                                                    <v-btn color="error" block outlined @click="dialog = false">
+                                                        Save
+                                                    </v-btn>
+                                                </v-card-actions>
+                                            </v-card>
+                                        </v-dialog>
                                     </v-col>
 
-                                    <v-col>
-
+                                    <v-col cols="3">
                                         <v-row>
                                             <v-col>
                                                 <div>{{instAccount.fullName}}</div>
@@ -29,7 +60,7 @@
                                         </v-row>
 
                                         <v-row>
-                                            <v-col>
+                                            <v-col >
                                                 <div>Followers: {{instAccount.followersAmount}} <v-icon>mdi-arrow-up</v-icon> </div>
                                             </v-col>
                                         </v-row>
@@ -42,14 +73,13 @@
                                     </v-col>
 
                                     <v-col>
-                                        <div class="title">{{instAccount.biography}}</div>
+                                        <div class="title font-weight-light">{{instAccount.biography}}</div>
                                     </v-col>
                                 </v-row>
                             </v-card-text>
                         </div>
                         <div v-else class="mx-auto">
                             <v-card-actions>
-
                                 <v-progress-circular
                                         style="margin-left: 45%"
                                         :size="70"
@@ -60,26 +90,45 @@
                             </v-card-actions>
                         </div>
 
-                        <!--ВВОД-->
-                        <v-card-actions>
+                        <!--<v-card-actions>
                             <v-row>
                                 <v-col>
                                     <v-text-field solo dense v-model="instUsername"></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn block outlined>GO</v-btn>
+                                    <v-btn block outlined @click="loadInstAccount()">GO</v-btn>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>-->
+
+                        <v-divider></v-divider>
+
+                        <v-container>
+                            <v-row>
+                                <v-col>Всего постов: </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col v-for="instPost in instPosts" v-key="instPost.id">
+
+                                    <v-card width="150" height="150">
+                                        <v-img src="instPost.pic"></v-img>
+                                        <v-card-text>
+                                            {{instPost.likes}}
+                                            {{instPost.comments}}
+                                        </v-card-text>
+                                    </v-card>
                                 </v-col>
                             </v-row>
 
-                        </v-card-actions>
+                        </v-container>
 
-                        <v-card-actions>
+                        <!--<v-card-actions>
                             <v-btn @click="instProfile">Inst Profile</v-btn>
                         </v-card-actions>
 
                         <v-card-actions>
                             <v-btn @click="instFollowers">Inst followers</v-btn>
-                        </v-card-actions>
+                        </v-card-actions>-->
                     </v-card>
                 </v-col>
             </v-row>
@@ -100,7 +149,10 @@
                 instAccount: {},
                 instUsername: 'romarioagrow',
                 instAccountPic: '',
-                loading: true
+                instAccountPicFull: '',
+                loading: true,
+                instPosts: [{},{},{}],
+                dialog: false
             }
         },
         created() {
@@ -108,6 +160,8 @@
         },
         methods: {
             loadInstAccount() {
+                this.loading = true
+
                 let instUsername = this.instUsername
                 const uri = '/api/profile/instagram/loadInstProfile'
 
@@ -131,6 +185,7 @@
                 axios.post(uri, instUsername, config).then(response => {
                     this.instAccount = response.data
                     this.instAccountPic = response.data.pic
+                    this.instAccountPicFull = response.data.picFull
                     this.loading = false
                     console.log(this.instAccount)
                 })

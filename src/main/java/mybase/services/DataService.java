@@ -89,8 +89,6 @@ public class DataService {
         }
         System.out.println(account.getMedia().getCount());
 
-
-
         log.info(account.getUsername());
         log.info(account.getBiography());
         log.info(account.getFullName());
