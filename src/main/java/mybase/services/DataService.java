@@ -69,7 +69,7 @@ public class DataService {
     }
 
     public void instProfile() {
-        HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+        /*HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
@@ -105,11 +105,9 @@ public class DataService {
             e.printStackTrace();
         }
 
-
-
         System.out.println(medias.getNodes().get(0).getDisplayUrl());
 
-        log.info(medias.getNodes().get(0).toString());
+        log.info(medias.getNodes().get(0).toString());*/
     }
 
 
@@ -121,7 +119,7 @@ public class DataService {
         instagram.login();*/
 
 
-        Instagram4j instagram = Instagram4j.builder().username("creep_waves").password("Route456123").build();
+        /*Instagram4j instagram = Instagram4j.builder().username("creep_waves").password("Route456123").build();
         instagram.setup();
         instagram.login();
 
@@ -140,6 +138,6 @@ public class DataService {
         List<InstagramUserSummary> usersFollowing = followers.getUsers();
         for (InstagramUserSummary user : usersFollowing) {
             System.out.println("following:  " + user.getUsername());
-        }
+        }*/
     }
 }

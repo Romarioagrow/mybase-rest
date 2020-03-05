@@ -12,14 +12,13 @@
                                     <v-text-field solo dense v-model="instUsername"></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn block color="error" @click="loadInstAccount()">GO</v-btn>
+                                    <v-btn block color="error" @click="loadInstData()">GO</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-actions>
                     </v-card>
                 </v-col>
             </v-row>
-
             <v-row>
                 <v-col>
                     <v-card min-height="850">
@@ -35,11 +34,9 @@
                             <v-card-text>
                                 <v-row>
                                     <v-col cols="3">
-
                                         <v-card width="150" height="150" @click.stop="dialog = true" hover>
                                             <v-img contain :src="instAccountPicFull"></v-img>
                                         </v-card>
-
                                         <v-dialog v-model="dialog" max-width="800">
                                             <v-card>
                                                 <v-img contain :src="instAccountPicFull"></v-img>
@@ -51,31 +48,56 @@
                                             </v-card>
                                         </v-dialog>
                                     </v-col>
-
-                                    <v-col cols="3">
+                                    <v-col cols="4">
                                         <v-row>
                                             <v-col>
-                                                <div>{{instAccount.fullName}}</div>
+                                                <div class="headline font-weight-thin">{{instAccount.fullName}}</div>
                                             </v-col>
                                         </v-row>
-
                                         <v-row>
                                             <v-col >
-                                                <div>Followers: {{instAccount.followersAmount}} <v-icon>mdi-arrow-up</v-icon> </div>
+                                                <v-btn :disabled="followsLoading" outlined>Followers: {{instAccount.followedBy}}
+                                                    <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
+                                                    <v-progress-circular v-else
+                                                                         indeterminate
+                                                                         size="20"
+                                                                         width="1"
+                                                                         color="primary"
+                                                                         class="ml-2"
+                                                    ></v-progress-circular>
+                                                </v-btn>
                                             </v-col>
                                         </v-row>
-
                                         <v-row>
                                             <v-col>
-                                                <div>Following: {{instAccount.followingAmount}} <v-icon>mdi-arrow-up</v-icon> </div>
+                                                <v-btn :disabled="followsLoading" outlined>Following: {{instAccount.follows}}
+                                                    <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
+                                                    <v-progress-circular v-else
+                                                                         indeterminate
+                                                                         size="20"
+                                                                         width="1"
+                                                                         color="primary"
+                                                                         class="ml-2"
+                                                    ></v-progress-circular>
+                                                </v-btn>
+
                                             </v-col>
                                         </v-row>
                                     </v-col>
-
                                     <v-col>
-                                        <div class="title font-weight-light">{{instAccount.biography}}</div>
+                                        <v-row>
+                                            <v-col>
+                                                <div class="title font-weight-light">{{instAccount.biography}}</div>
+                                            </v-col>
+                                        </v-row>
+                                        <v-row>
+                                            <v-col>
+                                                <div class="subtitle-2">{{instAccount.externalUrl}}</div>
+                                            </v-col>
+                                        </v-row>
                                     </v-col>
                                 </v-row>
+
                             </v-card-text>
                         </div>
                         <div v-else class="mx-auto">
@@ -89,46 +111,47 @@
                                 ></v-progress-circular>
                             </v-card-actions>
                         </div>
-
-                        <!--<v-card-actions>
-                            <v-row>
-                                <v-col>
-                                    <v-text-field solo dense v-model="instUsername"></v-text-field>
-                                </v-col>
-                                <v-col>
-                                    <v-btn block outlined @click="loadInstAccount()">GO</v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-actions>-->
-
                         <v-divider></v-divider>
 
+                        <!--POSTS-->
                         <v-container>
                             <v-row>
-                                <v-col>Всего постов: </v-col>
+                                <v-col>Всего постов: {{totalPosts}} </v-col>
                             </v-row>
                             <v-row>
-                                <v-col v-for="instPost in instPosts" v-key="instPost.id">
-
-                                    <v-card width="150" height="150">
-                                        <v-img src="instPost.pic"></v-img>
-                                        <v-card-text>
-                                            {{instPost.likes}}
-                                            {{instPost.comments}}
-                                        </v-card-text>
+                                <v-col v-for="instPost in instPosts" :key="instPost.id">
+                                    <v-card class="d-inline-block mx-auto">
+                                        <v-container>
+                                            <v-row >
+                                                <v-col >
+                                                    <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
+                                                </v-col>
+                                                <v-col>
+                                                    <v-row>
+                                                        <v-col>
+                                                            <v-btn icon>
+                                                                <v-icon>mdi-heart</v-icon>
+                                                                {{instPost.likeCount}}
+                                                            </v-btn>
+                                                        </v-col>
+                                                        <v-col>
+                                                            <v-btn icon>
+                                                                <v-icon>mdi-bookmark</v-icon>
+                                                            </v-btn>
+                                                        </v-col>
+                                                        <v-col>
+                                                            <v-btn icon>
+                                                                <v-icon>mdi-share-variant</v-icon>
+                                                            </v-btn>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-col>
+                                            </v-row>
+                                        </v-container>
                                     </v-card>
                                 </v-col>
                             </v-row>
-
                         </v-container>
-
-                        <!--<v-card-actions>
-                            <v-btn @click="instProfile">Inst Profile</v-btn>
-                        </v-card-actions>
-
-                        <v-card-actions>
-                            <v-btn @click="instFollowers">Inst followers</v-btn>
-                        </v-card-actions>-->
                     </v-card>
                 </v-col>
             </v-row>
@@ -151,45 +174,77 @@
                 instAccountPic: '',
                 instAccountPicFull: '',
                 loading: true,
-                instPosts: [{},{},{}],
-                dialog: false
+                instPosts: [],
+                dialog: false,
+                postsLoading: true,
+                totalPosts: '',
+                followers: [],
+                following: [],
+                followsLoading: true
             }
         },
         created() {
             this.loadInstAccount()
+            this.loadInstPosts()
+            this.loadInstFollows()
         },
         methods: {
-            loadInstAccount() {
-                this.loading = true
+            loadInstData() {
+                this.loadInstAccount()
+                this.loadInstPosts()
+                this.loadInstFollows()
+            },
 
+            loadInstAccount() {
+
+                console.log('loadInstAccount')
+                this.loading = true
                 let instUsername = this.instUsername
                 const uri = '/api/profile/instagram/loadInstProfile'
 
-                /*axios.get(uri, {
-                    params: {
-                        'instUsername': instUsername
-                    }
-                })
-                    .then(function (response) {
-                        this.instAccount = response.data
-                        console.log(this.instAccount)
-                    })
-                    .catch(function (error) {
-                        console.log(error);
-                    })
-                    /!*.then(function () {
-                        // always executed
-                    });*!/*/
-
-
                 axios.post(uri, instUsername, config).then(response => {
                     this.instAccount = response.data
-                    this.instAccountPic = response.data.pic
-                    this.instAccountPicFull = response.data.picFull
+                    this.instAccountPic = response.data.profilePicUrlHd
+                    this.instAccountPicFull = response.data.profilePicUrlHd
                     this.loading = false
-                    console.log(this.instAccount)
+                    console.log( this.instAccount)
                 })
             },
+
+            loadInstPosts() {
+                console.log('loadInstPosts')
+                this.postsLoading = true
+                let instUsername = this.instUsername
+                const uri = '/api/profile/instagram/loadInstPosts'
+
+                axios.post(uri, instUsername, config).then(response => {
+                    this.totalPosts = response.data.count
+                    this.instPosts = response.data.nodes
+                    this.postsLoading = false
+                    console.log(this.instPosts)
+                })
+            },
+
+
+            loadInstFollows() {
+                console.log('loadInstFollows')
+                this.followsLoading = true
+                //this.postsLoading = true
+                let instUsername = this.instUsername
+                const uri = '/api/profile/instagram/loadInstFollows'
+
+                axios.post(uri, instUsername, config).then(response => {
+                    //this.totalPosts = response.data.count
+                    //this.instPosts = response.data.nodes
+                    //this.postsLoading = false
+                    this.followsLoading = false
+                    console.log(response.data)
+                })
+
+            },
+
+
+
             instProfile() {
                 axios.post('/api/data/instProfile').then(response => {
                     //this.loadSpendingData(response.data)

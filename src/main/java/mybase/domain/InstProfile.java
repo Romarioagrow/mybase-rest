@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "inst_profile")
 @NoArgsConstructor
 @AllArgsConstructor
-public class InstProfile implements Serializable {
+public class InstProfile implements Serializable /*extends Account*/ {
 
     @Id
     @Column(name = "username")
@@ -25,6 +25,7 @@ public class InstProfile implements Serializable {
     private Integer followersAmount, followingAmount;
 
     private String biography, fullName, pic, picFull;
+
 
     @ManyToMany
     @JoinTable(
@@ -41,5 +42,25 @@ public class InstProfile implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "following_inst_id")
     )
     private List<InstProfile> following;
+
+
+    //private Object media;
+
+
+    /*@ManyToMany
+    @JoinTable(
+            name = "inst_followers",
+            joinColumns = @JoinColumn(name = "user_inst_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_inst_id")
+    )
+    private List<InstProfile> followers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "inst_following",
+            joinColumns = @JoinColumn(name = "user_inst_id"),
+            inverseJoinColumns = @JoinColumn(name = "following_inst_id")
+    )
+    private List<InstProfile> following;*/
 
 }

@@ -42,7 +42,7 @@
                                         </v-btn>
                                     </v-col>
                                     <v-col>
-                                        <v-btn color="red" outlined @click="googleAuth()" height="300" width="300">
+                                        <v-btn color="red" outlined @click="instAuth()" height="300" width="300">
                                             Авторизация Instagram
                                         </v-btn>
                                     </v-col>
@@ -83,6 +83,10 @@
         methods: {
             googleAuth() {
                 this.$store.dispatch("doGoogleAuth")
+            },
+            instAuth() {
+                let url = 'https://api.instagram.com/oauth/authorize?app_id=226365095211205&redirect_uri=localhost:8080/&scope=user_profile,user_media&response_type=code'
+                window.location.href = url
             },
             logout() {
                 this.$store.dispatch("doLogout")
