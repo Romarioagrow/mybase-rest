@@ -14,13 +14,20 @@ import 'material-icons/iconfont/material-icons.css';
 import 'material-design-icons-iconfont/dist/material-design-icons.css'
 import store from 'store'
 import VueMask from 'v-mask'
-
+//import facebookLogin from 'facebook-login-vuejs';
+//import FB from 'fb';
 
 Vue.use(VueResource);
 Vue.use(Vuetify);
-Vue.use(BootstrapVue);
+//Vue.use(BootstrapVue);
 Vue.use(Vuesax);
 Vue.use(VueMask);
+//Vue.use(facebookLogin)
+//Vue.use(FB)
+
+
+
+
 
 new Vue({
     el: '#app',

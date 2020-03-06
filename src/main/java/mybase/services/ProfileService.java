@@ -164,6 +164,12 @@ public class ProfileService {
             //account.getMedia()
 
             PageObject<Media> medias = account.getMedia();//instagram.getMedias(instUsername, 1);
+
+            //PageObject<Account> followers = instagram.getFollowers(Long.parseLong("17841401343956222"), 1);
+
+
+            //log.info(followers.toString());
+            //account.
             //PageObject<Media> medias = instagram.getMedias(instUsername, 10);
 
 

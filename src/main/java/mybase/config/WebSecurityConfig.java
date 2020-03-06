@@ -49,3 +49,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
 }
+/*server.port=8080
+security.require-ssl=true
+server.ssl.key-store-type:PKCS12
+server.ssl.key-store=classpath:keystore.p12
+server.ssl.key-store-password=160816
+server.ssl.key-alias=tomcat*/

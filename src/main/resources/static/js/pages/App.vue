@@ -1,6 +1,6 @@
 <template>
     <v-app id="inspire">
-        <div v-if="userAuth">
+        <div > <!--v-if="userAuth"-->
             <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
                 <v-list dense>
                     <template v-for="item in menuLinks">
@@ -82,11 +82,16 @@
             },
             async loadUser() {
                 let user = await axios.post('/api/user/getUser')
-                await this.$store.dispatch("loadUser", user.data)
-                this.user = user.data
+
+                if (user) {
+                    await this.$store.dispatch("loadUser", user.data)
+                    this.user = user.data
+                }
+
             },
         },
         async created() {
+
             await this.loadUser()
 
             if (!this.userAuth) {

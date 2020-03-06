@@ -21,10 +21,10 @@ export default new Vuex.Store({
     actions: {
         doGoogleAuth() {
             //window.open('http://localhost:8080/login', '_blank');
-            window.location.href = 'http://localhost:8080/login'
+            window.location.href = 'https://localhost:8080/login'
         },
         async doLogout(context) {
-            await axios.post('http://localhost:8080/logout')
+            await axios.post('https://localhost:8080/logout')
             context.commit('logoutUser')
         },
         loadUser(context, user) {

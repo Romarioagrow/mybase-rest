@@ -6,6 +6,7 @@ import me.postaddict.instagram.scraper.interceptor.ErrorInterceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import org.brunocvcunha.instagram4j.Instagram4j;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.boot.web.server.ConfigurableWebServerFactory;
 import org.springframework.boot.web.server.ErrorPage;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -36,7 +37,10 @@ public class WebMvcConfig  {
 
     @Bean
     public Instagram4j Instagram4jBuilder() {
-
         return Instagram4j.builder().username("creep_waves").password("Route456123").build();
     }
+
+
+
+
 }
