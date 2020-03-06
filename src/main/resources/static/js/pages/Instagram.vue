@@ -3,9 +3,77 @@
         <v-container class="fill-height" fluid>
             <v-row>
                 <v-col>
-                    <v-card wight="850" outlined>
-
+                    <v-card wight="850">
                         <!--ВВОД-->
+                        <v-card-title>
+                            Facebook Graph API
+                        </v-card-title>
+
+                        <v-card-title>
+                            <v-icon class="mr-3">mdi-instagram</v-icon>
+                            <span>Instagram&nbsp;</span>
+                            <span>{{instProfile.username}}</span>
+                        </v-card-title>
+
+                        <v-card-actions v-if="instProfile">
+                            <v-row>
+                                <v-col cols="3">
+                                    <v-card width="150" height="150" @click.stop="dialog = true" hover>
+                                        <v-img contain :src="instProfile.profile_picture_url"></v-img>
+                                    </v-card>
+                                    <v-dialog v-model="dialog" max-width="800">
+                                        <v-card>
+                                            <v-img contain :src="instProfile.profile_picture_url"></v-img>
+                                            <v-card-actions>
+                                                <v-btn color="error" block outlined @click="dialog = false">
+                                                    Save
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
+                                </v-col>
+                                <v-col cols="4">
+                                    <v-row>
+                                        <v-col>
+                                            <div class="headline font-weight-thin">{{instProfile.name}}</div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            <div>Followers: {{instProfile.followers_count}}</div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            <div>Following: {{instProfile.follows_count}}</div>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                                <v-col>
+                                    <v-row>
+                                        <v-col>
+                                            <div class="title font-weight-light">{{instProfile.biography}}</div>
+                                        </v-col>
+                                    </v-row>
+                                    <v-row>
+                                        <v-col>
+                                            <div class="subtitle-2">{{instProfile.website}}</div>
+                                        </v-col>
+                                    </v-row>
+                                </v-col>
+                            </v-row>
+                        </v-card-actions>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+            <v-spacer></v-spacer>
+
+            <!--OPEN API-->
+            <v-row>
+                <v-col>
+                    <v-card min-height="850">
+                        <v-card-title>Instagram Open API</v-card-title>
                         <v-card-actions>
                             <v-row>
                                 <v-col>
@@ -16,17 +84,11 @@
                                 </v-col>
                             </v-row>
                         </v-card-actions>
-                    </v-card>
-                </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
-                    <v-card min-height="850">
 
-                        <v-card-title>
-                            <v-icon class="mr-3">mdi-instagram</v-icon>
-                            <span>Instagram&nbsp;</span>
-                            <span v-if="!loading">{{instAccount.username}}</span>
+                        <v-divider></v-divider>
+
+                        <v-card-title v-if="!loading">
+                            <span >{{instAccount.username}}</span>
                         </v-card-title>
 
                         <!--PROFILE-->
@@ -80,7 +142,6 @@
                                                                          class="ml-2"
                                                     ></v-progress-circular>
                                                 </v-btn>
-
                                             </v-col>
                                         </v-row>
                                     </v-col>
@@ -97,7 +158,6 @@
                                         </v-row>
                                     </v-col>
                                 </v-row>
-
                             </v-card-text>
                         </div>
                         <div v-else class="mx-auto">
@@ -180,13 +240,20 @@
                 totalPosts: '',
                 followers: [],
                 following: [],
-                followsLoading: true
+                followsLoading: true,
+                //instProfile: {}
             }
         },
         created() {
             this.loadInstAccount()
             this.loadInstPosts()
             this.loadInstFollows()
+            this.instAccount = this.$store.state.instProfile
+        },
+        computed: {
+            instProfile() {
+                return this.$store.state.instProfile
+            }
         },
         methods: {
             loadInstData() {
@@ -225,7 +292,6 @@
                 })
             },
 
-
             loadInstFollows() {
                 console.log('loadInstFollows')
                 this.followsLoading = true
@@ -244,8 +310,7 @@
             },
 
 
-
-            instProfile() {
+            /*instProfile() {
                 axios.post('/api/data/instProfile').then(response => {
                     //this.loadSpendingData(response.data)
                 })
@@ -254,7 +319,7 @@
                 axios.post('/api/data/instFollowers').then(response => {
                     //this.loadSpendingData(response.data)
                 })
-            }
+            }*/
         }
     }
 </script>
