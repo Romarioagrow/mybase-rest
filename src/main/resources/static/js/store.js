@@ -9,9 +9,14 @@ import router from './router'
 export default new Vuex.Store({
     state: {
         currentUser: null,
-        instProfile: null
+        instProfile: null,
+        newFollowersData: null
     },
     mutations: {
+        addNewFollowersData(currentState, newFollowersData) {
+            currentState.newFollowersData = newFollowersData
+        },
+
         setInstProfile(currentState, profile) {
             currentState.instProfile = profile
         },
@@ -23,6 +28,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        newFollowersData(context, user) {
+            context.commit('addNewFollowersData', user)
+        },
+
         loadInstUserProfile(context, user) {
             context.commit('setInstProfile', user)
         },

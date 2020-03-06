@@ -185,6 +185,8 @@
                         console.log('accessToken:' + accessToken)
                         console.log('uid:' + uid)
 
+                        /*!!!!!ВСЕ В БЭК!!!!!*/
+
                         /*getFB_AccountData*/
                         FB.api('/me/accounts', (response) =>
                         {
@@ -207,9 +209,45 @@
                                 /*getIG_UserData*/
                                 let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
                                 FB.api(apiURL, (instUser) => {
-
                                     console.log(instUser)
                                     this.$store.dispatch('loadInstUserProfile', instUser)
+                                })
+
+                                let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
+                                FB.api(apiURLNewFollowers, (response) => {
+
+                                    let followersObject = response.data[0].values
+                                    let nextPage = response.paging.next
+
+                                    console.log(followersObject)
+                                    console.log(nextPage)
+
+                                    let newFollowersData = new Map()
+
+                                    followersObject.forEach((arrayItem) => {
+                                        if (arrayItem.value!== 0) {
+                                            console.log(arrayItem.end_time + ': ' + arrayItem.value)
+
+                                            newFollowersData.set(arrayItem.end_time, arrayItem.value)
+                                        }
+                                    });
+
+                                    console.log(newFollowersData)
+
+                                    this.$store.dispatch('newFollowersData', newFollowersData)
+
+                                    /*for (let day in followersObject) {
+                                        if (day.value !== 0) {
+                                            console.log(day.end_time + ': ' + day.value)
+                                        }
+                                    }*/
+
+                                    /*while (false) {
+                                        count++
+                                    }*/
+
+                                    //console.log('apiURLNewFollowers: ' + response.data)
+
                                 })
 
 

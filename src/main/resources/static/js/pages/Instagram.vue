@@ -8,13 +8,11 @@
                         <v-card-title>
                             Facebook Graph API
                         </v-card-title>
-
                         <v-card-title>
                             <v-icon class="mr-3">mdi-instagram</v-icon>
                             <span>Instagram&nbsp;</span>
                             <span>{{instProfile.username}}</span>
                         </v-card-title>
-
                         <v-card-actions v-if="instProfile">
                             <v-row>
                                 <v-col cols="3">
@@ -57,11 +55,39 @@
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <div class="subtitle-2">{{instProfile.website}}</div>
+                                            <v-btn outlined small>{{instProfile.website}}</v-btn>
+                                            <!--<div class="subtitle-2">{{instProfile.website}}</div>-->
                                         </v-col>
                                     </v-row>
                                 </v-col>
                             </v-row>
+                        </v-card-actions>
+                        <v-divider/>
+                        <v-card-actions>
+                            <v-card-subtitle>
+                                Insights
+                            </v-card-subtitle>
+                            <v-card-actions>
+                                <div>New followers: +<b>{{newFollowersDataAmount}}</b> (For February)</div>
+                            </v-card-actions>
+                        </v-card-actions>
+                        <v-divider/>
+                        <v-card-actions>
+                            <v-card-subtitle>
+                                Stories
+                            </v-card-subtitle>
+                        </v-card-actions>
+                        <v-divider/>
+                        <v-card-actions>
+                            <v-card-subtitle>
+                                Highlights
+                            </v-card-subtitle>
+                        </v-card-actions>
+                        <v-divider/>
+                        <v-card-actions>
+                            <v-card-subtitle>
+                                Posts
+                            </v-card-subtitle>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -84,13 +110,10 @@
                                 </v-col>
                             </v-row>
                         </v-card-actions>
-
                         <v-divider></v-divider>
-
                         <v-card-title v-if="!loading">
                             <span >{{instAccount.username}}</span>
                         </v-card-title>
-
                         <!--PROFILE-->
                         <div v-if="!loading">
                             <v-card-text>
@@ -172,7 +195,6 @@
                             </v-card-actions>
                         </div>
                         <v-divider></v-divider>
-
                         <!--POSTS-->
                         <v-container>
                             <v-row>
@@ -182,10 +204,27 @@
                                 <v-col v-for="instPost in instPosts" :key="instPost.id">
                                     <v-card class="d-inline-block mx-auto">
                                         <v-container>
-                                            <v-row >
-                                                <v-col >
-                                                    <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
+                                            <v-row>
+                                                <v-col>
+                                                        <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
+
+                                                    <!--<v-img contain :src="instAccountPicFull"></v-img>-->
+
+                                                   <!-- <v-img height="200" width="200" :src="instPost.displayUrl" @click="postDialog = true"></v-img>-->
+
+
+                                                    <!--<v-dialog v-model="postDialog" max-width="800">
+                                                        <v-card>
+                                                            <v-img contain :src="instPost.displayUrl"></v-img>
+                                                            <v-card-actions>
+                                                                <v-btn color="error" block outlined @click="postDialog = false">
+                                                                    Save
+                                                                </v-btn>
+                                                            </v-card-actions>
+                                                        </v-card>
+                                                    </v-dialog>-->
                                                 </v-col>
+
                                                 <v-col>
                                                     <v-row>
                                                         <v-col>
@@ -241,6 +280,8 @@
                 followers: [],
                 following: [],
                 followsLoading: true,
+
+                postDialog: false
                 //instProfile: {}
             }
         },
@@ -251,9 +292,16 @@
             this.instAccount = this.$store.state.instProfile
         },
         computed: {
+            newFollowersDataAmount() {
+                return this.$store.state.newFollowersData.size
+            },
             instProfile() {
                 return this.$store.state.instProfile
+            },
+            newFollowersData() {
+                return this.$store.state.newFollowersData
             }
+
         },
         methods: {
             loadInstData() {
