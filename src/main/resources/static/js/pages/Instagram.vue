@@ -1,6 +1,15 @@
 <template>
     <v-content>
         <v-container class="fill-height" fluid>
+
+            <v-row>
+                <v-col>
+                    <v-card-actions>
+                        <v-btn @click="test">Test</v-btn>
+                    </v-card-actions>
+                </v-col>
+            </v-row>
+
             <v-row>
                 <v-col>
                     <v-card wight="850">
@@ -8,6 +17,11 @@
                         <v-card-title>
                             Facebook Graph API
                         </v-card-title>
+
+                        <!--<v-card-actions>
+                            <v-btn @click="test">Test</v-btn>
+                        </v-card-actions>-->
+
                         <v-card-title>
                             <v-icon class="mr-3">mdi-instagram</v-icon>
                             <span>Instagram&nbsp;</span>
@@ -59,6 +73,22 @@
                                             <!--<div class="subtitle-2">{{instProfile.website}}</div>-->
                                         </v-col>
                                     </v-row>
+                                </v-col>
+                            </v-row>
+                            <v-row>
+                                <v-col>
+                                    <v-btn @click.stop="followersDialog = true" hover>
+                                        Followers info
+                                    </v-btn>
+                                    <v-dialog v-model="followersDialog" max-width="800">
+                                        <v-card>
+                                            <v-card-actions>
+                                                <v-btn color="error" block outlined @click="followersDialog = false">
+                                                    Save
+                                                </v-btn>
+                                            </v-card-actions>
+                                        </v-card>
+                                    </v-dialog>
                                 </v-col>
                             </v-row>
                         </v-card-actions>
@@ -206,12 +236,10 @@
                                         <v-container>
                                             <v-row>
                                                 <v-col>
-                                                        <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
+                                                    <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
 
                                                     <!--<v-img contain :src="instAccountPicFull"></v-img>-->
-
-                                                   <!-- <v-img height="200" width="200" :src="instPost.displayUrl" @click="postDialog = true"></v-img>-->
-
+                                                    <!-- <v-img height="200" width="200" :src="instPost.displayUrl" @click="postDialog = true"></v-img>-->
 
                                                     <!--<v-dialog v-model="postDialog" max-width="800">
                                                         <v-card>
@@ -281,14 +309,17 @@
                 following: [],
                 followsLoading: true,
 
-                postDialog: false
+                postDialog: false,
+                followersDialog: false
                 //instProfile: {}
             }
         },
         created() {
-            this.loadInstAccount()
+            /*this.loadInstAccount()
             this.loadInstPosts()
-            this.loadInstFollows()
+            this.loadInstFollows()*/
+
+            this.loadFollowersList()
             this.instAccount = this.$store.state.instProfile
         },
         computed: {
@@ -304,6 +335,18 @@
 
         },
         methods: {
+            /*loadFollowersList() {
+
+            }*/
+
+            loadFollowersList() {
+                //let instUsername = 'romarioagrow'
+                axios.post('/api/profile/instagram/loadFollowersList', this.instUsername, config).then(response => {
+
+                    console.log(response.data)
+                })
+            },
+
             loadInstData() {
                 this.loadInstAccount()
                 this.loadInstPosts()

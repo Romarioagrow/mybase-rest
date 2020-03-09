@@ -160,102 +160,8 @@
         },
         methods: {
             async fbTest() {
-
-                'use strict'
-                console.log('FB Test')
-
-                /*FB.getLoginStatus((response) =>
-                {
-                    if (response.status === 'connected')
-                    {
-                        let uid = response.authResponse.userID;
-                        let accessToken = response.authResponse.accessToken;
-                        console.log('connected')
-                        console.log('accessToken:' + accessToken)
-                        console.log('uid:' + uid)
-
-                        /!*!!!!!ВСЕ В БЭК!!!!!*!/
-
-                        /!*getFB_AccountData*!/
-                        FB.api('/me/accounts', (response) =>
-                        {
-                            console.log(response)
-                            let faceBookName = response.data[0].name
-                            let access_token = response.data[0].access_token
-                            let facebookID = response.data[0].id
-
-                            console.log('faceBookName: ' + faceBookName);
-                            console.log('facebookID: ' + facebookID);
-                            console.log('access_token: ' + access_token);
-
-                            /!*get instID*!/
-                            let getInstagramID = '/' + facebookID + '?fields=instagram_business_account'
-                            FB.api(getInstagramID, (response) =>
-                            {
-                                let instagramID = response.instagram_business_account.id
-                                console.log('instagramID: ' + instagramID)
-
-                                /!*getIG_UserData*!/
-                                let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
-                                FB.api(apiURL, (instUser) => {
-                                    console.log(instUser)
-                                    this.$store.dispatch('loadInstUserProfile', instUser)
-                                })
-
-                                let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
-                                FB.api(apiURLNewFollowers, (response) => {
-
-                                    let followersObject = response.data[0].values
-                                    let nextPage = response.paging.next
-
-                                    console.log(followersObject)
-                                    console.log(nextPage)
-
-                                    let newFollowersData = new Map()
-
-                                    followersObject.forEach((arrayItem) => {
-                                        if (arrayItem.value!== 0) {
-                                            console.log(arrayItem.end_time + ': ' + arrayItem.value)
-
-                                            newFollowersData.set(arrayItem.end_time, arrayItem.value)
-                                        }
-                                    });
-
-                                    console.log(newFollowersData)
-
-                                    this.$store.dispatch('newFollowersData', newFollowersData)
-
-                                    /!*for (let day in followersObject) {
-                                        if (day.value !== 0) {
-                                            console.log(day.end_time + ': ' + day.value)
-                                        }
-                                    }*!/
-
-                                    /!*while (false) {
-                                        count++
-                                    }*!/
-
-                                    //console.log('apiURLNewFollowers: ' + response.data)
-
-                                })
-
-
-                            })
-                        });
-                    }
-                    else if (response.status === 'not_authorized') {
-                        console.log('not_authorized')
-                    }
-                    else {
-                        console.log('no fb data (else)')
-                    }
-                });*/
             },
-            /*facebookAuth() {
-                FB.getLoginStatus(function(response) {
-                    statusChangeCallback(response);
-                });
-            },*/
+
             facebookAuth() {
 
                 /// ОСНОВНОЙ АЛГОРИТМ ПОЛУЧЕНИЯ ДАННЫХ INSTAGRAM API
@@ -271,7 +177,6 @@
                 *
                 * */
 
-
                 FB.login((response) =>
                 {
                     if (response.authResponse) {
@@ -280,13 +185,11 @@
                         FB.api('/me/accounts', (response) =>  {
                             console.log(response)
                             console.log('Facebook name: ' + response.data[0].name);
-
                             let access_tokenFacebook = response.data[0].access_token
-                            //console.log('access_token: ' + access_tokenFacebook);
                         });
 
-                        FB.getLoginStatus((response) =>
-                        {
+                        FB.getLoginStatus((response) => {
+
                             if (response.status === 'connected')
                             {
                                 let uid = response.authResponse.userID;
@@ -296,7 +199,6 @@
                                 console.log('uid:' + uid)
 
                                 /*!!!!!ВСЕ В БЭК!!!!!*/
-
                                 /*getFB_AccountData*/
                                 FB.api('/me/accounts', (response) =>
                                 {
@@ -342,16 +244,6 @@
                                             });
                                             console.log(newFollowersData)
                                             this.$store.dispatch('newFollowersData', newFollowersData)
-
-                                            /*for (let day in followersObject) {
-                                                if (day.value !== 0) {
-                                                    console.log(day.end_time + ': ' + day.value)
-                                                }
-                                            }*/
-                                            /*while (false) {
-                                                count++
-                                            }*/
-                                            //console.log('apiURLNewFollowers: ' + response.data)
                                         })
                                     })
                                 });
@@ -466,7 +358,6 @@
             },
             renameUser(user) {
                 let newName = this.oldNameText
-
                 console.log(newName)
             }
         },

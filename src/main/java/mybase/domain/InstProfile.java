@@ -6,13 +6,14 @@ import lombok.extern.java.Log;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 @Log
 @Data
 @Entity
 @Table(name = "inst_profile")
 @NoArgsConstructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class InstProfile implements Serializable /*extends Account*/ {
 
     /*"biography": "500 internal server error",
@@ -27,6 +28,10 @@ public class InstProfile implements Serializable /*extends Account*/ {
   "website": "http://linkedin.com/in/romarioagrow"*/
 
 
+    public InstProfile(String username) {
+        this.username = username;
+    }
+
     @Id
     @Column(name = "username")
     private String username;
@@ -38,26 +43,26 @@ public class InstProfile implements Serializable /*extends Account*/ {
 
     private String biography, fullName, pic, picFull;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> followers;
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "inst_followers",
             joinColumns = @JoinColumn(name = "user_inst_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_inst_id")
     )
-    private List<InstProfile> followers;
+    private List<InstProfile> followers;*/
 
-    @ManyToMany
+    /*@ManyToMany
     @JoinTable(
             name = "inst_following",
             joinColumns = @JoinColumn(name = "user_inst_id"),
             inverseJoinColumns = @JoinColumn(name = "following_inst_id")
     )
-    private List<InstProfile> following;
-
+    private List<InstProfile> following;*/
 
     //private Object media;
-
 
     /*@ManyToMany
     @JoinTable(
@@ -74,5 +79,4 @@ public class InstProfile implements Serializable /*extends Account*/ {
             inverseJoinColumns = @JoinColumn(name = "following_inst_id")
     )
     private List<InstProfile> following;*/
-
 }

@@ -1,6 +1,15 @@
 <template>
     <v-content>
         <v-container fluid>
+            <v-row>
+                <v-col>
+                    <v-card-actions>
+                        <v-btn @click="test">Test</v-btn>
+                    </v-card-actions>
+                </v-col>
+            </v-row>
+
+
             <v-row v-if="user">
                 <v-col>
                     <div class="display-2 font-weight-thin">myBase Main Page for <span class="font-weight-light">{{user.name}}</span></div>
@@ -46,13 +55,33 @@
 </template>
 
 <script>
+    import axios from "axios";
+    const config = {
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    }
     export default {
+
         computed: {
             user() {
                 return this.$store.state.currentUser
             }
         },
+        data() {
+            return {
+                instUsername: 'romarioagrow'
+            }
+        },
         methods: {
+            test() {
+                //let instUsername = 'romarioagrow'
+                axios.post('/api/profile/instagram/test', this.instUsername, config).then(response => {
+
+                    console.log(response.data)
+                })
+            },
+
             goTo(link) {
                 this.$router.push(link)
             }
