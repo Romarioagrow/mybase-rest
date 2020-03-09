@@ -61,12 +61,45 @@ public class ProfileService {
             Thread followersThread = new Thread(() -> {
                 try
                 {
-                    List<InstagramUserSummary> followersUsers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
+
+
+                    int e = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).users.size();
+                    //int dd = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
+                    log.info("eee " + e);
+                    //log.info("eee " + e);
+
+                    InstagramGetUserFollowersResult githubFollowers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk()));
+                    List<InstagramUserSummary> followersUsers = githubFollowers.getUsers();
+                    System.out.println();
+                    System.out.println();
+                    //githubFollowers.users().
+                    //log.info("getCheckpoint_url " +githubFollowers.getCheckpoint_url() + " ");
+
+                    log.info(githubFollowers.getPage_size() + " ");
+                    log.info(githubFollowers.getNext_max_id() + " ");
+                    log.info(githubFollowers.getCheckpoint_url() + " ");
+                    log.info(githubFollowers.getMessage() + " ");
+                    log.info(githubFollowers.getStatus() + " ");
+                    log.info(githubFollowers.getFeedback_message() + " ");
+
+
+                    for (InstagramUserSummary user : followersUsers) {
+                        System.out.println("User " + user.getUsername() + " follows Github!");
+                    }
+
                     payload.add(followersUsers);
                     log.info("followersUsers size:" + followersUsers.size());
 
-                    InstagramUser instagramUser = userResult.getUser();
-                    log.info(instagramUser.getHd_profile_pic_url_info().url);
+                    /*InstagramUser instagramUser = userResult.getUser();
+                    log.info(instagramUser.getHd_profile_pic_url_info().url);*/
+
+
+                //List<InstagramUserSummary> followersUsers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
+                    /*payload.add(followersUsers);
+                    log.info("followersUsers size:" + followersUsers.size());*/
+
+                    //InstagramUser instagramUser = userResult.getUser();
+                    //log.info(instagramUser.getHd_profile_pic_url_info().url);
 
                     //instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk(), "500"))
 
@@ -85,6 +118,7 @@ public class ProfileService {
             Thread followingThread = new Thread(() -> {
                 try
                 {
+                    String mm = "500";
                     List<InstagramUserSummary> usersFollowing = instagram.sendRequest(new InstagramGetUserFollowingRequest(userResult.getUser().getPk())).getUsers();
                     log.info("usersFollowing size:" + usersFollowing.size());
 
@@ -144,6 +178,9 @@ public class ProfileService {
             Instagram instagram = new Instagram(httpClient.OkHttpClientFactory());
             Account account = instagram.getAccountByUsername(instUsername);
 
+            //account.get
+            //long id
+            //instagram.getFollowers(2128921037200382, 1);
             //log.info(account.toString());
             return account;
         }
