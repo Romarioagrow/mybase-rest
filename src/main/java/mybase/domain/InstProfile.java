@@ -46,6 +46,9 @@ public class InstProfile implements Serializable /*extends Account*/ {
     @ElementCollection(fetch = FetchType.EAGER)
     private Map<String, String> followers;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> following;
+
     /*@ManyToMany
     @JoinTable(
             name = "inst_followers",

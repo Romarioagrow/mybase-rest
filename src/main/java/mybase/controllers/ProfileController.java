@@ -70,7 +70,7 @@ public class ProfileController {
         //driver.manage().window().maximize();
         driver.manage().window().setPosition(new Point(-2000, 0));
 
-        ((JavascriptExecutor) driver).executeScript("window.open('https://google.com');");
+        //((JavascriptExecutor) driver).executeScript("window.open('https://google.com');");
 
         String url = "https://www.instagram.com/accounts/login/";
         driver.get(url);
@@ -84,22 +84,27 @@ public class ProfileController {
         password.sendKeys("QwertyRoute01");
         password.sendKeys(Keys.ENTER);
 
-        new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("piCib")));
-        String url1 = "https://www.instagram.com/" + instUsername;
-        driver.get(url1);
+        WebElement followersDIV;
+        {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("piCib")));
+            String url1 = "https://www.instagram.com/" + instUsername;
+            driver.get(url1);
 
-        WebElement followersButton = (new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(@href, '/romarioagrow/followers/')]")));
-        followersButton.click();
+            WebElement followersButton = (new WebDriverWait(driver, 10))
+                    .until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(@href, '/romarioagrow/followers/')]")));
+            followersButton.click();
+            driver.switchTo().activeElement();
 
-        driver.switchTo().activeElement();
+            followersDIV = (new WebDriverWait(driver, 10))
+                    .until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+        }
 
-        WebElement followersDIV = (new WebDriverWait(driver, 10))
-                .until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
 
         /*Get User Data*/
         Map<String, String> followersData = new HashMap<>();
+        Map<String, String> followingData = new HashMap<>();
         List<WebElement> li = followersDIV.findElements(By.tagName("li"));
+
         li.forEach(webElement -> {
             List<String> userData = Arrays.asList(webElement.getText().split("\n"));
             String userName = userData.get(0);
@@ -130,13 +135,13 @@ public class ProfileController {
         String followersMeta = StringUtils.substringBetween(driver.getPageSource(),"<meta content=\""," подписчиков,");
         String followingMeta = StringUtils.substringBetween(driver.getPageSource(),"подписчиков, "," подписок,");
 
-        int userFollowersCount;
         int followersAmount = Integer.parseInt(followersMeta);
+        int followingAmount = Integer.parseInt(followingMeta);
 
         log.info("followersMeta: " + followersMeta);
         log.info("followingMeta: " + followingMeta);
 
-        Coordinates cor= ((Locatable) followersDIV).getCoordinates();
+        Coordinates cor = ((Locatable) followersDIV).getCoordinates();
         cor.inViewPort();
 
         while (followersData.size() < followersAmount) {
@@ -173,11 +178,60 @@ public class ProfileController {
         }
 
 
+        {
+            //new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("piCib")));
+            String url1 = "https://www.instagram.com/" + instUsername;
+            driver.get(url1);
+            WebElement followersButton = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(@href, '/romarioagrow/following/')]")));
+            followersButton.click();
+            driver.switchTo().activeElement();
+            followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+
+            cor = ((Locatable) followersDIV).getCoordinates();
+            cor.inViewPort();
+
+
+            while (followingData.size() < followingAmount) {
+                try
+                {
+                    cor.inViewPort();
+                    //Thread.sleep(100);
+
+                    ///refreshFollowersDIV();
+                    followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+                    li = followersDIV.findElements(By.tagName("li"));
+
+                    li.forEach(webElement -> {
+                        List<String> userData = Arrays.asList(webElement.getText().split("\n"));
+                        String userName = userData.get(0);///.replaceAll("\"","");
+                        String fullName = userData.get(1);
+
+                        System.out.println();
+                        log.info("strings: " + userData.toString());
+                        log.info("userName: " + userName);
+                        log.info("fullName: " + fullName);
+
+                        if (userData.size() == 3) {
+                            followingData.putIfAbsent(userName, fullName);
+                        }
+                        else followingData.putIfAbsent(userName, "");
+                    });
+                    log.info("size: " + followingData.size());
+                }
+                catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+
+        }
+
         InstProfile instProfile = instRepo.findById(instUsername).orElseGet(() -> {
             return new InstProfile(instUsername);
         });
 
         instProfile.setFollowers(followersData);
+        instProfile.setFollowing(followingData);
         instRepo.save(instProfile);
         log.info(instProfile.toString());
 
