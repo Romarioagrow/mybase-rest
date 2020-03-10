@@ -293,11 +293,14 @@
         }
     }
     import axios from "axios";
+    const api = axios.create({
+        withCredentials: true
+    });
     export default {
         data() {
             return {
                 instAccount: {},
-                instUsername: 'pollytwist',//'romarioagrow',
+                instUsername: 'romarioagrow',
                 instAccountPic: '',
                 instAccountPicFull: '',
                 loading: true,
@@ -308,7 +311,6 @@
                 followers: [],
                 following: [],
                 followsLoading: true,
-
                 postDialog: false,
                 followersDialog: false
                 //instProfile: {}
@@ -319,8 +321,7 @@
             this.loadInstPosts()
             this.loadInstFollows()*/
 
-            this.restRequests()
-
+            //this.restRequests()
             this.loadFollowersList()
             this.instAccount = this.$store.state.instProfile
         },
@@ -348,12 +349,12 @@
                 };
             },
 
-            restRequests() {
+            /*restRequests() {
                 axios.post('/api/profile/instagram/restRequests', configJson).then(response => {
-
                     console.log('response: ' + response)
+
                 })
-            },
+            },*/
 
 
             async loadFollowersList() {
@@ -391,40 +392,97 @@
                 console.log('followersURL: ' + followersURL)
 
 
-                axios.get(followersURL, {
-                    headers: {
-                        Cookie: "sessionid=1038252798:4VmrnL0LfPY3xY:20;"
-                    }
-                }).then(response => {
+                /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
 
-                    console.log('response: ' + response)
-                    console.log('response.data: ' + response.data)
-                    console.log('response.data stringify: ' + JSON.stringify(response.data))
-                    console.log('response.data.user: ' + response.data.user)
+                let dataToServer = {
+                    'username': this.instUsername,
+                    'userID': userID,
+                    'followersURL': followersURL
+                }
+
+                let hasNext = true
+                let endCursor
+                let totalFollowers
+                let followersSTRING
+                let followersList = []
 
 
-                    let stringResponse = JSON.stringify(response.data)
+                //while (hasNext) {
+                axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(response => {
+                    console.log(response.data)
 
-                    if (obj.hasOwnProperty("id")) {
-                        console.log(obj.data);
-                    }
+                    /**/
+                    /*hasNext = response.data[0]
+                    endCursor = response.data[1]
+                    totalFollowers = response.data[2]
+                    followersSTRING = response.data[3]
 
-                    data[list].push(...response.data.user[config[list].path].edges);
+                    followersList.push(JSON.parse(followersSTRING))
+                    console.log(followersList)
 
-                    if (response.data.user[config[list].path].page_info.has_next_page) {
-                        setTimeout(function () {
-                            getFollows(user, list, response.data.user[config[list].path].page_info.end_cursor);
-                        }, 1000);
-                    }
-                    else if (list === 'followers') {
-                        getFollows(user, 'followings');
-                    }
-                    else {
-                        alert('DONE!');
-                        console.log(followers);
-                        console.log(followings);
-                    }
+                    while (followersList.length < totalFollowers) {
+
+                        let followersURL = `https://www.instagram.com/graphql/query/?query_hash=${config['followers'].hash}&variables=${encodeURIComponent(JSON.stringify({
+                            "id": userID,
+                            "include_reel": true,
+                            "fetch_mutual": true,
+                            "first": 50,
+                            "after": endCursor
+                        }))}`
+                        console.log('followersURL: ' + followersURL)
+
+                        dataToServer.followersURL = followersURL
+
+                        axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(value => {
+                            hasNext = response.data[0]
+                            if (hasNext) {
+                                endCursor = response.data[1]
+                                //followersSTRING = response.data[3]
+                                followersList.push(JSON.parse(response.data[3]))
+                            }
+                        })
+
+                        console.log(followersList.length)
+                    }*/
+
                 })
+                //}
+
+
+                /* api.get(followersURL, {
+                     headers: {
+                         Cookie: "sessionid=1038252798:4VmrnL0LfPY3xY:20;"
+                     }
+                 }).then(response => {
+
+                     console.log('response: ' + response)
+                     console.log('response.data: ' + response.data)
+                     console.log('response.data stringify: ' + JSON.stringify(response.data))
+                     console.log('response.data.user: ' + response.data.user)
+
+
+                     /!*let stringResponse = JSON.stringify(response.data)
+
+                     if (obj.hasOwnProperty("id")) {
+                         console.log(obj.data);
+                     }*!/
+
+                     data[list].push(...response.data.user[config[list].path].edges);
+
+                     if (response.data.user[config[list].path].page_info.has_next_page) {
+                         setTimeout(function () {
+                             getFollows(user, list, response.data.user[config[list].path].page_info.end_cursor);
+                         }, 1000);
+                     }
+                     else if (list === 'followers') {
+                         getFollows(user, 'followings');
+                     }
+                     else {
+                         alert('DONE!');
+                         console.log(followers);
+                         console.log(followings);
+                     }
+                 })*/
 
             },
 

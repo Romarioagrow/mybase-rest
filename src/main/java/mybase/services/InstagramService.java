@@ -1,5 +1,9 @@
 package mybase.services;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import me.postaddict.instagram.scraper.Instagram;
@@ -11,6 +15,7 @@ import mybase.domain.InstProfile;
 import mybase.repo.InstRepo;
 import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowersRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowingRequest;
@@ -24,14 +29,12 @@ import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.interactions.Locatable;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.http.*;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -54,14 +57,13 @@ public class InstagramService {
 
 
 
-    public void httpClientRequester() {
-        /*log.info("RestTemplate");
+    public LinkedList<Object> httpClientRequester(Map<String, String> dataToServer) {
+        log.info("RestTemplate");
 
+        /*
         RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
-
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         String url = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A201512132%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A50%2C%22after%22%3A%22QVFENWU0Sl9kd2hVVDRYN1E4RHUycVBkU1JRMVlvYWl2UXd0ejRlMEZRTDE4VUt4RGl6dzB6OUl6eUhONmp3UHRSZmFoWW5mWDZWeDB3N2hQbEtkbEpjQQ%3D%3D%22%7D";
         //formData.add("app_id", "226365095211205");
@@ -73,7 +75,38 @@ public class InstagramService {
         String toString = response.toString();
         log.info(toString);*/
 
-        String url = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A201512132%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A50%2C%22after%22%3A%22QVFENWU0Sl9kd2hVVDRYN1E4RHUycVBkU1JRMVlvYWl2UXd0ejRlMEZRTDE4VUt4RGl6dzB6OUl6eUhONmp3UHRSZmFoWW5mWDZWeDB3N2hQbEtkbEpjQQ%3D%3D%22%7D";
+       /* Map<String, Map<String, String>> config = new HashMap<>();
+        HashMap<String, String> followers = new HashMap<>();
+        followers.put("hash", "c76146de99bb02f6415203be841dd25a");
+        followers.put("path", "edge_followed_by");
+        HashMap<String, String> following = new HashMap<>();
+        following.put("hash", "d04b0a864b4b54837c0d870b0e77e076");
+        following.put("path", "edge_follow");
+        config.put("followers", followers);
+        config.put("following", following);
+
+        String userPageUrl = "https://www.instagram.com/" + instUsername + "/?__a=1";
+        String userID = "201512132";*/
+        //String url = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A201512132%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A50%2C%22after%22%3A%22QVFENWU0Sl9kd2hVVDRYN1E4RHUycVBkU1JRMVlvYWl2UXd0ejRlMEZRTDE4VUt4RGl6dzB6OUl6eUhONmp3UHRSZmFoWW5mWDZWeDB3N2hQbEtkbEpjQQ%3D%3D%22%7D";
+
+        /*followers: {
+            hash: 'c76146de99bb02f6415203be841dd25a',
+                    path: 'edge_followed_by'
+        },
+        followings: {
+            hash: 'd04b0a864b4b54837c0d870b0e77e076',
+                    path: 'edge_follow'
+        }*/
+
+        HashMap<String, String> followers = new HashMap<>(), following = new HashMap<>();
+        followers.put("hash", "c76146de99bb02f6415203be841dd25a");
+        followers.put("path", "edge_followed_by");
+        following.put("hash", "d04b0a864b4b54837c0d870b0e77e076");
+        following.put("path", "edge_follow");
+
+        String followersURL = dataToServer.get("followersURL");
+        String userID = dataToServer.get("userID");
+        String sessionID = "sessionid=1038252798:4VmrnL0LfPY3xY:20;";
 
         OkHttpClient httpClient = new OkHttpClient().newBuilder()
                 .addInterceptor(new Interceptor() {
@@ -81,7 +114,7 @@ public class InstagramService {
                     public Response intercept(Chain chain) throws IOException {
                         final Request original = chain.request();
                         final Request authorized = original.newBuilder()
-                                .addHeader("Cookie", "sessionid=1038252798:4VmrnL0LfPY3xY:20;")
+                                .addHeader("Cookie", sessionID)
                                 .build();
                         return chain.proceed(authorized);
                     }
@@ -95,7 +128,7 @@ public class InstagramService {
                 .addFormDataPart("somParam", "someValue")
                 .build();
 
-        Request request = new Request.Builder().get().url(url).build();
+        Request request = new Request.Builder().get().url(followersURL).build();
         try
         {
             Response response = httpClient.newBuilder()
@@ -105,8 +138,74 @@ public class InstagramService {
                     .execute();
             if (response.isSuccessful())
             {
-                log.info(response.toString());
-                log.info(response.body().string());
+                log.info("response.toString: " + response.toString());
+
+                String responseString =  response.body().string();
+                log.info("responseString" + responseString);
+
+                JsonElement jelement = new JsonParser().parse(responseString);
+                JsonObject jsonObject = jelement.getAsJsonObject();
+                JsonObject levelData = jsonObject.getAsJsonObject("data");
+                JsonObject levelUser = levelData.getAsJsonObject("user");
+                JsonObject edge_followed_by = levelUser.getAsJsonObject("edge_followed_by");
+                JsonObject levelInfo = edge_followed_by.getAsJsonObject("page_info");
+
+                boolean hasNext = levelInfo.get("has_next_page").getAsBoolean();
+                String endCursor = levelInfo.get("end_cursor").getAsString();
+                int totalFollowers = edge_followed_by.get("count").getAsInt();
+                JsonArray edges = edge_followed_by.getAsJsonArray("edges");
+
+                log.info(levelData.toString());
+                log.info(levelUser.toString());
+                log.info(edge_followed_by.toString());
+                log.info(levelInfo.toString());
+                log.info(hasNext + "");
+                log.info(endCursor + "");
+                log.info(totalFollowers + " totalFollowers");
+                log.info("hash: " + followers.get("hash"));
+                log.info("edges: " + edges.toString());
+
+                String query = "https://www.instagram.com/graphql/query/?query_hash=" + followers.get("hash") + "&variables=";
+                String queryToEncode =
+                        "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":50,\"after\":\"" + endCursor + "\"}";
+                log.info("queryToEncode: " + queryToEncode);
+
+                String encodeQuery = URLEncoder.encode(queryToEncode, Charset.defaultCharset());
+                log.info("encodeQuery: " + encodeQuery);
+
+                String finalQuery = query + encodeQuery;
+                log.info(finalQuery);
+
+                /*while (hasNext) {
+                    *//*String encodedString = new URIBuilder()
+                            .setParameter("id", userID)
+                            .setParameter("include_reel", "true")
+                            .setParameter("fetch_mutual", "true")
+                            .setParameter("first", "50")
+                            .setParameter("after", endCursor)
+                            .build()
+                            .getRawQuery(); // output: i=encodedString
+                    String finalQuery = query.concat(encodedString);
+                    log.info(finalQuery);*//*
+                    *//*followersURL =
+                            "https://www.instagram.com/graphql/query/?query_hash=${config['followers'].hash}&variables=${encodeURIComponent(JSON.stringify({
+                    "id": userID,
+                            "include_reel": true,
+                            "fetch_mutual": true,
+                            "first": 50,
+                            "after": after
+                }))}`*//*
+                }*/
+
+
+                LinkedList<Object> payload = new LinkedList<>();
+                payload.add(hasNext);
+                payload.add(endCursor);
+                payload.add(totalFollowers);
+                payload.add(finalQuery);
+                payload.add(edges.toString());
+
+                return payload;
             }
             else
             {
@@ -115,28 +214,22 @@ public class InstagramService {
         }
         catch (IOException e) {
             e.printStackTrace();
+
         }
-
-
-
-
+        return null;
 
         // create an instance of RestTemplate
         /*RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         //headers.set("X-Request-Source", "Desktop");
         HttpEntity request = new HttpEntity(headers);
-
         *//*ResponseEntity<String> response = restTemplate.exchange(
                 url, HttpMethod.GET, request, String.class, 1
         );*//*
-
         log.info(url);
         ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
-
         // check response
         if (response.getStatusCode() == HttpStatus.OK) {
             System.out.println("Request Successful.");

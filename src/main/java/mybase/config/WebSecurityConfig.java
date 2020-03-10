@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 @EnableOAuth2Sso
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    @Override
+    /*@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .antMatcher("/**")
@@ -27,7 +27,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
                 .csrf().disable();
+    }*/
+
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .antMatcher("/**")
+                .authorizeRequests()
+                .anyRequest().permitAll()
+
+                /*.antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
+                .anyRequest().authenticated()
+                .and().logout().logoutSuccessUrl("/").permitAll()*/
+                .and()
+                .csrf().disable();
     }
+
 
     @Bean
     public PrincipalExtractor principalExtractor(UserRepo userDetailsRepo) {
