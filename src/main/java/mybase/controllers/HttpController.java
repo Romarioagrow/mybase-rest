@@ -26,8 +26,10 @@ public class HttpController {
         log.info(request.getRequestURL().toString() + "?" + request.getQueryString());
         String responseQuery = request.getQueryString();
 
-        if (responseQuery != null && responseQuery.startsWith("code=")) {
+        boolean instAuthRequest = responseQuery != null && responseQuery.startsWith("code=");
 
+        if (instAuthRequest)
+        {
             String instAuthCode = StringUtils.substringAfter(responseQuery, "code=");
             log.info(responseQuery);
             log.info("instAuthCode: " + instAuthCode);
@@ -42,11 +44,11 @@ public class HttpController {
             formData.add("app_id", "226365095211205");
             formData.add("app_secret", "9fa5d69f1ee9ddbfa1046326d66020bf");
             formData.add("grant_type", "authorization_code");
-            formData.add("redirect_uri", "http://localhost:8080/");
+            formData.add("redirect_uri", "https://localhost:8080/");
             formData.add("code", instAuthCode);
 
             HttpEntity<MultiValueMap<String, String>> httpRequest = new HttpEntity<MultiValueMap<String, String>>(formData, headers);
-            ResponseEntity<String> response = restTemplate.postForEntity( accessTokenURL, httpRequest , String.class );
+            ResponseEntity<String> response = restTemplate.postForEntity( accessTokenURL, new HttpEntity<MultiValueMap<String, String>>(formData, headers) , String.class );
 
             log.info(response.getBody());
         }

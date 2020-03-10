@@ -9,29 +9,38 @@ import me.postaddict.instagram.scraper.model.PageObject;
 import mybase.config.WebMvcConfig;
 import mybase.domain.InstProfile;
 import mybase.repo.InstRepo;
-import okhttp3.OkHttpClient;
+import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 import org.brunocvcunha.instagram4j.Instagram4j;
 import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowersRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowingRequest;
 import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramGetUserFollowersResult;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
-import org.brunocvcunha.instagram4j.requests.payload.InstagramUser;
 import org.brunocvcunha.instagram4j.requests.payload.InstagramUserSummary;
+import org.openqa.selenium.*;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Coordinates;
+import org.openqa.selenium.interactions.Locatable;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.springframework.http.*;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Log
 @Service
 @AllArgsConstructor
-public class ProfileService {
+public class InstagramService {
     private final InstRepo instRepo;
     private final WebMvcConfig httpClient;
-
 
 
     /*
@@ -43,13 +52,111 @@ public class ProfileService {
      *
      * */
 
+
+
+    public void httpClientRequester() {
+        /*log.info("RestTemplate");
+
+        RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        MultiValueMap<String, String> formData = new LinkedMultiValueMap<String, String>();
+
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String url = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A201512132%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A50%2C%22after%22%3A%22QVFENWU0Sl9kd2hVVDRYN1E4RHUycVBkU1JRMVlvYWl2UXd0ejRlMEZRTDE4VUt4RGl6dzB6OUl6eUhONmp3UHRSZmFoWW5mWDZWeDB3N2hQbEtkbEpjQQ%3D%3D%22%7D";
+        //formData.add("app_id", "226365095211205");
+        log.info(url);
+        HttpEntity<MultiValueMap<String, String>> httpRequest = new HttpEntity<MultiValueMap<String, String>>(formData, headers);*/
+
+        //ResponseEntity<String> response = restTemplate.get( url, new HttpEntity<MultiValueMap<String, String>>(formData, headers) , String.class );
+        /*ResponseEntity<String> response = restTemplate.getForEntity( url, new HttpEntity<MultiValueMap<String, String>>(formData, headers) , String.class );
+        String toString = response.toString();
+        log.info(toString);*/
+
+        String url = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A201512132%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A50%2C%22after%22%3A%22QVFENWU0Sl9kd2hVVDRYN1E4RHUycVBkU1JRMVlvYWl2UXd0ejRlMEZRTDE4VUt4RGl6dzB6OUl6eUhONmp3UHRSZmFoWW5mWDZWeDB3N2hQbEtkbEpjQQ%3D%3D%22%7D";
+
+        OkHttpClient httpClient = new OkHttpClient().newBuilder()
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public Response intercept(Chain chain) throws IOException {
+                        final Request original = chain.request();
+                        final Request authorized = original.newBuilder()
+                                .addHeader("Cookie", "sessionid=1038252798:4VmrnL0LfPY3xY:20;")
+                                .build();
+                        return chain.proceed(authorized);
+                    }
+                })
+                .build();
+
+        //OkHttpClient httpClient = new OkHttpClient();
+
+        RequestBody requestBody = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("somParam", "someValue")
+                .build();
+
+        Request request = new Request.Builder().get().url(url).build();
+        try
+        {
+            Response response = httpClient.newBuilder()
+                    .readTimeout(1, TimeUnit.SECONDS)
+                    .build()
+                    .newCall(request)
+                    .execute();
+            if (response.isSuccessful())
+            {
+                log.info(response.toString());
+                log.info(response.body().string());
+            }
+            else
+            {
+                log.info("error");
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+        // create an instance of RestTemplate
+        /*RestTemplate restTemplate = new RestTemplate();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        //headers.set("X-Request-Source", "Desktop");
+        HttpEntity request = new HttpEntity(headers);
+
+        *//*ResponseEntity<String> response = restTemplate.exchange(
+                url, HttpMethod.GET, request, String.class, 1
+        );*//*
+
+        log.info(url);
+        ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+
+        // check response
+        if (response.getStatusCode() == HttpStatus.OK) {
+            System.out.println("Request Successful.");
+            System.out.println(response.getBody());
+        }
+        else {
+            System.out.println("Request Failed");
+            System.out.println(response.getStatusCode());
+        }*/
+    }
+
+
     public LinkedList<Collection> loadInstFollows(String instUsername) {
+        log.info("loadInstFollows");
 
         try
         {
             LinkedList<Collection> payload = new LinkedList<>();
 
-            Instagram4j instagram = httpClient.Instagram4jBuilder();//Instagram4j.builder().username("creep_waves").password("Route456123").build();
+            Instagram4j instagram = httpClient.Instagram4jBuilder();
             instagram.setup();
             instagram.login();
 
@@ -61,8 +168,6 @@ public class ProfileService {
             Thread followersThread = new Thread(() -> {
                 try
                 {
-
-
                     int e = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).users.size();
                     //int dd = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
                     log.info("eee " + e);
@@ -82,7 +187,6 @@ public class ProfileService {
                     log.info(githubFollowers.getStatus() + " ");
                     log.info(githubFollowers.getFeedback_message() + " ");
 
-
                     for (InstagramUserSummary user : followersUsers) {
                         System.out.println("User " + user.getUsername() + " follows Github!");
                     }
@@ -93,16 +197,12 @@ public class ProfileService {
                     /*InstagramUser instagramUser = userResult.getUser();
                     log.info(instagramUser.getHd_profile_pic_url_info().url);*/
 
-
-                //List<InstagramUserSummary> followersUsers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
+                    //List<InstagramUserSummary> followersUsers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
                     /*payload.add(followersUsers);
                     log.info("followersUsers size:" + followersUsers.size());*/
-
                     //InstagramUser instagramUser = userResult.getUser();
                     //log.info(instagramUser.getHd_profile_pic_url_info().url);
-
                     //instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk(), "500"))
-
 
                     /*InstagramGetUserFollowersResult userFollowers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk()));
                     List<InstagramUserSummary> users = userFollowers.getUsers();
@@ -138,9 +238,6 @@ public class ProfileService {
             {
                 followersThread.join();
                 followingThread.join();
-
-
-
             }
             catch (InterruptedException e) {
                 e.printStackTrace();
@@ -149,18 +246,14 @@ public class ProfileService {
 
             return payload;
 
-
             /*for (InstagramUserSummary user : followersUsers) {
                 System.out.println(instUsername + " follower: " + user.username);
             }*/
-
             /*for (InstagramUserSummary user : usersFollowing) {
                 System.out.println(instUsername + " following: " + user.toString());
             }*/
-
             //payload.add(followersUsers);
             //payload.add(usersFollowing);
-
             //return payload;
         }
 
@@ -168,16 +261,19 @@ public class ProfileService {
             e.printStackTrace();
             return null;
         }
-
     }
 
-
     public Account instApiAccount(String instUsername) {
+        log.info("loadInstProfile");
+
         try
         {
             Instagram instagram = new Instagram(httpClient.OkHttpClientFactory());
             Account account = instagram.getAccountByUsername(instUsername);
 
+            //RequestQueue queue = Volley.newRequestQueue(this);
+            //httpClient.Instagram4jBuilder().sendRequest(new )
+            //instagram.
             //account.get
             //long id
             //instagram.getFollowers(2128921037200382, 1);
@@ -191,25 +287,18 @@ public class ProfileService {
     }
 
     public PageObject<Media> loadInstPosts(String instUsername) {
+        log.info("loadInstPosts");
 
         try
         {
             Instagram instagram = new Instagram(httpClient.OkHttpClientFactory());
             Account account = instagram.getAccountByUsername(instUsername);
-
-            //log.info(account.toString());
-            //account.getMedia()
-
             PageObject<Media> medias = account.getMedia();//instagram.getMedias(instUsername, 1);
 
             //PageObject<Account> followers = instagram.getFollowers(Long.parseLong("17841401343956222"), 1);
-
-
             //log.info(followers.toString());
             //account.
             //PageObject<Media> medias = instagram.getMedias(instUsername, 10);
-
-
             return medias;
         }
         catch (IOException | NullPointerException e ) {
@@ -219,12 +308,8 @@ public class ProfileService {
         //return null;
     }
 
-
-
-
     public InstProfile loadInstProfile(String instUsername) {
         log.info(instUsername);
-
         InstProfile instProfile = new InstProfile();
 
         Thread instData = new Thread(() -> {
@@ -247,15 +332,6 @@ public class ProfileService {
             catch (IOException e) {
                 e.printStackTrace();
             }
-            //System.out.println(account.getMedia().getCount());
-
-            /*log.info(account.getUsername());
-            log.info(account.getBiography());
-            log.info(account.getFullName());
-            log.info(account.getBlockedByViewer());
-            log.info(account.getProfilePicUrlHd());
-            log.info(account.getFollowedBy() + "f");
-            log.info(account.getFollows() + "follows");*/
 
             instProfile.setUsername(account.getUsername());
             instProfile.setBiography(account.getBiography());
@@ -278,20 +354,13 @@ public class ProfileService {
                 e.printStackTrace();
             }
 
-
             /*PageObject<Media> medias = null;
-            try
-            {
+            try{
                 medias = instagram.getMedias(instUsername, 1);
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
-
-            //medias = instagram.
-
-            //medias.fo
-
 
             System.out.println();
             log.info("MEDIA");
@@ -299,41 +368,29 @@ public class ProfileService {
 
             PageObject<Account> followers = null;
             PageObject<Account> follows = null;
-            try
-            {
+            try{
                 followers = instagram.getFollowers(account.getId(), 1);
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
-
-            try
-            {
+            try{
                 follows = instagram.getFollows(account.getId(), 1);
             }
             catch (IOException e) {
                 e.printStackTrace();
             }
-
             System.out.println();
             log.info(account.getId() + " id");
             log.info(followers.toString());
             List<Account> nodes = followers.getNodes();
 
-
             nodes.forEach(account1 -> log.info(account1.toString()));*/
-
-
             //log.info(followers.toString());
-
             //log.info(follows.toString());
-
             //System.out.println(medias.getNodes().get(0).getDisplayUrl());
-
             //instProfile.setMedia(medias);
             //instProfile.getMedia().add(medias);
-
-
         });
 
 
@@ -413,13 +470,167 @@ public class ProfileService {
         instRepo.save(instProfile);
 
         log.info(instProfile.toString());
-
         log.info("Done!");
-
 
         return instProfile;
     }
 
+
+    public InstProfile loadFollowersListSelenium(String instUsername) {
+
+        log.info("CHROME loadFollowersList");
+
+        /*ChromeOptions options = new ChromeOptions();
+        DesiredCapabilities cap = DesiredCapabilities.chrome();
+        cap.setCapability(ChromeOptions.CAPABILITY, options);
+
+        LoggingPreferences logPrefs = new LoggingPreferences();
+        logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
+        //logPrefs.enable(LogType.N, Level.ALL);
+        cap.setCapability(CapabilityType.SUPPORTS_NETWORK_CONNECTION, logPrefs);*/
+
+        /*PROXY NEW EACH REQUEST!!!*/
+
+        WebDriver driver = new ChromeDriver(/*cap*/);
+        driver.manage().window().setPosition(new Point(-2000, 0));
+
+        /*LOGIN INSTAGRAM*/
+        {
+            String url = "https://www.instagram.com/accounts/login/";
+            driver.get(url);
+
+            WebElement login = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.name("username")));
+            login.sendKeys("creep_waves");
+
+            WebElement password = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.name("password")));
+            password.sendKeys("QwertyRoute01");
+            password.sendKeys(Keys.ENTER);
+        }
+
+        /*GET FIRST FOLLOWERS DIV*/
+        WebElement followersDIV;
+        {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("piCib")));
+            String url1 = "https://www.instagram.com/" + instUsername;
+            driver.get(url1);
+
+            WebElement followersButton = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(@href, '/" + instUsername + "/followers/')]")));
+            followersButton.click();
+            driver.switchTo().activeElement();
+
+            followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+        }
+
+        /*Get User Data*/
+        Map<String, String> followersData = new HashMap<>(),followingData = new HashMap<>();
+        List<WebElement> li = followersDIV.findElements(By.tagName("li"));
+
+        //log.info(driver.getPageSource());
+        String followersMeta = StringUtils.substringBetween(driver.getPageSource(),"<meta content=\""," подписчиков,");
+        String followingMeta = StringUtils.substringBetween(driver.getPageSource(),"подписчиков, "," подписок,");
+
+        int followersAmount = Integer.parseInt(followersMeta.replaceAll(",",""));
+        int followingAmount = Integer.parseInt(followingMeta.replaceAll(",",""));
+
+        log.info("followersMeta: " + followersMeta);
+        log.info("followingMeta: " + followingMeta);
+
+        Coordinates cor = ((Locatable) followersDIV).getCoordinates();
+
+        /*SCROLL FOLLOWERS DIV AND FILL FOLLOWERS MAP*/
+        {
+            while (followersData.size() < followersAmount) {
+                try
+                {
+                    log.info("size: " + followingData.size());
+                    cor.inViewPort();
+                    ///Thread.sleep(100);
+
+                    ///refreshFollowersDIV();
+                    followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+                    li = followersDIV.findElements(By.tagName("li"));
+
+                    li.forEach(webElement -> {
+                        List<String> userData = Arrays.asList(webElement.getText().split("\n"));
+                        String userName = userData.get(0);
+                        String fullName = userData.get(1);
+
+                        System.out.println();
+                        log.info("strings: " + userData.toString());
+                        log.info("userName: " + userName);
+                        log.info("fullName: " + fullName);
+
+                        if (userData.size() == 3) {
+                            followersData.putIfAbsent(userName, fullName);
+                        } else followersData.putIfAbsent(userName, "");
+                        //followersData.putIfAbsent(userName, fullName);
+                    });
+                    log.info("size: " + followersData.size());
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        }
+
+        /*FOLLOWING*/
+        {
+            //new WebDriverWait(driver, 10).until(ExpectedConditions.presenceOfElementLocated(By.className("piCib")));
+            String url1 = "https://www.instagram.com/" + instUsername;
+            driver.get(url1);
+            WebElement followersButton = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.xpath("//a[contains(@href, '/" + instUsername + "/following/')]")));
+            followersButton.click();
+            driver.switchTo().activeElement();
+            followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+
+            cor = ((Locatable) followersDIV).getCoordinates();
+
+            {
+                while (followingData.size() < followingAmount) {
+                    log.info("size: " + followingData.size());
+                    try
+                    {
+                        cor.inViewPort();
+
+                        followersDIV = (new WebDriverWait(driver, 10)).until(ExpectedConditions.presenceOfElementLocated(By.className("PZuss")));
+                        li = followersDIV.findElements(By.tagName("li"));
+
+                        li.forEach(webElement -> {
+                            List<String> userData = Arrays.asList(webElement.getText().split("\n"));
+                            String userName = userData.get(0);
+                            String fullName = userData.get(1);
+
+                            System.out.println();
+                            log.info("strings: " + userData.toString());
+                            log.info("userName: " + userName);
+                            log.info("fullName: " + fullName);
+
+                            if (userData.size() == 3) {
+                                followingData.putIfAbsent(userName, fullName);
+                            }
+                            else followingData.putIfAbsent(userName, "");
+                        });
+                        log.info("size: " + followingData.size());
+                    }
+                    catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                }
+            }
+        }
+
+
+        /*FINAL DATA PROCESSING AND SAVING*/
+        InstProfile instProfile = instRepo.findById(instUsername).orElseGet(() -> {
+            return new InstProfile(instUsername);
+        });
+
+        instProfile.setFollowers(followersData);
+        instProfile.setFollowing(followingData);
+        instRepo.save(instProfile);
+        log.info(instProfile.toString());
+
+        return instProfile;
+    }
 
 
 }
