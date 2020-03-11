@@ -147,10 +147,12 @@ public class InstagramService {
 
         ///graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables={"id":"1038252798","include_reel":true,"fetch_mutual":true,"first":24}
         //String queryToEncodeNew = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24}";
+
+        ///ПЕРВЫЙ ЗАПРОС БЕЗ AFTER!!!
         followersURLInitial = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A24%7D";
+        log.info("followersURLInitial: " + followersURLInitial);
 
         /*FOLLOWERS QUERY REQUEST*///FIRST QUERY
-        log.info("followersURLInitial: " + followersURLInitial);
         Request followersRequest = new Request.Builder().get().url(followersURLInitial).build();
         try
         {
@@ -201,37 +203,25 @@ public class InstagramService {
                             levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by").getAsJsonObject("page_info");
 
                             hasNext = levelInfo.get("has_next_page").getAsBoolean();
-                            if (hasNext)
-                            {
+
+                            if (hasNext) {
                                 endCursor = levelInfo.get("end_cursor").getAsString();
                                 log.info("getNnd_cursorNew: " + levelInfo.get("end_cursor").getAsString());
                                 log.info("endCursorNew: " + endCursor);
+                            }
 
-                                edges = edge_followed_by.getAsJsonArray("edges");
+                            edges = edge_followed_by.getAsJsonArray("edges");
+                            boolean noEdges = edges.toString().equals("[]");
 
-                                boolean noEdges = edges.toString().equals("[]");
-
-                                if (noEdges)
-                                {
-                                    log.warning("EMPTY FOR: " + followersURLNext);
-
-
-
-
-
-
-                                }
-                                else
-                                {
-                                    followersListRAW.add(edges.toString());
-                                    log.info("edges: " + edges.toString());
-                                    log.info("followerSTRING: " + followersListRAW.size());
-                                }
+                            if (noEdges)
+                            {
+                                log.warning("EMPTY FOR: " + followersURLNext);
                             }
                             else
                             {
-                                log.info("END OF QUERY!");
-                                hasNext = false;
+                                followersListRAW.add(edges.toString());
+                                log.info("edges: " + edges.toString());
+                                log.info("followerSTRING: " + followersListRAW.size());
                             }
                         }
                         catch (UnsupportedOperationException e) {
@@ -239,6 +229,7 @@ public class InstagramService {
                         }
                     }
                 }
+                log.info("END OF QUERY!");
 
                 LinkedList<Object> payload = new LinkedList<>();
                 payload.add(totalFollowers);
