@@ -25,7 +25,10 @@ public class InstagramApiController {
 
     @PostMapping("/instagram/restRequests")
     private LinkedList<Object> restRequests(@RequestBody Map<String, String> dataToServer) {
+
         return profileService.httpClientRequester(dataToServer);
+
+
     }
 
     @PostMapping("/instagram/loadFollowersList")

@@ -304,9 +304,8 @@
             }
         },
         created() {
-
-            this.loadFollowersList()
-            this.instAccount = this.$store.state.instProfile
+            //this.loadFollowersAndFollowsLists()
+            this.loadInstAccountGraphAPI()
         },
         computed: {
             newFollowersDataAmount() {
@@ -321,24 +320,21 @@
 
         },
         methods: {
-            test() {
-
-                let options = {
-                    url: url,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        Cookie: "Cookie value which i copied from my logged in instagram browser window"
-                    }
-                };
+            loadInstAccountGraphAPI() {
+                this.instAccount = this.$store.state.instProfile
             },
 
-            async loadFollowersList() {
+            test() {
+
+            },
+
+            async loadFollowersAndFollowsLists() {
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
                 }
 
-                axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(response => {
+                axios.post('/api/profile/instagram/loadFollowersAndFollowsLists', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
                     let followersArray = response.data[1]
@@ -346,7 +342,6 @@
                     let followersOK = []
 
                     for (let string in followersArray) {
-                        //console.log(followersArray[string])
                         let stringObject = {}
                         stringObject = JSON.parse(followersArray[string])
                         followers.push(stringObject)
@@ -360,6 +355,8 @@
                     })
                     console.log(followersOK)
                 })
+
+
             },
 
             loadInstData() {
@@ -367,9 +364,7 @@
                 this.loadInstPosts()
                 this.loadInstFollows()
             },
-
             loadInstAccount() {
-
                 console.log('loadInstAccount')
                 this.loading = true
                 let instUsername = this.instUsername
@@ -382,7 +377,6 @@
                     this.loading = false
                 })
             },
-
             loadInstPosts() {
                 console.log('loadInstPosts')
                 this.postsLoading = true
@@ -395,7 +389,6 @@
                     this.postsLoading = false
                 })
             },
-
             loadInstFollows() {
                 console.log('loadInstFollows')
                 this.followsLoading = true
