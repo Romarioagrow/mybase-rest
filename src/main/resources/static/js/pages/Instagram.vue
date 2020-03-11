@@ -356,7 +356,6 @@
                 })
             },*/
 
-
             async loadFollowersList() {
                 //let instUsername = 'romarioagrow'
                 let config = {
@@ -373,7 +372,7 @@
 
                 let url = 'https://www.instagram.com/'+this.instUsername+'/?__a=1'
                 let data = {followers: [], followings: []};
-                let userID = 201512132
+                let userID = 1038252798
 
                 let after = await axios.get(url, this.instUsername).then(response => {
                     console.log(response.data)
@@ -386,31 +385,46 @@
                     "id": userID,
                     "include_reel": true,
                     "fetch_mutual": true,
-                    "first": 50,
+                    "first": 30,
                     "after": after
                 }))}`
                 console.log('followersURL: ' + followersURL)
 
 
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
-
                 let dataToServer = {
                     'username': this.instUsername,
                     'userID': userID,
                     'followersURL': followersURL
                 }
 
-                let hasNext = true
-                let endCursor
-                let totalFollowers
-                let followersSTRING
-                let followersList = []
-
-
-                //while (hasNext) {
                 axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
+                    let followersAmount = response.data[0]
+                    let followersArray = response.data[1]
+                    console.log(followersAmount)
+                    console.log(followersArray)
+
+                    let followers = []
+                    let followersOK = []
+
+                    for (let string in followersArray) {
+                        console.log(followersArray[string])
+
+                        let stringObject = {}
+                        stringObject = JSON.parse(followersArray[string])
+                        followers.push(stringObject)
+                    }
+                    console.log(followers)
+
+                    followers.forEach(array => {
+                        for (let index in array) {
+                            followersOK.push(array[index].node)
+                        }
+                    })
+
+                    console.log(followersOK)
                     /**/
                     /*hasNext = response.data[0]
                     endCursor = response.data[1]
