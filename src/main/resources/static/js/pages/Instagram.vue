@@ -1,15 +1,6 @@
 <template>
     <v-content>
         <v-container class="fill-height" fluid>
-
-            <!--<v-row>
-                <v-col>
-                    <v-card-actions>
-                        <v-btn @click="test">Test</v-btn>
-                    </v-card-actions>
-                </v-col>
-            </v-row>-->
-
             <v-row>
                 <v-col>
                     <v-card wight="850">
@@ -17,10 +8,6 @@
                         <v-card-title>
                             Facebook Graph API
                         </v-card-title>
-
-                        <!--<v-card-actions>
-                            <v-btn @click="test">Test</v-btn>
-                        </v-card-actions>-->
 
                         <v-card-title>
                             <v-icon class="mr-3">mdi-instagram</v-icon>
@@ -317,11 +304,7 @@
             }
         },
         created() {
-            /*this.loadInstAccount()
-            this.loadInstPosts()
-            this.loadInstFollows()*/
 
-            //this.restRequests()
             this.loadFollowersList()
             this.instAccount = this.$store.state.instProfile
         },
@@ -349,69 +332,21 @@
                 };
             },
 
-            /*restRequests() {
-                axios.post('/api/profile/instagram/restRequests', configJson).then(response => {
-                    console.log('response: ' + response)
-
-                })
-            },*/
-
             async loadFollowersList() {
-                //let instUsername = 'romarioagrow'
-                let config = {
-                    followers: {
-                        hash: 'c76146de99bb02f6415203be841dd25a',
-                        path: 'edge_followed_by'
-                    },
-                    followings: {
-                        hash: 'd04b0a864b4b54837c0d870b0e77e076',
-                        path: 'edge_follow'
-                    }
-                };
-
-
-                let url = 'https://www.instagram.com/'+this.instUsername+'/?__a=1'
-                let data = {followers: [], followings: []};
-                let userID = 1038252798
-
-                let after = await axios.get(url, this.instUsername).then(response => {
-                    console.log(response.data)
-                    return response.data.graphql.user.edge_owner_to_timeline_media.page_info.end_cursor
-                })
-
-                console.log('after: ' + after)
-
-                let followersURL = `https://www.instagram.com/graphql/query/?query_hash=${config['followers'].hash}&variables=${encodeURIComponent(JSON.stringify({
-                    "id": userID,
-                    "include_reel": true,
-                    "fetch_mutual": true,
-                    "first": 30,
-                    "after": after
-                }))}`
-                console.log('followersURL: ' + followersURL)
-
-
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
-                    'userID': userID,
-                    'followersURL': followersURL
                 }
 
                 axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
-                    let followersAmount = response.data[0]
                     let followersArray = response.data[1]
-                    console.log(followersAmount)
-                    console.log(followersArray)
-
                     let followers = []
                     let followersOK = []
 
                     for (let string in followersArray) {
-                        console.log(followersArray[string])
-
+                        //console.log(followersArray[string])
                         let stringObject = {}
                         stringObject = JSON.parse(followersArray[string])
                         followers.push(stringObject)
@@ -423,81 +358,8 @@
                             followersOK.push(array[index].node)
                         }
                     })
-
                     console.log(followersOK)
-                    /**/
-                    /*hasNext = response.data[0]
-                    endCursor = response.data[1]
-                    totalFollowers = response.data[2]
-                    followersSTRING = response.data[3]
-
-                    followersList.push(JSON.parse(followersSTRING))
-                    console.log(followersList)
-
-                    while (followersList.length < totalFollowers) {
-
-                        let followersURL = `https://www.instagram.com/graphql/query/?query_hash=${config['followers'].hash}&variables=${encodeURIComponent(JSON.stringify({
-                            "id": userID,
-                            "include_reel": true,
-                            "fetch_mutual": true,
-                            "first": 50,
-                            "after": endCursor
-                        }))}`
-                        console.log('followersURL: ' + followersURL)
-
-                        dataToServer.followersURL = followersURL
-
-                        axios.post('/api/profile/instagram/restRequests', dataToServer, configJson).then(value => {
-                            hasNext = response.data[0]
-                            if (hasNext) {
-                                endCursor = response.data[1]
-                                //followersSTRING = response.data[3]
-                                followersList.push(JSON.parse(response.data[3]))
-                            }
-                        })
-
-                        console.log(followersList.length)
-                    }*/
-
                 })
-                //}
-
-
-                /* api.get(followersURL, {
-                     headers: {
-                         Cookie: "sessionid=1038252798:4VmrnL0LfPY3xY:20;"
-                     }
-                 }).then(response => {
-
-                     console.log('response: ' + response)
-                     console.log('response.data: ' + response.data)
-                     console.log('response.data stringify: ' + JSON.stringify(response.data))
-                     console.log('response.data.user: ' + response.data.user)
-
-
-                     /!*let stringResponse = JSON.stringify(response.data)
-
-                     if (obj.hasOwnProperty("id")) {
-                         console.log(obj.data);
-                     }*!/
-
-                     data[list].push(...response.data.user[config[list].path].edges);
-
-                     if (response.data.user[config[list].path].page_info.has_next_page) {
-                         setTimeout(function () {
-                             getFollows(user, list, response.data.user[config[list].path].page_info.end_cursor);
-                         }, 1000);
-                     }
-                     else if (list === 'followers') {
-                         getFollows(user, 'followings');
-                     }
-                     else {
-                         alert('DONE!');
-                         console.log(followers);
-                         console.log(followings);
-                     }
-                 })*/
-
             },
 
             loadInstData() {
@@ -518,7 +380,6 @@
                     this.instAccountPic = response.data.profilePicUrlHd
                     this.instAccountPicFull = response.data.profilePicUrlHd
                     this.loading = false
-                    //console.log( this.instAccount)
                 })
             },
 
@@ -532,38 +393,19 @@
                     this.totalPosts = response.data.count
                     this.instPosts = response.data.nodes
                     this.postsLoading = false
-                    //console.log(this.instPosts)
                 })
             },
 
             loadInstFollows() {
                 console.log('loadInstFollows')
                 this.followsLoading = true
-                //this.postsLoading = true
                 let instUsername = this.instUsername
                 const uri = '/api/profile/instagram/loadInstFollows'
 
                 axios.post(uri, instUsername, configJson).then(response => {
-                    //this.totalPosts = response.data.count
-                    //this.instPosts = response.data.nodes
-                    //this.postsLoading = false
                     this.followsLoading = false
-                    //console.log(response.data)
                 })
-
-            },
-
-
-            /*instProfile() {
-                axios.post('/api/data/instProfile').then(response => {
-                    //this.loadSpendingData(response.data)
-                })
-            },
-            instFollowers() {
-                axios.post('/api/data/instFollowers').then(response => {
-                    //this.loadSpendingData(response.data)
-                })
-            }*/
+            }
         }
     }
 </script>
