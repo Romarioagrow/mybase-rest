@@ -56,11 +56,16 @@ public class InstagramService {
      *
      * */
 
+    public String makeURIEncodedNoAfter(String followersHash, String userID, String endCursor) {
+        String query = "https://www.instagram.com/graphql/query/?query_hash=" + followersHash + "&variables=";
+        String queryToEncode = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24}";
+        String encodeQuery = URLEncoder.encode(queryToEncode, Charset.defaultCharset());
+        return query + encodeQuery;
+    }
+
     public String makeURIEncoded(String followersHash, String userID, String endCursor) {
-        String query =
-                "https://www.instagram.com/graphql/query/?query_hash=" + followersHash + "&variables=";
-        String queryToEncode =
-                "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":12,\"after\":\"" + endCursor + "\"}";
+        String query = "https://www.instagram.com/graphql/query/?query_hash=" + followersHash + "&variables=";
+        String queryToEncode = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24,\"after\":\"" + endCursor + "\"}";
         String encodeQuery = URLEncoder.encode(queryToEncode, Charset.defaultCharset());
         return query + encodeQuery;
     }
@@ -74,7 +79,9 @@ public class InstagramService {
     }
 
     public LinkedList<Object> httpClientRequester(Map<String, String> dataToServer) {
+        System.out.println();
         log.info("RestTemplate");
+        //https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A24%7D
 
         final String followersHash = "c76146de99bb02f6415203be841dd25a";
         final String followingHash = "1038252798%3AwoM4qyrNWkOxkq%3A11";
@@ -127,8 +134,8 @@ public class InstagramService {
                 log.info("endCursor1: " + endCursor1);
                 log.info("endCursor2: " + endCursor2);
 
-                followersURLInitial = makeURIEncoded(followersHash, userID, endCursor2);
-                log.info(followersURLInitial);
+                //followersURLInitial = makeURIEncoded(followersHash, userID, endCursor2);
+                //log.info("followersURLInitial: " + followersURLInitial);
             }
             else {
                 log.info("Error in userPage request");
@@ -138,8 +145,12 @@ public class InstagramService {
             e.printStackTrace();
         }
 
+        ///graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables={"id":"1038252798","include_reel":true,"fetch_mutual":true,"first":24}
+        //String queryToEncodeNew = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24}";
+        followersURLInitial = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A24%7D";
 
-        /*FOLLOWERS QUERY REQUEST*/
+        /*FOLLOWERS QUERY REQUEST*///FIRST QUERY
+        log.info("followersURLInitial: " + followersURLInitial);
         Request followersRequest = new Request.Builder().get().url(followersURLInitial).build();
         try
         {
@@ -165,13 +176,17 @@ public class InstagramService {
                 endCursor = levelInfo.get("end_cursor").getAsString();
                 edges = edge_followed_by.getAsJsonArray("edges");
 
+                followersListRAW.add(edges.toString());
+
                 log.info("hasNext: " + hasNext);
                 log.info("endCursor: " + endCursor);
                 log.info("edges: " + edges);
+                log.info("followersListRAW: " + followersListRAW.toString());
 
                 while (hasNext) {
 
                     String followersURLNext = makeURIEncoded(followersHash, userID, endCursor);
+                    System.out.println();
                     log.info("NEW followersURLNext: " + followersURLNext);
 
                     followersRequest = new Request.Builder().get().url(followersURLNext).build();
@@ -186,13 +201,32 @@ public class InstagramService {
                             levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by").getAsJsonObject("page_info");
 
                             hasNext = levelInfo.get("has_next_page").getAsBoolean();
-
-                            if (hasNext) {
+                            if (hasNext)
+                            {
                                 endCursor = levelInfo.get("end_cursor").getAsString();
+                                log.info("getNnd_cursorNew: " + levelInfo.get("end_cursor").getAsString());
+                                log.info("endCursorNew: " + endCursor);
+
                                 edges = edge_followed_by.getAsJsonArray("edges");
 
-                                followersListRAW.add(edges.toString());
-                                log.info("followerSTRING: " + followersListRAW.size());
+                                boolean noEdges = edges.toString().equals("[]");
+
+                                if (noEdges)
+                                {
+                                    log.warning("EMPTY FOR: " + followersURLNext);
+
+
+
+
+
+
+                                }
+                                else
+                                {
+                                    followersListRAW.add(edges.toString());
+                                    log.info("edges: " + edges.toString());
+                                    log.info("followerSTRING: " + followersListRAW.size());
+                                }
                             }
                             else
                             {
@@ -215,6 +249,7 @@ public class InstagramService {
             else
             {
                 log.info("error");
+                log.info(response.toString());
             }
         }
         catch (IOException e) {
