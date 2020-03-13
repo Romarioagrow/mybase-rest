@@ -17,15 +17,15 @@
                         <v-card-actions v-if="instProfile">
                             <v-row>
                                 <v-col cols="3">
-                                    <v-card width="150" height="150" @click.stop="dialog = true" hover>
+                                    <v-card width="150" height="150" @click.stop="dialogGraph = true" hover>
                                         <v-img contain :src="instProfile.profile_picture_url"></v-img>
                                     </v-card>
-                                    <v-dialog v-model="dialog" max-width="800">
+                                    <v-dialog v-model="dialogGraph" max-width="800">
                                         <v-card>
                                             <v-img contain :src="instProfile.profile_picture_url"></v-img>
                                             <v-card-actions>
-                                                <v-btn color="error" block outlined @click="dialog = false">
-                                                    Save
+                                                <v-btn color="error" block @click="dialogGraph = false">
+                                                    Save photo
                                                 </v-btn>
                                             </v-card-actions>
                                         </v-card>
@@ -281,6 +281,7 @@
                 instAccountPicFull: '',
                 loading: true,
                 instPosts: [],
+                dialogGraph: false,
                 dialog: false,
                 postsLoading: true,
                 totalPosts: '',

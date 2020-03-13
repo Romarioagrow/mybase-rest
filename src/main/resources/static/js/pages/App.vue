@@ -77,8 +77,8 @@
                 menuLinks: [
                     { icon: 'mdi-airplay', text: 'Main page', link: '/'},
                     { icon: 'mdi-account-circle-outline', text: 'Profile', link: '/cabinet' },
-                    { icon: 'mdi-currency-usd', text: 'Spending', link: '/spending' },
                     { icon: 'mdi-instagram', text: 'Instagram', link: '/instagram' },
+                    { icon: 'mdi-currency-usd', text: 'Spending', link: '/spending' },
                     { icon: 'mdi-account-box-multiple', text: 'Posts', link: '/posts' }
 
                 ]
