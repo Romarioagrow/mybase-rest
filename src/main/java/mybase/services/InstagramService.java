@@ -65,22 +65,16 @@ public class InstagramService {
 
         /*LOAD USER DATA*/
         String username = dataToServer.get("username");
-        String sessionID = dataToServer.get("sessionid");//"sessionid=1038252798%3AAbjYDoDJfK6hwQ%3A13;"; ///dataToServer.get("sessionid");
+        String sessionID = dataToServer.get("sessionid");
 
         if (followersAvailable(username)) return storedInstFollowers(username);
 
         OkHttpClient httpClient = buildHttpCookieClient(sessionID);
         InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
-        LinkedHashMap<String, String> graphApiData = collectGraphApiData(httpClient, username, sessionID);
+        LinkedHashMap<String, String> graphApiData =  Objects.requireNonNull(collectGraphApiData(httpClient, username, sessionID));
 
-        Thread collectFollowers = new Thread(() -> {
-            collectInstFollowersList(instProfile, graphApiData, httpClient);
-        });
-
-        Thread collectFollowing = new Thread(() -> {
-            collectInstFollowingList(instProfile, graphApiData, httpClient);
-        });
-
+        Thread collectFollowers = new Thread(() -> collectInstFollowersList(instProfile, graphApiData, httpClient));
+        Thread collectFollowing = new Thread(() -> collectInstFollowingList(instProfile, graphApiData, httpClient));
         collectFollowers.start();
         collectFollowing.start();
 
@@ -146,10 +140,7 @@ public class InstagramService {
             if (instProfileDB == null) {
                 return createInstProfile(instProfileDATA);
             }
-            else {
-                return updateInstProfile(instProfileDB, instProfileDATA);
-            }
-
+            else return updateInstProfile(instProfileDB, instProfileDATA);
         }
         catch (Exception e) {
             e.printStackTrace();
@@ -158,9 +149,9 @@ public class InstagramService {
         }
     }
 
-    private boolean needToChange() {
+    /*private boolean needToChange() {
         return false;
-    }
+    }*/
 
     private ResponseEntity<?> updateInstProfile(InstProfile instProfileDB, InstProfile instProfileDATA) {
         log.info("Updating: " + instProfileDATA.toString());
@@ -178,7 +169,6 @@ public class InstagramService {
     }
 
     private ResponseEntity<?> createInstProfile(InstProfile newInstProfile) {
-
         newInstProfile.setLastDataChange(LocalDateTime.now());
         newInstProfile.setInstFollowers(new InstFollowers());
 
@@ -501,6 +491,14 @@ public class InstagramService {
                 .build();
     }
 
+    private Response buildHttpClient(OkHttpClient httpClient, Request followersRequest, int timeout) throws IOException {
+        return httpClient.newBuilder()
+                .readTimeout(timeout, TimeUnit.SECONDS)
+                .build()
+                .newCall(followersRequest)
+                .execute();
+    }
+
     public String makeURIEncodedNoAfter(String followersHash, String userID, String endCursor) {
         String query = "https://www.instagram.com/graphql/query/?query_hash=" + followersHash + "&variables=";
         String queryToEncode = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24}";
@@ -513,14 +511,6 @@ public class InstagramService {
         String queryToEncode = "{\"id\":" + userID + ",\"include_reel\":true,\"fetch_mutual\":true,\"first\":24,\"after\":\"" + endCursor + "\"}";
         String encodeQuery = URLEncoder.encode(queryToEncode, Charset.defaultCharset());
         return query + encodeQuery;
-    }
-
-    private Response buildHttpClient(OkHttpClient httpClient, Request followersRequest, int timeout) throws IOException {
-        return httpClient.newBuilder()
-                .readTimeout(timeout, TimeUnit.SECONDS)
-                .build()
-                .newCall(followersRequest)
-                .execute();
     }
 
     public Account loadScrapperInstProfile(String instUsername) {
@@ -629,7 +619,8 @@ public class InstagramService {
                         //followersData.putIfAbsent(userName, fullName);
                     });
                     log.info("size: " + followersData.size());
-                } catch (Exception ex) {
+                }
+                catch (Exception ex) {
                     ex.printStackTrace();
                 }
             }

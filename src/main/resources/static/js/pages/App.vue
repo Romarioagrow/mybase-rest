@@ -26,6 +26,14 @@
                 color="#660091"
                 dark
         >
+
+            <div style="width: 5rem; margin-left: -1rem;">
+                <v-img src="https://i.pinimg.com/originals/c0/c8/76/c0c876ca5ddde13f55fd2b3d19a5e53d.jpg" height="64"></v-img>
+            </div>
+
+            <!--<v-toolbar-title>
+
+            </v-toolbar-title>-->
             <v-app-bar-nav-icon @click.stop="drawer = !drawer" v-if="userAuth"/>
             <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
                 <span class="hidden-sm-and-down" @click="goTo('/')">myBase</span>

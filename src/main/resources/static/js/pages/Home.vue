@@ -1,14 +1,13 @@
 <template>
     <v-content>
         <v-container fluid>
-            <v-row>
+            <!--<v-row>
                 <v-col>
                     <v-card-actions>
                         <v-btn @click="test">Test</v-btn>
                     </v-card-actions>
                 </v-col>
-            </v-row>
-
+            </v-row>-->
 
             <v-row v-if="user">
                 <v-col>

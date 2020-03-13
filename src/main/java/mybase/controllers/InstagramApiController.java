@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.awt.*;
 import java.util.Map;
 
 @Log
@@ -30,6 +29,7 @@ public class InstagramApiController {
     /*GRAPH*/
     @PostMapping("/graph/processFollowers")
     private InstFollowers/*LinkedList<Object>*/ processFollowers(@RequestBody Map<String, String> dataToServer) {
+        log.info("ProcessFollowers:" + dataToServer.toString());
         return profileService.processFollowers(dataToServer);
     }
     @PostMapping("/graph/save_profile")
@@ -44,7 +44,7 @@ public class InstagramApiController {
 
     /*SELENIUM*/
     @PostMapping("/selenium/loadFollowersList")
-    private InstProfile loadFollowersList(@RequestBody String instUsername) throws AWTException {
+    private InstProfile loadFollowersList(@RequestBody String instUsername) {
         return profileService.loadFollowersListSelenium(instUsername);
     }
 
@@ -52,6 +52,7 @@ public class InstagramApiController {
     /*SCRAPPER*/
     @PostMapping("/scraper/loadInstProfile")
     private Account loadInstProfile(@RequestBody String instUsername) {
+        log.info("Scraper loadInstProfile:" + instUsername.toString());
         return profileService.loadScrapperInstProfile(instUsername);
     }
 }

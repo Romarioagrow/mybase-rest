@@ -3,7 +3,7 @@
         <v-container class="fill-height" fluid>
             <v-row>
                 <v-col>
-                    <v-card wight="850">
+                    <v-card wight="850" outlined tile>
                         <!--ВВОД-->
                         <v-card-title>
                             Facebook Graph API
@@ -57,61 +57,39 @@
                                     <v-row>
                                         <v-col>
                                             <v-btn outlined small>{{instProfile.website}}</v-btn>
-                                            <!--<div class="subtitle-2">{{instProfile.website}}</div>-->
                                         </v-col>
                                     </v-row>
                                 </v-col>
                             </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-btn @click.stop="followersDialog = true" hover>
-                                        Followers info
-                                    </v-btn>
-                                    <v-dialog v-model="followersDialog" max-width="800">
-                                        <v-card>
-                                            <v-card-actions>
-                                                <v-btn color="error" block outlined @click="followersDialog = false">
-                                                    Save
-                                                </v-btn>
-                                            </v-card-actions>
-                                        </v-card>
-                                    </v-dialog>
-                                </v-col>
-                            </v-row>
                         </v-card-actions>
                         <v-divider/>
-                        <v-card-actions>
-                            <v-card-subtitle>
-                                Insights
-                            </v-card-subtitle>
-                            <!--<v-card-actions>
-                                <div>New followers: +<b>{{newFollowersDataAmount}}</b> (For February)</div>
-                            </v-card-actions>-->
-                        </v-card-actions>
-                        <v-divider/>
-                        <v-card-actions>
-                            <v-card-subtitle>
-                                Stories
-                            </v-card-subtitle>
-                        </v-card-actions>
-                        <v-divider/>
-                        <v-card-actions>
-                            <v-card-subtitle>
-                                Highlights
-                            </v-card-subtitle>
-                        </v-card-actions>
-                        <v-divider/>
-                        <v-card-actions>
-                            <v-card-subtitle>
-                                Posts
-                            </v-card-subtitle>
+                        <v-card-actions class="p-0">
+                            <v-expansion-panels accordion multiple tile flat>
+                                <v-expansion-panel v-for="(item, i) in 5" :key="i" style="border-bottom: 1px solid #e0e0e0;">
+                                    <v-expansion-panel-header>
+                                        <v-row>
+                                            <v-col>
+                                                Item
+                                            </v-col>
+                                            <v-col>
+                                                Property
+                                            </v-col>
+                                            <v-col>
+                                                Amount
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
                         </v-card-actions>
                     </v-card>
+
                 </v-col>
             </v-row>
-
-            <v-spacer></v-spacer>
-
+            <v-spacer/>
             <!--OPEN API-->
             <v-row>
                 <v-col>
@@ -268,9 +246,33 @@
     const api = axios.create({
         withCredentials: true
     });
+
     export default {
         data() {
             return {
+                instProfileCategories: [
+                    {
+                        name: 'Followers',
+                        new: '0',
+                        lost: '0',
+                        not_follow: '0',
+                        not_following: '0'
+                    },
+                    {
+                        name: 'Insights',
+                    },
+                    {
+                        name: 'Stories',
+                    },
+                    {
+                        name: 'Highlights',
+                    },
+                    {
+                        name: 'Posts',
+                    }
+                ],
+
+
                 instAccount: {},
                 instUsername: 'romarioagrow',
                 scrapperInstUsername: 'romarioagrow',
@@ -293,9 +295,9 @@
             this.loadInstagramPage()
         },
         computed: {
-            newFollowersDataAmount() {
+            /*newFollowersDataAmount() {
                 return this.$store.state.newFollowersData.size
-            },
+            },*/
             instProfile() {
                 return this.$store.state.instProfile
             },
@@ -303,9 +305,11 @@
                 return this.$store.state.newFollowersData
             }
 
+
         },
         methods: {
             async loadInstagramPage() {
+                this.loadCrapperInstAccount()
                 await this.loadInstAccountGraphAPI()
                 await this.loadInstFollowersLists()
             },
@@ -319,13 +323,13 @@
                     'sessionid': this.sessionid
                 }
                 axios.post('/api/social/instagram/graph/processFollowers', dataToServer, configJson).then(response => {
-                    console.log(response.data)
+                    console.log('response: ' + response.data)
 
                     this.followers = response.data.followers
                     this.following = response.data.following
 
-                    console.log(this.followers)
-                    console.log(this.following)
+                    console.log('followers: ' + this.followers)
+                    console.log('following: ' + this.following)
 
                     /*
                     let followersArray = response.data[1]
@@ -346,16 +350,18 @@
                     */
                 })
             },
-            loadInstDataFreeAPI() {
+            /*loadInstDataFreeAPI() {
                 this.loadCrapperInstAccount()
-            },
+            },*/
             loadCrapperInstAccount() {
                 console.log('loadInstAccount')
                 this.loading = true
                 let instUsername = this.scrapperInstUsername
                 const uri = '/api/social/instagram/scraper/loadInstProfile'
 
-                axios.post(uri, instUsername, configJson).then(response => {
+                //log.formatError()
+
+                axios.post(uri, this.scrapperInstUsername, configJson).then(response => {
                     console.log(response)
                     console.log(response.data)
 
