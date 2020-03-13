@@ -24,7 +24,11 @@ repositories {
 
 dependencies {
     //compile group: 'com.android.volley', name: 'volley', version: '1.1.0'
+    compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
+
+
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java'
+
 
     compile 'org.brunocvcunha.instagram4j:instagram4j:1.13'
     compile group: 'com.github.igor-suhorukov', name: 'instagramscraper', version: '2.2'

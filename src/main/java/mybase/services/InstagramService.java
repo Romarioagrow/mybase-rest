@@ -1,11 +1,12 @@
 package mybase.services;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
+//import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.google.common.base.Splitter;
+import com.google.gson.*;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.val;
 import me.postaddict.instagram.scraper.Instagram;
 import me.postaddict.instagram.scraper.model.Account;
 import me.postaddict.instagram.scraper.model.Media;
@@ -176,10 +177,6 @@ public class InstagramService {
 
 
 
-
-
-
-
         //return collectInstFollowersList(instFollowers, username, dataToServer);
         return instProfile;
 
@@ -303,6 +300,34 @@ public class InstagramService {
 
                 followersListRAW.add(edges.toString());
 
+                HashMap<String, LinkedHashMap<String, String>> followersDATA = new LinkedHashMap<>();
+
+                ////////////////////////////////////////////////////////
+                /*!!!В МЕТОД!!!*/
+                ///jsonFollowersExtractor();
+                edges.forEach(jsonElement1 -> {
+                    HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
+
+                    hashMap.forEach((jsonKey, jsonVal) -> {
+                        LinkedHashMap<String, String> properties = new LinkedHashMap<>();
+
+                        String valueToList = StringUtils.substringBetween(jsonVal.toString(),"{", ", reel={id=");
+                        String followerUsername = StringUtils.substringBetween(valueToList, "username=", ", ");
+                        List<String> stringsToValue = new ArrayList<String>(Arrays.asList(valueToList.split(", ")));//Arrays.asList(valueToList);
+
+                        stringsToValue.forEach(stringVal -> {
+                            String followerKey = StringUtils.substringBefore(stringVal, "=");
+                            String followerVal = StringUtils.substringAfter(stringVal, "=");
+                            properties.put(followerKey, followerVal);
+                        });
+
+                        followersDATA.put(followerUsername, properties);
+                    });
+                });
+                log.info("followers: " + followersDATA.size());
+                log.info("followersDATA: " + followersDATA.toString());
+                /////////////////////////////////////////////////////////
+
                 log.info("hasNext: " + hasNext);
                 log.info("endCursor: " + endCursor);
                 log.info("edges: " + edges);
@@ -334,6 +359,7 @@ public class InstagramService {
                                 log.info("endCursorNew: " + endCursor);
                             }
 
+                            /*FOLLOWERS EDGES*/
                             edges = edge_followed_by.getAsJsonArray("edges");
                             boolean noEdges = edges.toString().equals("[]");
 
@@ -342,9 +368,30 @@ public class InstagramService {
                             }
                             else
                             {
-                                followersListRAW.add(edges.toString());
-                                log.info("edges: " + edges.toString());
-                                log.info("followerSTRING: " + followersListRAW.size());
+                                /*!!!В МЕТОД!!!*/
+                                ///jsonFollowersExtractor();
+                                edges.forEach(jsonElement1 -> {
+                                    HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
+
+                                    hashMap.forEach((jsonKey, jsonVal) -> {
+                                        LinkedHashMap<String, String> properties = new LinkedHashMap<>();
+
+                                        String valueToList = StringUtils.substringBetween(jsonVal.toString(),"{", ", reel={id=");
+                                        String followerUsername = StringUtils.substringBetween(valueToList, "username=", ", ");
+                                        List<String> stringsToValue = new ArrayList<String>(Arrays.asList(valueToList.split(", ")));//Arrays.asList(valueToList);
+
+                                        stringsToValue.forEach(stringVal -> {
+                                            String followerKey = StringUtils.substringBefore(stringVal, "=");
+                                            String followerVal = StringUtils.substringAfter(stringVal, "=");
+                                            properties.put(followerKey, followerVal);
+                                        });
+
+                                        followersDATA.put(followerUsername, properties);
+                                    });
+                                });
+
+                                log.info("followers: " + followersDATA.size());
+                                log.info("followersDATA: " + followersDATA.toString());
                             }
                         }
                         catch (UnsupportedOperationException e) {
@@ -353,16 +400,8 @@ public class InstagramService {
                     }
                 }
 
-
-                /*LinkedList<Object> payload = new LinkedList<>();
-                payload.add(totalFollowers);
-                payload.add(followersListRAW);
-                log.info(followersListRAW.toString());*/
-                //return followersListRAW;
+                log.info("TOTAL: " + followersDATA.size());
                 log.info("END OF FOLLOWERS QUERY!");
-                instProfile.getInstFollowers().setFollowers(followersListRAW);
-                instRepo.save(instProfile);
-                log.info(instProfile.toString());
             }
             else
             {
@@ -373,7 +412,6 @@ public class InstagramService {
         catch (IOException e) {
             e.printStackTrace();
         }
-        //return null;
     }
 
     private JsonElement parseJsonBody(String responseString) throws IOException, NullPointerException, IllegalStateException {

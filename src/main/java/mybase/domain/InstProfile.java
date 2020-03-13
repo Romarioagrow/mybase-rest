@@ -1,4 +1,5 @@
 package mybase.domain;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -55,6 +56,7 @@ public class InstProfile implements Serializable /*extends Account*/ {
     @Column(name = "main_user_id")
     private String mainUserID;
 
+    @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
     private InstFollowers instFollowers;// = new InstFollowers();
 

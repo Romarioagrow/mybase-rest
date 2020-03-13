@@ -6,9 +6,7 @@ import lombok.extern.java.Log;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Log
 @Data
@@ -43,8 +41,8 @@ public class InstFollowers  implements Serializable {
     private InstProfile instProfile;
 
 
-    @ElementCollection
-    private List<String> followers = new LinkedList<>();
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Map<String, String> followers = new LinkedHashMap<>();
 
 
     /*@ManyToMany
