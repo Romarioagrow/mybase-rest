@@ -120,7 +120,7 @@
                         <v-card-actions>
                             <v-row>
                                 <v-col>
-                                    <v-text-field solo dense v-model="instUsername"></v-text-field>
+                                    <v-text-field solo dense v-model="scrapperInstUsername"></v-text-field>
                                 </v-col>
                                 <v-col>
                                     <v-btn block color="error" @click="loadInstDataFreeAPI()">GO</v-btn>
@@ -129,7 +129,7 @@
                         </v-card-actions>
                         <v-divider></v-divider>
                         <v-card-title v-if="!loading">
-                            <span >{{instAccount.username}}</span>
+                            <span >{{scrapperInstAccount.username}}</span>
                         </v-card-title>
                         <!--PROFILE-->
                         <div v-if="!loading">
@@ -153,34 +153,36 @@
                                     <v-col cols="4">
                                         <v-row>
                                             <v-col>
-                                                <div class="headline font-weight-thin">{{instAccount.fullName}}</div>
+                                                <div class="headline font-weight-thin">{{scrapperInstAccount.fullName}}</div>
                                             </v-col>
                                         </v-row>
                                         <v-row>
                                             <v-col >
-                                                <v-btn :disabled="followsLoading" outlined>Followers: {{instAccount.followedBy}}
+                                                <v-btn :disabled="false" outlined>Followers:
+                                                    {{scrapperInstAccount.followedBy}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
-                                                    <v-progress-circular v-else
+                                                    <!--<v-progress-circular v-else
                                                                          indeterminate
                                                                          size="20"
                                                                          width="1"
                                                                          color="primary"
                                                                          class="ml-2"
-                                                    ></v-progress-circular>
+                                                    ></v-progress-circular>-->
                                                 </v-btn>
                                             </v-col>
                                         </v-row>
                                         <v-row>
                                             <v-col>
-                                                <v-btn :disabled="followsLoading" outlined>Following: {{instAccount.follows}}
+                                                <v-btn :disabled="false" outlined>Following:
+                                                    {{scrapperInstAccount.follows}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
-                                                    <v-progress-circular v-else
+                                                    <!--<v-progress-circular v-else
                                                                          indeterminate
                                                                          size="20"
                                                                          width="1"
                                                                          color="primary"
                                                                          class="ml-2"
-                                                    ></v-progress-circular>
+                                                    ></v-progress-circular>-->
                                                 </v-btn>
                                             </v-col>
                                         </v-row>
@@ -188,12 +190,12 @@
                                     <v-col>
                                         <v-row>
                                             <v-col>
-                                                <div class="title font-weight-light">{{instAccount.biography}}</div>
+                                                <div class="title font-weight-light">{{scrapperInstAccount.biography}}</div>
                                             </v-col>
                                         </v-row>
                                         <v-row>
                                             <v-col>
-                                                <div class="subtitle-2">{{instAccount.externalUrl}}</div>
+                                                <div class="subtitle-2">{{scrapperInstAccount.externalUrl}}</div>
                                             </v-col>
                                         </v-row>
                                     </v-col>
@@ -227,7 +229,6 @@
 
                                                     <!--<v-img contain :src="instAccountPicFull"></v-img>-->
                                                     <!-- <v-img height="200" width="200" :src="instPost.displayUrl" @click="postDialog = true"></v-img>-->
-
                                                     <!--<v-dialog v-model="postDialog" max-width="800">
                                                         <v-card>
                                                             <v-img contain :src="instPost.displayUrl"></v-img>
@@ -274,9 +275,6 @@
 </template>
 
 <script>
-
-    /*!!!!!! ОТПРАВЛЕНИЕ INST_PROFILE НА СЕРВЕР ДЛЯ СОХРАНЕНИЯ ПОСЛЕ АВТОРИЗАЦИИ INST/FACE */
-
     const configJson = {
         headers: {
             'Content-Type': 'application/json'
@@ -289,8 +287,9 @@
     export default {
         data() {
             return {
-                instAccount: {},
+                scrapperInstAccount: {},
                 instUsername: 'romarioagrow',
+                scrapperInstUsername: 'romarioagrow',
                 sessionid: 'sessionid=1038252798%3AAmldaSBRLWz8tw%3A3;',
                 instAccountPic: '',
                 instAccountPicFull: '',
@@ -304,12 +303,11 @@
                 followsLoading: true,
                 postDialog: false,
                 followersDialog: false
-                //instProfile: {}
             }
         },
         created() {
-            //this.loadInstDataFreeAPI()
-            this.loadFollowersAndFollowsLists()
+            this.loadInstDataFreeAPI()
+            //this.loadFollowersAndFollowsLists()
             this.loadInstAccountGraphAPI()
         },
         computed: {
@@ -326,20 +324,14 @@
         },
         methods: {
             loadInstAccountGraphAPI() {
-                this.instAccount = this.$store.state.instProfile
+                this.scrapperInstAccount = this.$store.state.instProfile
             },
-
-            test() {
-
-            },
-
             async loadFollowersAndFollowsLists() {
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
                     'sessionid': this.sessionid
                 }
-
                 axios.post('/api/social/instagram/graph/processFollowers', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
@@ -362,47 +354,28 @@
                     console.log(followersOK)
                 })
             },
-
             loadInstDataFreeAPI() {
-                this.loadInstAccount()
-                this.loadInstPosts()
-                this.loadInstFollows()
+                this.loadCrapperInstAccount()
             },
-            loadInstAccount() {
+            loadCrapperInstAccount() {
                 console.log('loadInstAccount')
                 this.loading = true
-                let instUsername = this.instUsername
-                const uri = '/api/profile/instagram/loadInstProfile'
+                let instUsername = this.scrapperInstUsername
+                const uri = '/api/social/instagram/scraper/loadInstProfile'
 
                 axios.post(uri, instUsername, configJson).then(response => {
-                    this.instAccount = response.data
+                    console.log(response)
+                    console.log(response.data)
+
+                    this.scrapperInstAccount = response.data
                     this.instAccountPic = response.data.profilePicUrlHd
                     this.instAccountPicFull = response.data.profilePicUrlHd
+                    this.totalPosts = response.data.media.count
+                    this.instPosts = response.data.media.nodes
+                    this.postsLoading = false
                     this.loading = false
                 })
             },
-            loadInstPosts() {
-                console.log('loadInstPosts')
-                this.postsLoading = true
-                let instUsername = this.instUsername
-                const uri = '/api/profile/instagram/loadInstPosts'
-
-                axios.post(uri, instUsername, configJson).then(response => {
-                    this.totalPosts = response.data.count
-                    this.instPosts = response.data.nodes
-                    this.postsLoading = false
-                })
-            },
-            loadInstFollows() {
-                console.log('loadInstFollows')
-                this.followsLoading = true
-                let instUsername = this.instUsername
-                const uri = '/api/profile/instagram/loadInstFollows'
-
-                axios.post(uri, instUsername, configJson).then(response => {
-                    this.followsLoading = false
-                })
-            }
         }
     }
 </script>

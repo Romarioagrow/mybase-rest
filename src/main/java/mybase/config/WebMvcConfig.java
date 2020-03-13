@@ -23,7 +23,6 @@ public class WebMvcConfig  {
 
     @Bean
     public OkHttpClient OkHttpClientFactory() {
-        //return new OkHttpClient();
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
         loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);

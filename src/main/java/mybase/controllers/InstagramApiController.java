@@ -45,16 +45,8 @@ public class InstagramApiController {
 
 
     /*SCRAPPER*/
-    @PostMapping("/scraper/loadInstFollows")
-    private LinkedList<Collection> loadInstFollows(@RequestBody String instUsername) {
-        return profileService.loadInstFollows(instUsername);
-    }
-    @PostMapping("/scraper/loadInstPosts")
-    private PageObject<Media> loadInstPosts(@RequestBody String instUsername) {
-        return profileService.loadInstPosts(instUsername);
-    }
-    @PostMapping("/instagram/loadInstProfile")
+    @PostMapping("/scraper/loadInstProfile")
     private Account loadInstProfile(@RequestBody String instUsername) {
-        return profileService.instApiAccount(instUsername);
+        return profileService.loadScrapperInstProfile(instUsername);
     }
 }

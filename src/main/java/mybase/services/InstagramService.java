@@ -140,7 +140,7 @@ public class InstagramService {
         LinkedHashMap<String, String> graphApiData = collectGraphApiData(httpClient, username, sessionID);
 
         InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
-       /* InstFollowers instFollowers = Objects.requireNonNull(instProfile.getInstFollowers());*/
+        /* InstFollowers instFollowers = Objects.requireNonNull(instProfile.getInstFollowers());*/
 
 
         /*DOWNLOAD FOLLOWERS*/
@@ -241,14 +241,9 @@ public class InstagramService {
     }
 
 
-    public void/*LinkedList<String>*/ collectInstFollowersList(InstProfile instProfile, LinkedHashMap<String, String> graphApiData, OkHttpClient httpClient/*String username, String sessionID*//*Map<String, String> dataToServer*//*, LinkedList<String> followersListRAW*/) {
-
-
-        //InstFollowers instFollowers = Objects.requireNonNull(instProfile.getInstFollowers());
-
-
+    public void collectInstFollowersList(InstProfile instProfile, LinkedHashMap<String, String> graphApiData, OkHttpClient httpClient) {
         System.out.println();
-        log.info("RestTemplate");
+        log.info("collectInstFollowersList()");
         ///https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A24%7D
 
         /*INITIALIZATION*/
@@ -266,11 +261,7 @@ public class InstagramService {
         String endCursor1 = graphApiData.get("endCursor1");
         String endCursor2 = graphApiData.get("endCursor2");
 
-
-        //String username = dataToServer.get("username");
-//        String sessionID = "sessionid=1038252798%3AAbjYDoDJfK6hwQ%3A13;"; ///dataToServer.get("sessionid");
-
-        LinkedList<String> followersListRAW = new LinkedList<>();
+        HashMap<String, LinkedHashMap<String, String>> followersDATA = new LinkedHashMap<>();
 
         /*FOLLOWERS QUERY REQUEST*///FIRST QUERY
         Request followersRequest = new Request.Builder().get().url(followersURLInitial).build();
@@ -291,27 +282,17 @@ public class InstagramService {
                 edge_followed_by = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by");
                 levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by").getAsJsonObject("page_info");
 
-                log.info(edge_followed_by.toString());
-                log.info(levelInfo.toString());
-
                 hasNext = levelInfo.get("has_next_page").getAsBoolean();
                 endCursor = levelInfo.get("end_cursor").getAsString();
                 edges = edge_followed_by.getAsJsonArray("edges");
 
-                followersListRAW.add(edges.toString());
-
-                HashMap<String, LinkedHashMap<String, String>> followersDATA = new LinkedHashMap<>();
-
-                ////////////////////////////////////////////////////////
-                /*!!!В МЕТОД!!!*/
-                ///jsonFollowersExtractor();
                 jsonFollowersExtractor(edges, followersDATA);
-                /////////////////////////////////////////////////////////
 
+                log.info(edge_followed_by.toString());
+                log.info(levelInfo.toString());
                 log.info("hasNext: " + hasNext);
                 log.info("endCursor: " + endCursor);
                 log.info("edges: " + edges);
-                log.info("followersListRAW: " + followersListRAW.toString());
 
                 /*CYCLE NEXT_EDGES QUERIES*/
                 while (hasNext)
@@ -346,10 +327,7 @@ public class InstagramService {
                             if (noEdges) {
                                 log.warning("EMPTY FOR: " + followersURLNext);
                             }
-                            else
-                            {
-                                /*!!!В МЕТОД!!!*/
-                                ///jsonFollowersExtractor();
+                            else {
                                 jsonFollowersExtractor(edges, followersDATA);
                             }
                         }
@@ -567,13 +545,15 @@ public class InstagramService {
     }
 
     public PageObject<Media> loadInstPosts(String instUsername) {
-        log.info("loadInstPosts: " + instUsername);
+        System.out.println();
+        log.info("!!!loadInstPosts: " + instUsername);
 
 
         try
         {
             Instagram instagram = new Instagram(httpClient.OkHttpClientFactory());
             Account account = instagram.getAccountByUsername(instUsername);
+            log.info(account.getMedia().toString());
             return account.getMedia();
         }
         catch (IOException | NullPointerException e ) {
@@ -582,74 +562,24 @@ public class InstagramService {
         }
     }
 
-    public InstProfile loadInstProfile(String instUsername) {
-        log.info(instUsername);
+    public Account loadScrapperInstProfile(String instUsername) {
+        log.info("loadScrapperInstProfile: " + instUsername);
+
         InstProfile instProfile = new InstProfile();
-
-        Thread instData = new Thread(() -> {
-            /*HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-            loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);*/
-
-            OkHttpClient httpClient = this.httpClient.OkHttpClientFactory();
-                    /*.addNetworkInterceptor(loggingInterceptor)
-                    .addInterceptor(new ErrorInterceptor())
-                    .cookieJar(new DefaultCookieJar(new CookieHashSet()))
-                    .build();*/
-
-            Instagram instagram = new Instagram(httpClient);
-            Account account = null;
-
-            try {
-                account = instagram.getAccountByUsername(instUsername);
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            /*instProfile.setUsername(account.getUsername());
-            instProfile.setBiography(account.getBiography());
-            instProfile.setFullName(account.getFullName());
-            instProfile.setPic(account.getProfilePicUrl());
-            instProfile.setPicFull(account.getProfilePicUrlHd());
-            instProfile.setFollowersAmount(account.getFollowedBy());
-            instProfile.setFollowingAmount(account.getFollows());*/
-
-            long instID = account.getId();
-            try
-            {
-                PageObject<Account> followers = instagram.getFollows(instID, 1);
-                System.out.println();
-                log.info(followers.toString());
-                //followers.getNodes().forEach(account1 -> log.info(account1.toString()));
-            }
-            catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-
-
-        Thread instFollowers = new Thread(() -> {
-            /**/
-        });
-
-        instData.start();
-        instFollowers.start();
+        Account account = new Account();
 
         try {
-            instData.join();
-            instFollowers.join();
-
+            OkHttpClient httpClient = this.httpClient.OkHttpClientFactory();
+            Instagram instagram = new Instagram(httpClient);
+            account = instagram.getAccountByUsername(instUsername);
         }
-        catch (InterruptedException e) {
+        catch (IOException e) {
             e.printStackTrace();
-            return null;
         }
 
-        instRepo.save(instProfile);
-
-        log.info(instProfile.toString());
+        log.info("account SCRAPPER: " + account.toString());
         log.info("Done!");
-        return instProfile;
+        return account;
     }
 
 
@@ -660,14 +590,12 @@ public class InstagramService {
         /*ChromeOptions options = new ChromeOptions();
         DesiredCapabilities cap = DesiredCapabilities.chrome();
         cap.setCapability(ChromeOptions.CAPABILITY, options);
-
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.PERFORMANCE, Level.ALL);
         //logPrefs.enable(LogType.N, Level.ALL);
         cap.setCapability(CapabilityType.SUPPORTS_NETWORK_CONNECTION, logPrefs);*/
 
         /*PROXY NEW EACH REQUEST!!!*/
-
         WebDriver driver = new ChromeDriver(/*cap*/);
         driver.manage().window().setPosition(new Point(-2000, 0));
 
