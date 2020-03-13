@@ -123,7 +123,7 @@
                                     <v-text-field solo dense v-model="instUsername"></v-text-field>
                                 </v-col>
                                 <v-col>
-                                    <v-btn block color="error" @click="loadInstData()">GO</v-btn>
+                                    <v-btn block color="error" @click="loadInstDataFreeAPI()">GO</v-btn>
                                 </v-col>
                             </v-row>
                         </v-card-actions>
@@ -274,6 +274,9 @@
 </template>
 
 <script>
+
+    /*!!!!!! ОТПРАВЛЕНИЕ INST_PROFILE НА СЕРВЕР ДЛЯ СОХРАНЕНИЯ ПОСЛЕ АВТОРИЗАЦИИ INST/FACE */
+
     const configJson = {
         headers: {
             'Content-Type': 'application/json'
@@ -288,6 +291,7 @@
             return {
                 instAccount: {},
                 instUsername: 'romarioagrow',
+                sessionid: 'sessionid=1038252798%3AAbjYDoDJfK6hwQ%3A13;',
                 instAccountPic: '',
                 instAccountPicFull: '',
                 loading: true,
@@ -304,7 +308,8 @@
             }
         },
         created() {
-            //this.loadFollowersAndFollowsLists()
+            //this.loadInstDataFreeAPI()
+            this.loadFollowersAndFollowsLists()
             this.loadInstAccountGraphAPI()
         },
         computed: {
@@ -332,22 +337,23 @@
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
+                    'sessionid': this.sessionid
                 }
 
-                axios.post('/api/profile/instagram/loadFollowersAndFollowsLists', dataToServer, configJson).then(response => {
+                axios.post('/api/social/instagram/graph/processFollowers', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
                     let followersArray = response.data[1]
                     let followers = []
                     let followersOK = []
 
-                    for (let string in followersArray) {
+                    /**/
+                    for (let index in followersArray) {
                         let stringObject = {}
-                        stringObject = JSON.parse(followersArray[string])
+                        stringObject = JSON.parse(followersArray[index])
                         followers.push(stringObject)
                     }
                     console.log(followers)
-
                     followers.forEach(array => {
                         for (let index in array) {
                             followersOK.push(array[index].node)
@@ -355,11 +361,9 @@
                     })
                     console.log(followersOK)
                 })
-
-
             },
 
-            loadInstData() {
+            loadInstDataFreeAPI() {
                 this.loadInstAccount()
                 this.loadInstPosts()
                 this.loadInstFollows()

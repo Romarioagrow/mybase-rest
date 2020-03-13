@@ -218,11 +218,11 @@
                                         let instagramID = response.instagram_business_account.id
                                         console.log('instagramID: ' + instagramID)
 
-                                        /*getIG_UserData*/
+                                        /*get Object INST_USER*/
                                         let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
                                         FB.api(apiURL, (instUser) => {
                                             console.log(instUser)
-                                            this.$store.dispatch('loadInstUserProfile', instUser)
+                                            this.$store.dispatch('loadInstUserProfile', instUser) ///To Storage
                                         })
 
                                         let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
@@ -255,71 +255,11 @@
                                 console.log('no fb data (else)')
                             }
                         });
-
                     }
                     else {
                         console.log('User cancelled login or did not fully authorize.');
                     }
                 });
-                /*FB.getLoginStatus(function(response) {
-                    if (response.status === 'connected') {
-                        // The user is logged in and has authenticated your
-                        // app, and response.authResponse supplies
-                        // the user's ID, a valid access token, a signed
-                        // request, and the time the access token
-                        // and signed request each expire.
-                        var uid = response.authResponse.userID;
-                        var accessToken = response.authResponse.accessToken;
-                        console.log('connected')
-                        console.log(accessToken)
-                        console.log(uid)
-                    } else if (response.status === 'not_authorized') {
-                        FB.login(function(response) {
-                            if (response.authResponse) {
-                                console.log('Welcome!  Fetching your information.... ');
-                                FB.api('/me', function(response) {
-                                    console.log('Good to see you, ' + response.name + '.');
-                                    console.log(response.authResponse.accessToken)
-                                });
-                            } else {
-                                console.log('User cancelled login or did not fully authorize.');
-                            }
-                        });
-                        // The user hasn't authorized your application.  They
-                        // must click the Login button, or you must call FB.login
-                        // in response to a user gesture, to launch a login dialog.
-                    } else {
-                        // The user isn't logged in to Facebook. You can launch a
-                        // login dialog with a user gesture, but the user may have
-                        // to log in to Facebook before authorizing your application.
-                    }
-                });*/
-                /* FB.login(function(response) {
-                     if (response.authResponse) {
-                         console.log('Welcome!  Fetching your information.... ');
-                         FB.api('/me', function(response) {
-                             console.log('Good to see you, ' + response.name + '.');
-                             console.log(response)
-                         });
-                         FB.getLoginStatus(function(response) {
-                             if (response.status === 'connected') {
-                                 var accessToken = response.authResponse.accessToken;
-                             }
-                         } );
-                     } else {
-                         console.log('User cancelled login or did not fully authorize.');
-                     }
-                 });*/
-                /*FB.ui({
-                    method: 'share_open_graph',
-                    action_type: 'og.likes',
-                    action_properties: JSON.stringify({
-                        object:'https://developers.facebook.com/docs/javascript/examples',
-                    })
-                }, function(response){
-                    // Debug response (optional)
-                    console.log(response);
-                });*/
             },
 
 
@@ -333,18 +273,7 @@
                     }
                 )
             },
-            /*sdkLoaded(payload) {
-                this.isConnected = payload.isConnected
-                //FB = payload.FB
-                if (this.isConnected) this.getUserData()
-            },
-            onLogin() {
-                this.isConnected = true
-                this.getUserData()
-            },
-            onLogout() {
-                this.isConnected = false;
-            },*/
+
             googleAuth() {
                 this.$store.dispatch("doGoogleAuth")
             },

@@ -32,8 +32,11 @@ export default new Vuex.Store({
             context.commit('addNewFollowersData', user)
         },
 
-        loadInstUserProfile(context, user) {
-            context.commit('setInstProfile', user)
+        loadInstUserProfile(context, instProfile) {
+            context.commit('setInstProfile', instProfile)
+            axios.post('/api/social/instagram/graph/save_profile', instProfile).then(value => {
+                console.log(value)
+            })
         },
         doGoogleAuth() {
             ///window.open('http://localhost:8080/login', '_blank');

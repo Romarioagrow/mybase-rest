@@ -7,8 +7,9 @@ import me.postaddict.instagram.scraper.model.Account;
 import me.postaddict.instagram.scraper.model.Media;
 import me.postaddict.instagram.scraper.model.PageObject;
 import mybase.domain.InstProfile;
-import mybase.repo.InstRepo;
+import mybase.repo.InstProfileRepo;
 import mybase.services.InstagramService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.awt.*;
@@ -18,34 +19,40 @@ import java.util.*;
 @Data
 @RestController
 @AllArgsConstructor
-@RequestMapping("/api/profile")
+@RequestMapping("/api/social/instagram")
 public class InstagramApiController {
     private final InstagramService profileService;
-    private final InstRepo instRepo;
-
-    @PostMapping("/instagram/restRequests")
-    private LinkedList<Object> restRequests(@RequestBody Map<String, String> dataToServer) {
-
-        return profileService.httpClientRequester(dataToServer);
+    private final InstProfileRepo instRepo;
 
 
+    /*GRAPH*/
+    @PostMapping("/graph/processFollowers")
+    private InstProfile processFollowers(@RequestBody Map<String, String> dataToServer) {
+        return profileService.processFollowers(dataToServer);
     }
 
-    @PostMapping("/instagram/loadFollowersList")
+    @PostMapping("/graph/save_profile")
+    private ResponseEntity<?> saveProfileGraph(@RequestBody InstProfile instProfile) {
+        return profileService.saveProfileGraph(instProfile);
+    }
+
+
+    /*SELENIUM*/
+    @PostMapping("/selenium/loadFollowersList")
     private InstProfile loadFollowersList(@RequestBody String instUsername) throws AWTException {
         return profileService.loadFollowersListSelenium(instUsername);
     }
 
-    @PostMapping("/instagram/loadInstFollows")
+
+    /*SCRAPPER*/
+    @PostMapping("/scraper/loadInstFollows")
     private LinkedList<Collection> loadInstFollows(@RequestBody String instUsername) {
         return profileService.loadInstFollows(instUsername);
     }
-
-    @PostMapping("/instagram/loadInstPosts")
+    @PostMapping("/scraper/loadInstPosts")
     private PageObject<Media> loadInstPosts(@RequestBody String instUsername) {
         return profileService.loadInstPosts(instUsername);
     }
-
     @PostMapping("/instagram/loadInstProfile")
     private Account loadInstProfile(@RequestBody String instUsername) {
         return profileService.instApiAccount(instUsername);
