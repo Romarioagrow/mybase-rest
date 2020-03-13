@@ -305,27 +305,7 @@ public class InstagramService {
                 ////////////////////////////////////////////////////////
                 /*!!!В МЕТОД!!!*/
                 ///jsonFollowersExtractor();
-                edges.forEach(jsonElement1 -> {
-                    HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
-
-                    hashMap.forEach((jsonKey, jsonVal) -> {
-                        LinkedHashMap<String, String> properties = new LinkedHashMap<>();
-
-                        String valueToList = StringUtils.substringBetween(jsonVal.toString(),"{", ", reel={id=");
-                        String followerUsername = StringUtils.substringBetween(valueToList, "username=", ", ");
-                        List<String> stringsToValue = new ArrayList<String>(Arrays.asList(valueToList.split(", ")));//Arrays.asList(valueToList);
-
-                        stringsToValue.forEach(stringVal -> {
-                            String followerKey = StringUtils.substringBefore(stringVal, "=");
-                            String followerVal = StringUtils.substringAfter(stringVal, "=");
-                            properties.put(followerKey, followerVal);
-                        });
-
-                        followersDATA.put(followerUsername, properties);
-                    });
-                });
-                log.info("followers: " + followersDATA.size());
-                log.info("followersDATA: " + followersDATA.toString());
+                jsonFollowersExtractor(edges, followersDATA);
                 /////////////////////////////////////////////////////////
 
                 log.info("hasNext: " + hasNext);
@@ -370,28 +350,7 @@ public class InstagramService {
                             {
                                 /*!!!В МЕТОД!!!*/
                                 ///jsonFollowersExtractor();
-                                edges.forEach(jsonElement1 -> {
-                                    HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
-
-                                    hashMap.forEach((jsonKey, jsonVal) -> {
-                                        LinkedHashMap<String, String> properties = new LinkedHashMap<>();
-
-                                        String valueToList = StringUtils.substringBetween(jsonVal.toString(),"{", ", reel={id=");
-                                        String followerUsername = StringUtils.substringBetween(valueToList, "username=", ", ");
-                                        List<String> stringsToValue = new ArrayList<String>(Arrays.asList(valueToList.split(", ")));//Arrays.asList(valueToList);
-
-                                        stringsToValue.forEach(stringVal -> {
-                                            String followerKey = StringUtils.substringBefore(stringVal, "=");
-                                            String followerVal = StringUtils.substringAfter(stringVal, "=");
-                                            properties.put(followerKey, followerVal);
-                                        });
-
-                                        followersDATA.put(followerUsername, properties);
-                                    });
-                                });
-
-                                log.info("followers: " + followersDATA.size());
-                                log.info("followersDATA: " + followersDATA.toString());
+                                jsonFollowersExtractor(edges, followersDATA);
                             }
                         }
                         catch (UnsupportedOperationException e) {
@@ -412,6 +371,30 @@ public class InstagramService {
         catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void jsonFollowersExtractor(JsonArray edges, HashMap<String, LinkedHashMap<String, String>> followersDATA) {
+        edges.forEach(jsonElement1 -> {
+            HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
+
+            hashMap.forEach((jsonKey, jsonVal) -> {
+                LinkedHashMap<String, String> properties = new LinkedHashMap<>();
+
+                String valueToList = StringUtils.substringBetween(jsonVal.toString(),"{", ", reel={id=");
+                String followerUsername = StringUtils.substringBetween(valueToList, "username=", ", ");
+                List<String> stringsToValue = new ArrayList<String>(Arrays.asList(valueToList.split(", ")));//Arrays.asList(valueToList);
+
+                stringsToValue.forEach(stringVal -> {
+                    String followerKey = StringUtils.substringBefore(stringVal, "=");
+                    String followerVal = StringUtils.substringAfter(stringVal, "=");
+                    properties.put(followerKey, followerVal);
+                });
+
+                followersDATA.put(followerUsername, properties);
+            });
+        });
+        log.info("followers: " + followersDATA.size());
+        log.info("followersDATA: " + followersDATA.toString());
     }
 
     private JsonElement parseJsonBody(String responseString) throws IOException, NullPointerException, IllegalStateException {
