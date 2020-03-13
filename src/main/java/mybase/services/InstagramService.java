@@ -54,6 +54,13 @@ public class InstagramService {
     private final WebMvcConfig httpClient;
 
 
+
+    public InstFollowers checkFollowersListDB(String username) {
+        return instRepo.findByUsername(username).getInstFollowers();
+    }
+
+
+
     /*
      * Отедльно вывод инфо
      * Отдельно вывод постов
@@ -62,6 +69,91 @@ public class InstagramService {
      *
      *
      * */
+
+
+    public InstFollowers/*LinkedList<Object>*/ processFollowers(Map<String, String> dataToServer) {
+
+        /*
+         * 1. Объект с полями для:
+         * V.Подсисчиков и подписок,
+         * Обновленный и прошлый список подписчиков,
+         * Список отписавшихся и подписавшихся,
+         * Список на кого не подписанв ответ и кто не подписан в ответ,
+         *
+         * Объект для Главного InstProfile, логин по username
+         *
+         *
+         * */
+
+        /*LOAD USER DATA*/
+        String username = dataToServer.get("username");
+        String sessionID = dataToServer.get("sessionid");//"sessionid=1038252798%3AAbjYDoDJfK6hwQ%3A13;"; ///dataToServer.get("sessionid");
+
+        if (followersAvailable(username)) return storedInstFollowers(username);
+
+        OkHttpClient httpClient = buildHttpCookieClient(sessionID);
+        InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
+        LinkedHashMap<String, String> graphApiData = collectGraphApiData(httpClient, username, sessionID);
+
+        Thread collectFollowers = new Thread(() -> {
+            collectInstFollowersList(instProfile, graphApiData, httpClient);
+        });
+
+        Thread collectFollowing = new Thread(() -> {
+            collectInstFollowingList(instProfile, graphApiData, httpClient);
+        });
+
+        collectFollowers.start();
+        collectFollowing.start();
+
+        try {
+            collectFollowers.join();
+            collectFollowing.join();
+        }
+        catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println();
+        System.out.println();
+        System.out.println();
+        log.info("RESULT");
+        log.info("instProfile: " + instProfile.toString());
+        log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
+        log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
+        log.info("getFollowing: " + instProfile.getInstFollowers().getFollowing().toString());
+
+        /*LinkedList<Object> payload = new LinkedList<>();
+        payload.add(instProfile);
+        payload.add(instProfile.getInstFollowers());
+        return payload;*/
+        return instProfile.getInstFollowers();
+    }
+
+    private InstFollowers storedInstFollowers(String username) {
+        return instRepo.findByUsername(username).getInstFollowers();
+    }
+
+    private boolean followersAvailable(String username) {
+        try
+        {
+            InstProfile instProfile = instRepo.findByUsername(username);
+            if (instProfile != null) {
+                boolean hasFollowersDB = !instProfile.getInstFollowers().getFollowers().isEmpty();
+                log.info("Profile found in DB: " + username);
+                log.info("Followers stored in DB: " + hasFollowersDB);
+                return hasFollowersDB;
+            }
+            else return false;
+            /*log.info("followers stored in DB: " + !instRepo.findByUsername(username).getInstFollowers().getFollowers().isEmpty());
+            return !instRepo.findByUsername(username).getInstFollowers().getFollowers().isEmpty();*/
+            //return true;
+        }
+        catch (NullPointerException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
 
     public ResponseEntity<?> saveProfileGraph(InstProfile instProfileDATA) {
@@ -118,69 +210,7 @@ public class InstagramService {
     }
 
 
-    public InstProfile processFollowers(Map<String, String> dataToServer) {
 
-        /*
-         * 1. Объект с полями для:
-         * Подсисчиков и подписок,
-         * Обновленный и прошлый список подписчиков,
-         * Список отписавшихся и подписавшихся,
-         * Список на кого не подписанв ответ и кто не подписан в ответ,
-         *
-         * Объект для Главного InstProfile, логин по username
-         *
-         *
-         * */
-
-        /*LOAD USER DATA*/
-        String username = dataToServer.get("username");
-        String sessionID = dataToServer.get("sessionid");//"sessionid=1038252798%3AAbjYDoDJfK6hwQ%3A13;"; ///dataToServer.get("sessionid");
-
-        OkHttpClient httpClient = buildHttpCookieClient(sessionID);
-        LinkedHashMap<String, String> graphApiData = collectGraphApiData(httpClient, username, sessionID);
-
-        InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
-        /* InstFollowers instFollowers = Objects.requireNonNull(instProfile.getInstFollowers());*/
-
-
-        /*DOWNLOAD FOLLOWERS*/
-        //LinkedList<String> followers;// = getFollowersListsAndDataProcess(username);
-        //LinkedList<String> following;// = getFollowersListsAndDataProcess(username);
-
-        Thread collectFollowers = new Thread(() -> {
-            collectInstFollowersList(instProfile, graphApiData, httpClient);
-        });
-
-        Thread collectFollowing = new Thread(() -> {
-            //collectInstFollowingList(instProfile, graphApiData, httpClient);
-
-        });
-
-        collectFollowing.start();
-        collectFollowers.start();
-
-        try {
-            collectFollowing.join();
-            collectFollowers.join();
-
-        }
-        catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
-        log.info(instProfile.toString());
-        log.info("END OF ACTION!!!");
-
-
-        /// processFollowersData();
-        //Object UserFollowersList;
-
-
-
-        //return collectInstFollowersList(instFollowers, username, dataToServer);
-        return instProfile;
-
-    }
 
     private LinkedHashMap<String, String> collectGraphApiData(OkHttpClient httpClient, String username, String sessionID) {
         try
@@ -234,7 +264,114 @@ public class InstagramService {
         }
     }
 
-    private void collectInstFollowingList(InstFollowers instFollowers, LinkedHashMap<String, String> username, OkHttpClient sessionID) {
+    private void collectInstFollowingList(InstProfile instProfile, LinkedHashMap<String, String> graphApiData, OkHttpClient httpClient) {
+        System.out.println();
+        log.info("collectInstFollowersList()");
+        /// https://www.instagram.com/graphql/query/?query_hash=d04b0a864b4b54837c0d870b0e77e076&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Afalse%2C%22first%22%3A24%7D
+
+        /*INITIALIZATION*/
+        //final String followingHash = "1038252798%3AwoM4qyrNWkOxkq%3A11";
+        final String followingHash = "d04b0a864b4b54837c0d870b0e77e076";
+        final String followingURLInitial = "https://www.instagram.com/graphql/query/?query_hash=d04b0a864b4b54837c0d870b0e77e076&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Afalse%2C%22first%22%3A24%7D";
+        final String followingPath = "edge_follow";
+        log.info("followersURLInitial: " + followingURLInitial);
+
+        int timeout = 3;
+        //int totalFollowing = Integer.parseInt(graphApiData.get("totalFollowing"));
+        String userID = graphApiData.get("userID");
+        String endCursor1 = graphApiData.get("endCursor1");
+        String endCursor2 = graphApiData.get("endCursor2");
+
+        HashMap<String, String/*LinkedHashMap<String, String>*/> followingDATA = new LinkedHashMap<>();
+
+        /*FOLLOWING QUERY REQUEST*///FIRST QUERY
+        Request followingRequest = new Request.Builder().get().url(followingURLInitial).build();
+        try
+        {
+            Response response = buildHttpClient(httpClient, followingRequest, timeout);
+            if (response.isSuccessful())
+            {
+                //log.info("response: " + response.toString());
+                boolean hasNext = true;
+                String responseString, endCursor;
+                JsonArray edges;
+                JsonElement jsonElement;
+                JsonObject jsonObject, levelData, levelUser, edge_followed_by, levelInfo;
+
+                jsonElement =  new JsonParser().parse(response.body().string());
+                edge_followed_by = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followingPath);
+                levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followingPath).getAsJsonObject("page_info");
+
+                hasNext = levelInfo.get("has_next_page").getAsBoolean();
+                endCursor = levelInfo.get("end_cursor").getAsString();
+                edges = edge_followed_by.getAsJsonArray("edges");
+
+                jsonFollowersExtractor(edges, followingDATA);
+
+                log.info(edge_followed_by.toString());
+                log.info(levelInfo.toString());
+                log.info("hasNext: " + hasNext);
+                log.info("endCursor: " + endCursor);
+                log.info("edges: " + edges);
+
+                /*CYCLE NEXT_EDGES QUERIES*/
+                while (hasNext)
+                {
+                    String followingURLNext = makeURIEncoded(followingHash, userID, endCursor);
+                    System.out.println();
+                    log.info("NEW followingURLNext: " + followingURLNext);
+
+                    followingRequest = new Request.Builder().get().url(followingURLNext).build();
+                    Response responseNext = buildHttpClient(httpClient, followingRequest, timeout);
+                    if (responseNext.isSuccessful())
+                    {
+                        try
+                        {
+                            /*DATA FROM NEW REQUEST*/
+                            jsonElement =  new JsonParser().parse(responseNext.body().string());
+                            edge_followed_by = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followingPath);
+                            levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followingPath).getAsJsonObject("page_info");
+
+                            hasNext = levelInfo.get("has_next_page").getAsBoolean();
+
+                            if (hasNext) {
+                                endCursor = levelInfo.get("end_cursor").getAsString();
+                                log.info("getNnd_cursorNew: " + levelInfo.get("end_cursor").getAsString());
+                                log.info("endCursorNew: " + endCursor);
+                            }
+
+                            /*FOLLOWERS EDGES*/
+                            edges = edge_followed_by.getAsJsonArray("edges");
+                            boolean noEdges = edges.toString().equals("[]");
+
+                            if (noEdges) {
+                                log.warning("EMPTY FOR: " + followingURLNext);
+                            }
+                            else {
+                                jsonFollowersExtractor(edges, followingDATA);
+                            }
+                        }
+                        catch (UnsupportedOperationException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+
+                instProfile.getInstFollowers().setFollowing(followingDATA);
+                instRepo.save(instProfile);
+
+                log.info("TOTAL: " + followingDATA.size());
+                log.info("END OF FOLLOWING QUERY!");
+            }
+            else
+            {
+                log.info("error");
+                log.info(response.toString());
+            }
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -248,6 +385,8 @@ public class InstagramService {
         final String followersHash = "c76146de99bb02f6415203be841dd25a";
         final String followersURLInitial = "https://www.instagram.com/graphql/query/?query_hash=c76146de99bb02f6415203be841dd25a&variables=%7B%22id%22%3A%221038252798%22%2C%22include_reel%22%3Atrue%2C%22fetch_mutual%22%3Atrue%2C%22first%22%3A24%7D";
         log.info("followersURLInitial: " + followersURLInitial);
+
+        final String followersPath = "edge_followed_by";
 
         /*final String followingHash = "1038252798%3AwoM4qyrNWkOxkq%3A11";
         final String followersPath = "edge_followed_by";
@@ -277,8 +416,8 @@ public class InstagramService {
                 JsonObject jsonObject, levelData, levelUser, edge_followed_by, levelInfo;
 
                 jsonElement =  new JsonParser().parse(response.body().string());
-                edge_followed_by = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by");
-                levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject("edge_followed_by").getAsJsonObject("page_info");
+                edge_followed_by = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followersPath);
+                levelInfo = jsonElement.getAsJsonObject().getAsJsonObject("data").getAsJsonObject("user").getAsJsonObject(followersPath).getAsJsonObject("page_info");
 
                 hasNext = levelInfo.get("has_next_page").getAsBoolean();
                 endCursor = levelInfo.get("end_cursor").getAsString();
@@ -339,9 +478,9 @@ public class InstagramService {
                 instRepo.save(instProfile);
 
                 log.info("TOTAL: " + followersDATA.size());
-                log.info("instProfile: " + instProfile.toString());
+                /*log.info("instProfile: " + instProfile.toString());
                 log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
-                log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
+                log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());*/
                 log.info("END OF FOLLOWERS QUERY!");
             }
             else

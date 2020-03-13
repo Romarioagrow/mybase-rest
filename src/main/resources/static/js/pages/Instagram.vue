@@ -129,7 +129,7 @@
                         </v-card-actions>
                         <v-divider></v-divider>
                         <v-card-title v-if="!loading">
-                            <span >{{scrapperInstAccount.username}}</span>
+                            <span >{{instAccount.username}}</span>
                         </v-card-title>
                         <!--PROFILE-->
                         <div v-if="!loading">
@@ -153,13 +153,13 @@
                                     <v-col cols="4">
                                         <v-row>
                                             <v-col>
-                                                <div class="headline font-weight-thin">{{scrapperInstAccount.fullName}}</div>
+                                                <div class="headline font-weight-thin">{{instAccount.fullName}}</div>
                                             </v-col>
                                         </v-row>
                                         <v-row>
                                             <v-col >
                                                 <v-btn :disabled="false" outlined>Followers:
-                                                    {{scrapperInstAccount.followedBy}}
+                                                    {{instAccount.followedBy}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
                                                 </v-btn>
                                             </v-col>
@@ -167,7 +167,7 @@
                                         <v-row>
                                             <v-col>
                                                 <v-btn :disabled="false" outlined>Following:
-                                                    {{scrapperInstAccount.follows}}
+                                                    {{instAccount.follows}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
                                                 </v-btn>
                                             </v-col>
@@ -176,12 +176,12 @@
                                     <v-col>
                                         <v-row>
                                             <v-col>
-                                                <div class="title font-weight-light">{{scrapperInstAccount.biography}}</div>
+                                                <div class="title font-weight-light">{{instAccount.biography}}</div>
                                             </v-col>
                                         </v-row>
                                         <v-row>
                                             <v-col>
-                                                <div class="subtitle-2">{{scrapperInstAccount.externalUrl}}</div>
+                                                <div class="subtitle-2">{{instAccount.externalUrl}}</div>
                                             </v-col>
                                         </v-row>
                                     </v-col>
@@ -271,7 +271,7 @@
     export default {
         data() {
             return {
-                scrapperInstAccount: {},
+                instAccount: {},
                 instUsername: 'romarioagrow',
                 scrapperInstUsername: 'romarioagrow',
                 sessionid: 'sessionid=1038252798%3AAmldaSBRLWz8tw%3A3;',
@@ -291,8 +291,11 @@
         },
         created() {
             //this.loadInstDataFreeAPI()
-            this.loadFollowersAndFollowsLists()
-            this.loadInstAccountGraphAPI()
+            //this.loadFollowersAndFollowsLists()
+            //this.loadInstAccountGraphAPI()
+
+
+            this.loadInstagramPage()
         },
         computed: {
             newFollowersDataAmount() {
@@ -307,10 +310,36 @@
 
         },
         methods: {
-            loadInstAccountGraphAPI() {
-                this.scrapperInstAccount = this.$store.state.instProfile
+            async loadInstagramPage() {
+                await this.loadInstAccountGraphAPI()
+                await this.loadInstFollowersLists()
+                /*console.log('LOOOOOOOOOOOAD ' + profileLoadedFromDB)
+                if (!profileLoadedFromDB) {
+                    this.loadFollowersAndFollowsLists()
+                }*/
             },
-            async loadFollowersAndFollowsLists() {
+
+            loadInstAccountGraphAPI() {
+                this.instAccount = this.$store.state.instProfile
+            },
+
+            /*loadInstFollowersLists() {
+                const checkFollowersListDB = '/api/social/instagram/graph/checkFollowersListDB'
+                axios.post(checkFollowersListDB, this.instUsername, configJson).then(response => {
+                    console.log(response)
+                    console.log(response.data)
+                    if (response.data !== null) {
+                        this.followers = response.data.followers
+                        this.following = response.data.following
+                        console.log(this.followers)
+                        console.log(this.following)
+                        return true
+                    }
+                    else return false
+                })
+            },*/
+
+            async loadInstFollowersLists() {
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
@@ -319,12 +348,17 @@
                 axios.post('/api/social/instagram/graph/processFollowers', dataToServer, configJson).then(response => {
                     console.log(response.data)
 
-                    let followersArray = response.data[1]
-                    let followers = []
-                    let followersOK = []
+                    this.followers = response.data.followers
+                    this.following = response.data.following
 
+                    console.log(this.followers)
+                    console.log(this.following)
+
+                    /*let followersArray = response.data[1]
+                    let followers = []
+                    let followersOK = []*/
                     /**/
-                    for (let index in followersArray) {
+                    /*for (let index in followersArray) {
                         let stringObject = {}
                         stringObject = JSON.parse(followersArray[index])
                         followers.push(stringObject)
@@ -334,8 +368,8 @@
                         for (let index in array) {
                             followersOK.push(array[index].node)
                         }
-                    })
-                    console.log(followersOK)
+                    })*/
+                    //console.log(followersOK)
                 })
             },
             loadInstDataFreeAPI() {
@@ -351,7 +385,7 @@
                     console.log(response)
                     console.log(response.data)
 
-                    this.scrapperInstAccount = response.data
+                    this.instAccount = response.data
                     this.instAccountPic = response.data.profilePicUrlHd
                     this.instAccountPicFull = response.data.profilePicUrlHd
                     this.totalPosts = response.data.media.count

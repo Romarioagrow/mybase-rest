@@ -12,10 +12,9 @@ import java.util.UUID;
 @Log
 @Data
 @Entity
-public class InstFollowers  implements Serializable {
+public class InstFollowers implements Serializable {
 
-      /*
-    *
+     /*
     followed_by_viewer: true
     full_name: ""
     id: "566755028"
@@ -25,12 +24,11 @@ public class InstFollowers  implements Serializable {
     reel: Object { id: "566755028", expiring_at: 1584112435, has_pride_media: false, … }
     requested_by_viewer: false
     username: "dadaitsme"
-* */
+    */
 
     public InstFollowers() {
         this.instRID = UUID.randomUUID().toString();
     }
-
 
     @Id
     private String instRID;
@@ -38,16 +36,11 @@ public class InstFollowers  implements Serializable {
     @OneToOne(mappedBy = "instFollowers")
     private InstProfile instProfile;
 
-
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(length = 10000)
     private Map<String, String> followers = new LinkedHashMap<>();
 
-    /*@ManyToMany
-    @JoinTable(
-            name = "inst_followers",
-            joinColumns = @JoinColumn(name = "user_inst_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_inst_id")
-    )
-    private List<InstProfile> followers;*/
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(length = 10000)
+    private Map<String, String> following = new LinkedHashMap<>();
 }

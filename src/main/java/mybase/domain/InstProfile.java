@@ -58,7 +58,7 @@ public class InstProfile implements Serializable /*extends Account*/ {
 
     @JsonIgnore
     @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
-    private InstFollowers instFollowers;// = new InstFollowers();
+    private InstFollowers instFollowers;
 
     @Column(length = 1000)
     private String profile_picture_url, website;

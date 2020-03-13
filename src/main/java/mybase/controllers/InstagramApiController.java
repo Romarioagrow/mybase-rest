@@ -6,6 +6,7 @@ import lombok.extern.java.Log;
 import me.postaddict.instagram.scraper.model.Account;
 import me.postaddict.instagram.scraper.model.Media;
 import me.postaddict.instagram.scraper.model.PageObject;
+import mybase.domain.InstFollowers;
 import mybase.domain.InstProfile;
 import mybase.repo.InstProfileRepo;
 import mybase.services.InstagramService;
@@ -27,12 +28,16 @@ public class InstagramApiController {
 
     /*GRAPH*/
     @PostMapping("/graph/processFollowers")
-    private InstProfile processFollowers(@RequestBody Map<String, String> dataToServer) {
+    private InstFollowers/*LinkedList<Object>*/ processFollowers(@RequestBody Map<String, String> dataToServer) {
         return profileService.processFollowers(dataToServer);
     }
     @PostMapping("/graph/save_profile")
     private ResponseEntity<?> saveProfileGraph(@RequestBody InstProfile instProfile) {
         return profileService.saveProfileGraph(instProfile);
+    }
+    @PostMapping("/graph/checkFollowersListDB")
+    private InstFollowers checkFollowersListDB(@RequestBody String username) {
+        return profileService.checkFollowersListDB(username);
     }
 
 
