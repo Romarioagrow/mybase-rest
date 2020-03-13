@@ -30,7 +30,6 @@ public class InstagramApiController {
     private InstProfile processFollowers(@RequestBody Map<String, String> dataToServer) {
         return profileService.processFollowers(dataToServer);
     }
-
     @PostMapping("/graph/save_profile")
     private ResponseEntity<?> saveProfileGraph(@RequestBody InstProfile instProfile) {
         return profileService.saveProfileGraph(instProfile);

@@ -84,9 +84,9 @@
                             <v-card-subtitle>
                                 Insights
                             </v-card-subtitle>
-                            <v-card-actions>
+                            <!--<v-card-actions>
                                 <div>New followers: +<b>{{newFollowersDataAmount}}</b> (For February)</div>
-                            </v-card-actions>
+                            </v-card-actions>-->
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions>
@@ -161,13 +161,6 @@
                                                 <v-btn :disabled="false" outlined>Followers:
                                                     {{scrapperInstAccount.followedBy}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
-                                                    <!--<v-progress-circular v-else
-                                                                         indeterminate
-                                                                         size="20"
-                                                                         width="1"
-                                                                         color="primary"
-                                                                         class="ml-2"
-                                                    ></v-progress-circular>-->
                                                 </v-btn>
                                             </v-col>
                                         </v-row>
@@ -176,13 +169,6 @@
                                                 <v-btn :disabled="false" outlined>Following:
                                                     {{scrapperInstAccount.follows}}
                                                     <v-icon v-if="!followsLoading">mdi-arrow-up</v-icon>
-                                                    <!--<v-progress-circular v-else
-                                                                         indeterminate
-                                                                         size="20"
-                                                                         width="1"
-                                                                         color="primary"
-                                                                         class="ml-2"
-                                                    ></v-progress-circular>-->
                                                 </v-btn>
                                             </v-col>
                                         </v-row>
@@ -226,7 +212,6 @@
                                             <v-row>
                                                 <v-col>
                                                     <v-img height="200" width="200" :src="instPost.displayUrl"></v-img>
-
                                                     <!--<v-img contain :src="instAccountPicFull"></v-img>-->
                                                     <!-- <v-img height="200" width="200" :src="instPost.displayUrl" @click="postDialog = true"></v-img>-->
                                                     <!--<v-dialog v-model="postDialog" max-width="800">
@@ -240,7 +225,6 @@
                                                         </v-card>
                                                     </v-dialog>-->
                                                 </v-col>
-
                                                 <v-col>
                                                     <v-row>
                                                         <v-col>
@@ -306,8 +290,8 @@
             }
         },
         created() {
-            this.loadInstDataFreeAPI()
-            //this.loadFollowersAndFollowsLists()
+            //this.loadInstDataFreeAPI()
+            this.loadFollowersAndFollowsLists()
             this.loadInstAccountGraphAPI()
         },
         computed: {

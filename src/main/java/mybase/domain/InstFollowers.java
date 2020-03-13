@@ -1,19 +1,18 @@
 package mybase.domain;
 
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.extern.java.Log;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Log
 @Data
 @Entity
-//@NoArgsConstructor
 public class InstFollowers  implements Serializable {
-
 
       /*
     *
@@ -34,7 +33,6 @@ public class InstFollowers  implements Serializable {
 
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     private String instRID;
 
     @OneToOne(mappedBy = "instFollowers")
@@ -42,8 +40,8 @@ public class InstFollowers  implements Serializable {
 
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Column(length = 10000)
     private Map<String, String> followers = new LinkedHashMap<>();
-
 
     /*@ManyToMany
     @JoinTable(
@@ -52,10 +50,4 @@ public class InstFollowers  implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "follower_inst_id")
     )
     private List<InstProfile> followers;*/
-
-
-
-
-
-
 }

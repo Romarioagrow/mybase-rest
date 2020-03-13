@@ -38,8 +38,4 @@ public class WebMvcConfig  {
     public Instagram4j Instagram4jBuilder() {
         return Instagram4j.builder().username("creep_waves").password("Route456123").build();
     }
-
-
-
-
 }

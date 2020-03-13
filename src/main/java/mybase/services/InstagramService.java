@@ -236,8 +236,6 @@ public class InstagramService {
 
     private void collectInstFollowingList(InstFollowers instFollowers, LinkedHashMap<String, String> username, OkHttpClient sessionID) {
 
-
-
     }
 
 
@@ -261,7 +259,7 @@ public class InstagramService {
         String endCursor1 = graphApiData.get("endCursor1");
         String endCursor2 = graphApiData.get("endCursor2");
 
-        HashMap<String, LinkedHashMap<String, String>> followersDATA = new LinkedHashMap<>();
+        HashMap<String, String/*LinkedHashMap<String, String>*/> followersDATA = new LinkedHashMap<>();
 
         /*FOLLOWERS QUERY REQUEST*///FIRST QUERY
         Request followersRequest = new Request.Builder().get().url(followersURLInitial).build();
@@ -337,7 +335,13 @@ public class InstagramService {
                     }
                 }
 
+                instProfile.getInstFollowers().setFollowers(followersDATA);
+                instRepo.save(instProfile);
+
                 log.info("TOTAL: " + followersDATA.size());
+                log.info("instProfile: " + instProfile.toString());
+                log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
+                log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
                 log.info("END OF FOLLOWERS QUERY!");
             }
             else
@@ -351,7 +355,7 @@ public class InstagramService {
         }
     }
 
-    private void jsonFollowersExtractor(JsonArray edges, HashMap<String, LinkedHashMap<String, String>> followersDATA) {
+    private void jsonFollowersExtractor(JsonArray edges, HashMap<String, String/*LinkedHashMap<String, String>*/> followersDATA) {
         edges.forEach(jsonElement1 -> {
             HashMap<String, Object> hashMap = Objects.requireNonNull(new Gson().fromJson(jsonElement1, HashMap.class));
 
@@ -368,7 +372,7 @@ public class InstagramService {
                     properties.put(followerKey, followerVal);
                 });
 
-                followersDATA.put(followerUsername, properties);
+                followersDATA.put(followerUsername, properties.toString()); /// TO_STRING???
             });
         });
         log.info("followers: " + followersDATA.size());
@@ -429,7 +433,7 @@ public class InstagramService {
 
 
     /*FREE_API*/
-    public LinkedList<Collection> loadInstFollows(String instUsername) {
+    /*public LinkedList<Collection> loadInstFollows(String instUsername) {
         log.info("loadInstFollows: " + instUsername);
 
         try
@@ -466,21 +470,21 @@ public class InstagramService {
                     payload.add(followersUsers);
                     log.info("followersUsers size:" + followersUsers.size());
 
-                    /*InstagramUser instagramUser = userResult.getUser();
-                    log.info(instagramUser.getHd_profile_pic_url_info().url);*/
+                    *//*InstagramUser instagramUser = userResult.getUser();
+                    log.info(instagramUser.getHd_profile_pic_url_info().url);*//*
 
                     //List<InstagramUserSummary> followersUsers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk())).getUsers();
-                    /*payload.add(followersUsers);
-                    log.info("followersUsers size:" + followersUsers.size());*/
+                    *//*payload.add(followersUsers);
+                    log.info("followersUsers size:" + followersUsers.size());*//*
                     //InstagramUser instagramUser = userResult.getUser();
                     //log.info(instagramUser.getHd_profile_pic_url_info().url);
                     //instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk(), "500"))
 
-                    /*InstagramGetUserFollowersResult userFollowers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk()));
+                    *//*InstagramGetUserFollowersResult userFollowers = instagram.sendRequest(new InstagramGetUserFollowersRequest(userResult.getUser().getPk()));
                     List<InstagramUserSummary> users = userFollowers.getUsers();
                     for (InstagramUserSummary user : users) {
                         System.out.println("User " + user.getUsername() + " follows Github!");
-                    }*/
+                    }*//*
                 }
                 catch (IOException e) {
                     e.printStackTrace();
@@ -525,17 +529,8 @@ public class InstagramService {
 
     public Account instApiAccount(String instUsername) {
         log.info("loadInstProfile: " + instUsername);
-
-        try
-        {
+        try {
             Instagram instagram = new Instagram(httpClient.OkHttpClientFactory());
-            //RequestQueue queue = Volley.newRequestQueue(this);
-            //httpClient.Instagram4jBuilder().sendRequest(new )
-            //instagram.
-            //account.get
-            //long id
-            //instagram.getFollowers(2128921037200382, 1);
-            //log.info(account.toString());
             return instagram.getAccountByUsername(instUsername);
         }
         catch (IOException | NullPointerException e ) {
@@ -560,7 +555,7 @@ public class InstagramService {
             e.printStackTrace();
             return null;
         }
-    }
+    }*/
 
     public Account loadScrapperInstProfile(String instUsername) {
         log.info("loadScrapperInstProfile: " + instUsername);
@@ -584,9 +579,7 @@ public class InstagramService {
 
 
     public InstProfile loadFollowersListSelenium(String instUsername) {
-
         log.info("CHROME loadFollowersList");
-
         /*ChromeOptions options = new ChromeOptions();
         DesiredCapabilities cap = DesiredCapabilities.chrome();
         cap.setCapability(ChromeOptions.CAPABILITY, options);
@@ -723,7 +716,6 @@ public class InstagramService {
             }
         }
 
-
         /*FINAL DATA PROCESSING AND SAVING*/
         InstProfile instProfile = instRepo.findById(instUsername).orElseGet(() -> {
             return new InstProfile(instUsername);
@@ -733,7 +725,6 @@ public class InstagramService {
         instProfile.setFollowing(followingData);*/
         instRepo.save(instProfile);
         log.info(instProfile.toString());
-
         return instProfile;
     }
 
