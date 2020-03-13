@@ -4,17 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.extern.java.Log;
 import me.postaddict.instagram.scraper.model.Account;
-import me.postaddict.instagram.scraper.model.Media;
-import me.postaddict.instagram.scraper.model.PageObject;
 import mybase.domain.InstFollowers;
 import mybase.domain.InstProfile;
 import mybase.repo.InstProfileRepo;
 import mybase.services.InstagramService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.awt.*;
-import java.util.*;
+import java.util.Map;
 
 @Log
 @Data

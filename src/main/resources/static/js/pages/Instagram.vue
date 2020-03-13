@@ -290,11 +290,6 @@
             }
         },
         created() {
-            //this.loadInstDataFreeAPI()
-            //this.loadFollowersAndFollowsLists()
-            //this.loadInstAccountGraphAPI()
-
-
             this.loadInstagramPage()
         },
         computed: {
@@ -313,32 +308,10 @@
             async loadInstagramPage() {
                 await this.loadInstAccountGraphAPI()
                 await this.loadInstFollowersLists()
-                /*console.log('LOOOOOOOOOOOAD ' + profileLoadedFromDB)
-                if (!profileLoadedFromDB) {
-                    this.loadFollowersAndFollowsLists()
-                }*/
             },
-
             loadInstAccountGraphAPI() {
                 this.instAccount = this.$store.state.instProfile
             },
-
-            /*loadInstFollowersLists() {
-                const checkFollowersListDB = '/api/social/instagram/graph/checkFollowersListDB'
-                axios.post(checkFollowersListDB, this.instUsername, configJson).then(response => {
-                    console.log(response)
-                    console.log(response.data)
-                    if (response.data !== null) {
-                        this.followers = response.data.followers
-                        this.following = response.data.following
-                        console.log(this.followers)
-                        console.log(this.following)
-                        return true
-                    }
-                    else return false
-                })
-            },*/
-
             async loadInstFollowersLists() {
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
@@ -354,11 +327,11 @@
                     console.log(this.followers)
                     console.log(this.following)
 
-                    /*let followersArray = response.data[1]
+                    /*
+                    let followersArray = response.data[1]
                     let followers = []
-                    let followersOK = []*/
-                    /**/
-                    /*for (let index in followersArray) {
+                    let followersOK = []
+                    for (let index in followersArray) {
                         let stringObject = {}
                         stringObject = JSON.parse(followersArray[index])
                         followers.push(stringObject)
@@ -368,8 +341,9 @@
                         for (let index in array) {
                             followersOK.push(array[index].node)
                         }
-                    })*/
-                    //console.log(followersOK)
+                    })
+                    console.log(followersOK)
+                    */
                 })
             },
             loadInstDataFreeAPI() {
