@@ -10,9 +10,15 @@ export default new Vuex.Store({
     state: {
         currentUser: null,
         instProfile: null,
-        newFollowersData: null
+        newFollowersData: null,
+
+        instFollowers: null
     },
     mutations: {
+        setInstFollowers(currentState, instFollowers) {
+            currentState.instFollowers = instFollowers
+        },
+
         addNewFollowersData(currentState, newFollowersData) {
             currentState.newFollowersData = newFollowersData
         },
@@ -28,6 +34,10 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        loadInstDataToStorage(context, instFollowers) {
+            context.commit('setInstFollowers', instFollowers)
+        },
+
         newFollowersData(context, user) {
             context.commit('addNewFollowersData', user)
         },

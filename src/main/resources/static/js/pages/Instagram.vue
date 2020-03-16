@@ -64,8 +64,15 @@
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions>
-                            <div>Last Update: </div>
-                            <v-btn outlined>Update</v-btn>
+                            <v-row>
+                                <v-col>
+                                    <div>Last Update: <span>{{followersData.lastUpdate}}</span></div>
+                                </v-col>
+                                <v-col>
+                                    <v-btn outlined @click="loadInstFollowersLists()">Update</v-btn>
+                                </v-col>
+                            </v-row>
+
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions class="p-0">
@@ -94,9 +101,10 @@
                                         FOLLOWERS DATA
                                         <v-row>
                                             <v-col cols="3">
-                                                <v-avatar>
+
+                                                <!--<v-avatar>
                                                     <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                                                </v-avatar>
+                                                </v-avatar>-->
                                             </v-col>
                                             <v-divider vertical/>
                                             <v-col cols="3">
@@ -304,28 +312,6 @@
     export default {
         data() {
             return {
-                instProfileCategories: [
-                    {
-                        name: 'Followers',
-                        new: '0',
-                        lost: '0',
-                        not_follow: '0',
-                        not_following: '0'
-                    },
-                    {
-                        name: 'Insights',
-                    },
-                    {
-                        name: 'Stories',
-                    },
-                    {
-                        name: 'Highlights',
-                    },
-                    {
-                        name: 'Posts',
-                    }
-                ],
-
 
                 instAccount: {},
                 instUsername: 'romarioagrow',
@@ -339,24 +325,25 @@
                 dialog: false,
                 postsLoading: true,
                 totalPosts: '',
-                /*followers: [],
-                following: [],*/
+
                 followsLoading: true,
                 postDialog: false,
                 followersDialog: false,
 
-
-                followersData: {
+                /*followersData: {
                     'followersList':{},
                     'followingList':{},
+                    'lostFollowersList':{},
+                    'newFollowersList':{},
                     'newFollowersAmount': 0,
                     'lostFollowersAmount': 0,
                     'youNotFollowAmount': 0,
                     'notFollowsYouAmount': 0,
-                    /*newFollowersAmount = response.data.newFollowersAmount
-                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
-                    this.followersData.youNotFollow = response.data.youNotFollow
-                    this.followersData.notFollowsYou = response.data.notFollowsYou*/
+                    'lastUpdate': ''
+
+                },*/
+                followersData: {
+
                 }
             }
         },
@@ -364,96 +351,64 @@
             this.loadInstagramPage()
         },
         computed: {
-            /*newFollowersDataAmount() {
-                return this.$store.state.newFollowersData.size
-            },*/
             instProfile() {
                 return this.$store.state.instProfile
             },
             newFollowersData() {
                 return this.$store.state.newFollowersData
             }
-
-
         },
         methods: {
             async loadInstagramPage() {
                 //this.loadCrapperInstAccount()
                 await this.loadInstAccountGraphAPI()
 
+                await this.loadInstFollowersListsDB()
 
-                /*await*/ this.loadInstFollowersLists()
             },
+            /**/
+
             loadInstAccountGraphAPI() {
                 this.instAccount = this.$store.state.instProfile /// GETTER()!
             },
-            /*async*/ loadInstFollowersLists() {
+            async loadInstFollowersListsDB() {
+                const instFollowers = this.$store.state.instFollowers
+                if (instFollowers !== null)
+                {
+                    this.followersData = instFollowers
+                    console.log('followersData LOADED FROM STORAGE: ' + this.followersData)
+                }
+                else
+                {
+                    console.log('followersData LOADING FROM API')
+                    const url = '/api/social/instagram/graph/loadInstFollowersListsDB'
+                    this.loadInstFollowersLists(url)
+                }
+            },
+            loadInstFollowersLists(url) {
+                let requestURL = url ? url : '/api/social/instagram/graph/loadInstFollowersData'
+                console.log('loadInstFollowersLists')
+                console.log('url: ' + requestURL)
+
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
                     'sessionid': this.sessionid
                 }
-                axios.post('/api/social/instagram/graph/loadInstFollowersData', dataToServer, configJson).then(response => {/*
-                    console.log('response')
-                    console.log(response)*/
-                    console.log('response.data')
-                    console.log(response.data)
+                axios.post(requestURL, dataToServer, configJson).then(response => {
                     console.log(response.data.lostFollowersAmount)
 
-                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
-                    this.followersData.newFollowersAmount = response.data.newFollowersAmount
-                    //console.log('response.instRID: ' + response.instRID)
-
-                    /*this.followers = response.data.followers
-                    this.following = response.data.following*/
-
-
-
-
-                    /*this.followersData.followersList = response.data.followers
-                    this.followersData.followingList = response.data.following
-                    this.followersData.newFollowersAmount = response.data.newFollowersAmount
-                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
-                    this.followersData.youNotFollow = response.data.youNotFollow
-                    this.followersData.notFollowsYou = response.data.notFollowsYou*/
-
-
-                    //console.log(this.followersData.newFollowers)
-                    //console.log(this.followersData.lostFollowers)
-
-
-                    /*console.log('followers: ' + this.followers)
-                    console.log('following: ' + this.following)*/
-
-                    /*
-                    let followersArray = response.data[1]
-                    let followers = []
-                    let followersOK = []
-                    for (let index in followersArray) {
-                        let stringObject = {}
-                        stringObject = JSON.parse(followersArray[index])
-                        followers.push(stringObject)
-                    }
-                    console.log(followers)
-                    followers.forEach(array => {
-                        for (let index in array) {
-                            followersOK.push(array[index].node)
-                        }
-                    })
-                    console.log(followersOK)
-                    */
+                    this.followersData = response.data
+                    this.$store.dispatch('loadInstDataToStorage', response.data)
                 })
             },
-            /*loadInstDataFreeAPI() {
-                this.loadCrapperInstAccount()
-            },*/
+            /**/
+
             loadCrapperInstAccount() {
                 console.log('loadInstAccount')
                 this.loading = true
                 let instUsername = this.scrapperInstUsername
                 const uri = '/api/social/instagram/scraper/loadInstProfile'
-
-                //log.formatError()
 
                 axios.post(uri, this.scrapperInstUsername, configJson).then(response => {
                     console.log(response)

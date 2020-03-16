@@ -67,10 +67,6 @@ public class InstagramService {
         String username = dataToServer.get("username");
         String sessionID = dataToServer.get("sessionid");
         log.info("Processing Followers for user: " + username + "sessionID: " + sessionID);
-        /*if (instFollowersAvailableInDB(username)) {
-            log.info("Return Stored InstFollowers");
-            return getStoredInstFollowers(username);
-        }*/
 
         /*EXTRACTING FOLLOWERS LISTS*/
         log.info("No local InstFollowers, Creating APi Connection...");
@@ -94,7 +90,6 @@ public class InstagramService {
         }
 
 
-
         /*FOLLOWERS DATA!!!*/
 
 
@@ -108,15 +103,11 @@ public class InstagramService {
         log.info("InstFollowers: " + instFollowers.toString());
         log.info("NewFollowers: " + instFollowers.getNewFollowers().size());
         log.info("LostFollowers: " + instFollowers.getLostFollowers().size());
-        /*log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
-        log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
-        log.info("getFollowing: " + instProfile.getInstFollowers().getFollowing().toString());*/
-        /*LinkedList<Object> payload = new LinkedList<>();
-        payload.add(instProfile);
-        payload.add(instProfile.getInstFollowers());
-        return payload;*/
         log.info("PROCESSING COMPLETE!!!");
-        return instFollowers;//.toString();//new Gson().toJson(instFollowers);
+
+
+
+        return instFollowers;
     }
 
     public InstFollowers checkFollowersListDB(String username) {
@@ -360,8 +351,9 @@ public class InstagramService {
         log.info("followersURLInitial: " + followersURLInitial);
 
         int timeout = 3;
-        //int totalFollowers = Integer.parseInt(graphApiData.get("totalFollowers"));
         String userID = graphApiData.get("userID");
+
+        //int totalFollowers = Integer.parseInt(graphApiData.get("totalFollowers"));
         //String endCursor1 = graphApiData.get("endCursor1");
         //String endCursor2 = graphApiData.get("endCursor2");
 
@@ -448,9 +440,13 @@ public class InstagramService {
                 Map<String, String> lostFollowers = instFollowers.getLostFollowers();
                 Map<String, String> newFollowers = instFollowers.getNewFollowers();
 
-                /*CHECK LOST*/
-
-                if (!oldFollowers.isEmpty()) {
+                /*if (oldFollowers.isEmpty()) {
+                    oldFollowers = followersDATA;
+                }*/
+                /*!!! if(oldFollowers.isEmpty) {oldFollowers = followersDATA}) !!!*/
+                if (!oldFollowers.isEmpty())
+                {
+                    /*CHECK LOST*/
                     oldFollowers.forEach((oldFollowerID, oldFollowerDATA) -> {
                         if (followersDATA.get(oldFollowerID) == null)
                         {
@@ -474,8 +470,11 @@ public class InstagramService {
 
                     instFollowers.setLostFollowers(lostFollowers);
                     instFollowers.setNewFollowers(newFollowers);
+                    instFollowers.setFollowersAmount(lostFollowers.size());
+                    instFollowers.setFollowingAmount(newFollowers.size());
                     instFollowers.setLostFollowersAmount(lostFollowers.size());
                     instFollowers.setNewFollowersAmount(newFollowers.size());
+                    instFollowers.setLastUpdate(LocalDateTime.now());
                 }
 
                 instFollowers.setFollowers(followersDATA);

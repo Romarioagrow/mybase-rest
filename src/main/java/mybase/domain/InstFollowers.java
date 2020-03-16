@@ -6,6 +6,7 @@ import lombok.extern.java.Log;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -39,6 +40,8 @@ public class InstFollowers implements Serializable {
     private InstProfile instProfile;
 
     private Integer followersAmount, followingAmount, lostFollowersAmount, newFollowersAmount;
+
+    private LocalDateTime lastUpdate;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(length = 10000)
