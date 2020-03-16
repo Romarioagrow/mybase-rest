@@ -27,10 +27,9 @@ public class InstagramApiController {
 
 
     /*GRAPH*/
-    @PostMapping("/graph/processFollowers")
-    private InstFollowers/*LinkedList<Object>*/ processFollowers(@RequestBody Map<String, String> dataToServer) {
-        log.info("ProcessFollowers:" + dataToServer.toString());
-        return profileService.processFollowers(dataToServer);
+    @PostMapping("/graph/loadInstFollowersData")
+    private InstFollowers loadInstFollowersData(@RequestBody Map<String, String> dataToServer) {
+        return profileService.loadInstFollowersData(dataToServer);
     }
     @PostMapping("/graph/save_profile")
     private ResponseEntity<?> saveProfileGraph(@RequestBody InstProfile instProfile) {

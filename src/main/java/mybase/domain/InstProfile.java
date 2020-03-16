@@ -61,4 +61,10 @@ public class InstProfile implements Serializable /*extends Account*/ {
     private Integer followers_count, follows_count, media_count;
 
     private LocalDateTime lastDataChange;
+
+    private boolean hasStoredFollowers = false;
+
+    public boolean hasStoredFollowers() {
+        return this.hasStoredFollowers;
+    }
 }

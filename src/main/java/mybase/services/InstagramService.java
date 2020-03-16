@@ -49,8 +49,8 @@ public class InstagramService {
      *
      * */
 
-    public InstFollowers/*LinkedList<Object>*/ processFollowers(Map<String, String> dataToServer) {
-
+    public InstFollowers/*LinkedList<Object>*/ loadInstFollowersData(Map<String, String> dataToServer) {
+        log.info("ProcessFollowers:" + dataToServer.toString());
         /*
          * 1. Объект с полями для:
          * V.Подсисчиков и подписок,
@@ -66,13 +66,18 @@ public class InstagramService {
         /*LOAD USER DATA*/
         String username = dataToServer.get("username");
         String sessionID = dataToServer.get("sessionid");
+        log.info("Processing Followers for user: " + username + "sessionID: " + sessionID);
+        if (instFollowersAvailableInDB(username)) {
+            log.info("Return Stored InstFollowers");
+            return getStoredInstFollowers(username);
+        }
 
-        if (followersAvailable(username)) return storedInstFollowers(username);
-
+        log.info("No local InstFollowers, Creating APi Connection...");
         OkHttpClient httpClient = buildHttpCookieClient(sessionID);
         InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
         LinkedHashMap<String, String> graphApiData =  Objects.requireNonNull(collectGraphApiData(httpClient, username, sessionID));
 
+        log.info("Ready to connect API...");
         Thread collectFollowers = new Thread(() -> collectInstFollowersList(instProfile, graphApiData, httpClient));
         Thread collectFollowing = new Thread(() -> collectInstFollowingList(instProfile, graphApiData, httpClient));
         collectFollowers.start();
@@ -81,6 +86,7 @@ public class InstagramService {
         try {
             collectFollowers.join();
             collectFollowing.join();
+            log.info("Collecting from API complete!");
         }
         catch (InterruptedException e) {
             e.printStackTrace();
@@ -89,16 +95,17 @@ public class InstagramService {
         System.out.println();
         System.out.println();
         System.out.println();
-        log.info("RESULT");
+        log.info("RESULT///");
         log.info("instProfile: " + instProfile.toString());
-        log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
+        /*log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
         log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
-        log.info("getFollowing: " + instProfile.getInstFollowers().getFollowing().toString());
+        log.info("getFollowing: " + instProfile.getInstFollowers().getFollowing().toString());*/
 
         /*LinkedList<Object> payload = new LinkedList<>();
         payload.add(instProfile);
         payload.add(instProfile.getInstFollowers());
         return payload;*/
+        log.info("PROCESSING COMPLETE!!!");
         return instProfile.getInstFollowers();
     }
 
@@ -106,24 +113,21 @@ public class InstagramService {
         return instRepo.findByUsername(username).getInstFollowers();
     }
 
-    private InstFollowers storedInstFollowers(String username) {
+    private InstFollowers getStoredInstFollowers(String username) {
         return instRepo.findByUsername(username).getInstFollowers();
     }
 
-    private boolean followersAvailable(String username) {
+    private boolean instFollowersAvailableInDB(String username) {
+        log.info("Checking followersAvailable...");
         try
         {
-            InstProfile instProfile = instRepo.findByUsername(username);
-            if (instProfile != null) {
-                boolean hasFollowersDB = !instProfile.getInstFollowers().getFollowers().isEmpty();
-                log.info("Profile found in DB: " + username);
-                log.info("Followers stored in DB: " + hasFollowersDB);
-                return hasFollowersDB;
-            }
-            else return false;
+            boolean hasFollowersDB = instRepo.findByUsername(username).hasStoredFollowers();
+            log.info("Followers stored in DB: " + hasFollowersDB);
+            return hasFollowersDB;
         }
         catch (NullPointerException e) {
             e.printStackTrace();
+            log.info("No user: " + username + ", creating new one!");
             return false;
         }
     }
@@ -316,6 +320,7 @@ public class InstagramService {
                 }
 
                 instProfile.getInstFollowers().setFollowing(followingDATA);
+                instProfile.setHasStoredFollowers(true);
                 instRepo.save(instProfile);
 
                 log.info("TOTAL: " + followingDATA.size());
@@ -345,10 +350,10 @@ public class InstagramService {
         log.info("followersURLInitial: " + followersURLInitial);
 
         int timeout = 3;
-        int totalFollowers = Integer.parseInt(graphApiData.get("totalFollowers"));
+        //int totalFollowers = Integer.parseInt(graphApiData.get("totalFollowers"));
         String userID = graphApiData.get("userID");
-        String endCursor1 = graphApiData.get("endCursor1");
-        String endCursor2 = graphApiData.get("endCursor2");
+        //String endCursor1 = graphApiData.get("endCursor1");
+        //String endCursor2 = graphApiData.get("endCursor2");
 
         HashMap<String, String/*LinkedHashMap<String, String>*/> followersDATA = new LinkedHashMap<>();
 
@@ -427,6 +432,7 @@ public class InstagramService {
                 }
 
                 instProfile.getInstFollowers().setFollowers(followersDATA);
+                instProfile.setHasStoredFollowers(true);
                 instRepo.save(instProfile);
 
                 log.info("TOTAL: " + followersDATA.size());

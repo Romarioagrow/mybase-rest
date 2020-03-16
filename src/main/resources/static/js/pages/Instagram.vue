@@ -91,7 +91,7 @@
             </v-row>
             <v-spacer/>
             <!--OPEN API-->
-            <v-row>
+            <v-row v-if="false"> <!--!!!!!!-->
                 <v-col>
                     <v-card min-height="850">
                         <v-card-title>Instagram Open API</v-card-title>
@@ -276,7 +276,7 @@
                 instAccount: {},
                 instUsername: 'romarioagrow',
                 scrapperInstUsername: 'romarioagrow',
-                sessionid: 'sessionid=1038252798%3AAmldaSBRLWz8tw%3A3;',
+                sessionid: 'sessionid=1038252798%3AHugtwm4FEOdmCZ%3A9;',
                 instAccountPic: '',
                 instAccountPicFull: '',
                 loading: true,
@@ -310,20 +310,22 @@
         },
         methods: {
             async loadInstagramPage() {
-                this.loadCrapperInstAccount()
+                //this.loadCrapperInstAccount()
                 await this.loadInstAccountGraphAPI()
-                await this.loadInstFollowersLists()
+
+
+                /*await*/ this.loadInstFollowersLists()
             },
             loadInstAccountGraphAPI() {
-                this.instAccount = this.$store.state.instProfile
+                this.instAccount = this.$store.state.instProfile /// GETTER()!
             },
-            async loadInstFollowersLists() {
+            /*async*/ loadInstFollowersLists() {
                 /*SEND DATA TO SERVER AND GET FOLLOWERS LIST*/
                 let dataToServer = {
                     'username': this.instUsername,
                     'sessionid': this.sessionid
                 }
-                axios.post('/api/social/instagram/graph/processFollowers', dataToServer, configJson).then(response => {
+                axios.post('/api/social/instagram/graph/loadInstFollowersData', dataToServer, configJson).then(response => {
                     console.log('response: ' + response.data)
 
                     this.followers = response.data.followers
