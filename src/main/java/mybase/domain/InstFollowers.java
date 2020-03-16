@@ -1,5 +1,6 @@
 package mybase.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.extern.java.Log;
 
@@ -33,8 +34,11 @@ public class InstFollowers implements Serializable {
     @Id
     private String instRID;
 
+    @JsonIgnore
     @OneToOne(mappedBy = "instFollowers")
     private InstProfile instProfile;
+
+    private Integer followersAmount, followingAmount, lostFollowersAmount, newFollowersAmount;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(length = 10000)
@@ -43,4 +47,12 @@ public class InstFollowers implements Serializable {
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(length = 10000)
     private Map<String, String> following = new LinkedHashMap<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(length = 10000)
+    private Map<String, String> lostFollowers = new LinkedHashMap<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Column(length = 10000)
+    private Map<String, String> newFollowers = new LinkedHashMap<>();
 }

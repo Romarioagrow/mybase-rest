@@ -67,11 +67,12 @@ public class InstagramService {
         String username = dataToServer.get("username");
         String sessionID = dataToServer.get("sessionid");
         log.info("Processing Followers for user: " + username + "sessionID: " + sessionID);
-        if (instFollowersAvailableInDB(username)) {
+        /*if (instFollowersAvailableInDB(username)) {
             log.info("Return Stored InstFollowers");
             return getStoredInstFollowers(username);
-        }
+        }*/
 
+        /*EXTRACTING FOLLOWERS LISTS*/
         log.info("No local InstFollowers, Creating APi Connection...");
         OkHttpClient httpClient = buildHttpCookieClient(sessionID);
         InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
@@ -92,21 +93,30 @@ public class InstagramService {
             e.printStackTrace();
         }
 
+
+
+        /*FOLLOWERS DATA!!!*/
+
+
+
         System.out.println();
         System.out.println();
         System.out.println();
+        InstFollowers instFollowers = instProfile.getInstFollowers();
         log.info("RESULT///");
-        log.info("instProfile: " + instProfile.toString());
+        log.info("InstProfile: " + instProfile.toString());
+        log.info("InstFollowers: " + instFollowers.toString());
+        log.info("NewFollowers: " + instFollowers.getNewFollowers().size());
+        log.info("LostFollowers: " + instFollowers.getLostFollowers().size());
         /*log.info("getInstFollowers: " + instProfile.getInstFollowers().toString());
         log.info("getFollowers: " + instProfile.getInstFollowers().getFollowers().toString());
         log.info("getFollowing: " + instProfile.getInstFollowers().getFollowing().toString());*/
-
         /*LinkedList<Object> payload = new LinkedList<>();
         payload.add(instProfile);
         payload.add(instProfile.getInstFollowers());
         return payload;*/
         log.info("PROCESSING COMPLETE!!!");
-        return instProfile.getInstFollowers();
+        return instFollowers;//.toString();//new Gson().toJson(instFollowers);
     }
 
     public InstFollowers checkFollowersListDB(String username) {
@@ -431,7 +441,44 @@ public class InstagramService {
                     }
                 }
 
-                instProfile.getInstFollowers().setFollowers(followersDATA);
+
+                /*////////////////////*/
+                InstFollowers instFollowers = instProfile.getInstFollowers();
+                Map<String, String> oldFollowers = instFollowers.getFollowers();
+                Map<String, String> lostFollowers = instFollowers.getLostFollowers();
+                Map<String, String> newFollowers = instFollowers.getNewFollowers();
+
+                /*CHECK LOST*/
+
+                if (!oldFollowers.isEmpty()) {
+                    oldFollowers.forEach((oldFollowerID, oldFollowerDATA) -> {
+                        if (followersDATA.get(oldFollowerID) == null)
+                        {
+                            lostFollowers.put(oldFollowerID, oldFollowerDATA);
+                            if (newFollowers.get(oldFollowerID) != null) {
+                                newFollowers.remove(oldFollowerID);
+                            }
+                        }
+                    });
+
+                    /*CHECK NEW*/
+                    followersDATA.forEach((newFollowerID, newFollowerDATA) -> {
+                        if (oldFollowers.get(newFollowerID) == null)
+                        {
+                            newFollowers.put(newFollowerID, newFollowerDATA);
+                            if (lostFollowers.get(newFollowerID) != null) {
+                                lostFollowers.remove(newFollowerID);
+                            }
+                        }
+                    });
+
+                    instFollowers.setLostFollowers(lostFollowers);
+                    instFollowers.setNewFollowers(newFollowers);
+                    instFollowers.setLostFollowersAmount(lostFollowers.size());
+                    instFollowers.setNewFollowersAmount(newFollowers.size());
+                }
+
+                instFollowers.setFollowers(followersDATA);
                 instProfile.setHasStoredFollowers(true);
                 instRepo.save(instProfile);
 
@@ -440,7 +487,7 @@ public class InstagramService {
             }
             else
             {
-                log.info("error");
+                log.info("Request error");
                 log.info(response.toString());
             }
         }
@@ -484,6 +531,7 @@ public class InstagramService {
     }
 
     private OkHttpClient buildHttpCookieClient(String sessionID) {
+        log.info("Building HTTP Client...");
         return new OkHttpClient().newBuilder()
                 .addInterceptor(new Interceptor() {
                     @Override
@@ -491,6 +539,7 @@ public class InstagramService {
                         final Request authorized = chain.request().newBuilder()
                                 .addHeader("Cookie", sessionID)
                                 .build();
+                        log.info("Client ready.");
                         return chain.proceed(authorized);
                     }
                 })

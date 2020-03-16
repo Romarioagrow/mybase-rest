@@ -57,6 +57,7 @@ public class InstProfile implements Serializable /*extends Account*/ {
     private String profile_picture_url, website;
 
     private String biography, id, ig_id, name;
+    ///youUnfollowedFrom
 
     private Integer followers_count, follows_count, media_count;
 

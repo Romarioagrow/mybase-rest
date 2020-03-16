@@ -1,9 +1,9 @@
 <template>
     <v-content>
-        <v-container class="fill-height" fluid>
+        <b-container class="fill-height" fluid>
             <v-row>
                 <v-col>
-                    <v-card wight="850" outlined tile>
+                    <v-card wight="950" outlined tile>
                         <!--ВВОД-->
                         <v-card-title>
                             Facebook Graph API
@@ -63,9 +63,63 @@
                             </v-row>
                         </v-card-actions>
                         <v-divider/>
+                        <v-card-actions>
+                            <div>Last Update: </div>
+                            <v-btn outlined>Update</v-btn>
+                        </v-card-actions>
+                        <v-divider/>
                         <v-card-actions class="p-0">
                             <v-expansion-panels accordion multiple tile flat>
-                                <v-expansion-panel v-for="(item, i) in 5" :key="i" style="border-bottom: 1px solid #e0e0e0;">
+                                <v-expansion-panel style="border-bottom: 1px solid #e0e0e0;">
+                                    <v-expansion-panel-header>
+                                        <v-row>
+                                            <v-col>
+                                                <strong>Followers</strong>
+                                            </v-col>
+                                            <v-col>
+                                                <div>New: <div>{{followersData.newFollowersAmount}}</div></div>
+                                            </v-col>
+                                            <v-col>
+                                                <div>Lost: <div>{{followersData.lostFollowersAmount}}</div></div>
+                                            </v-col>
+                                            <v-col>
+                                                <div>Not follows you: <div>{{followersData.notFollowsYouAmount}}</div></div>
+                                            </v-col>
+                                            <v-col>
+                                                <div>You not follow: <div>{{followersData.youNotFollowAmount}}</div></div>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        FOLLOWERS DATA
+                                        <v-row>
+                                            <v-col cols="3">
+                                                <v-avatar>
+                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                                                </v-avatar>
+                                            </v-col>
+                                            <v-divider vertical/>
+                                            <v-col cols="3">
+                                                <v-avatar>
+                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                                                </v-avatar>
+                                            </v-col>
+                                            <v-divider vertical/>
+                                            <v-col cols="3">
+                                                <v-avatar>
+                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                                                </v-avatar>
+                                            </v-col>
+                                            <v-divider vertical/>
+                                            <v-col cols="2">
+                                                <v-avatar>
+                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                                                </v-avatar>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel v-for="(item, i) in 4" :key="i" style="border-bottom: 1px solid #e0e0e0;">
                                     <v-expansion-panel-header>
                                         <v-row>
                                             <v-col>
@@ -232,7 +286,7 @@
                     </v-card>
                 </v-col>
             </v-row>
-        </v-container>
+        </b-container>
     </v-content>
 </template>
 
@@ -285,11 +339,25 @@
                 dialog: false,
                 postsLoading: true,
                 totalPosts: '',
-                followers: [],
-                following: [],
+                /*followers: [],
+                following: [],*/
                 followsLoading: true,
                 postDialog: false,
-                followersDialog: false
+                followersDialog: false,
+
+
+                followersData: {
+                    'followersList':{},
+                    'followingList':{},
+                    'newFollowersAmount': 0,
+                    'lostFollowersAmount': 0,
+                    'youNotFollowAmount': 0,
+                    'notFollowsYouAmount': 0,
+                    /*newFollowersAmount = response.data.newFollowersAmount
+                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
+                    this.followersData.youNotFollow = response.data.youNotFollow
+                    this.followersData.notFollowsYou = response.data.notFollowsYou*/
+                }
             }
         },
         created() {
@@ -325,14 +393,37 @@
                     'username': this.instUsername,
                     'sessionid': this.sessionid
                 }
-                axios.post('/api/social/instagram/graph/loadInstFollowersData', dataToServer, configJson).then(response => {
-                    console.log('response: ' + response.data)
+                axios.post('/api/social/instagram/graph/loadInstFollowersData', dataToServer, configJson).then(response => {/*
+                    console.log('response')
+                    console.log(response)*/
+                    console.log('response.data')
+                    console.log(response.data)
+                    console.log(response.data.lostFollowersAmount)
 
-                    this.followers = response.data.followers
-                    this.following = response.data.following
+                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
+                    this.followersData.newFollowersAmount = response.data.newFollowersAmount
+                    //console.log('response.instRID: ' + response.instRID)
 
-                    console.log('followers: ' + this.followers)
-                    console.log('following: ' + this.following)
+                    /*this.followers = response.data.followers
+                    this.following = response.data.following*/
+
+
+
+
+                    /*this.followersData.followersList = response.data.followers
+                    this.followersData.followingList = response.data.following
+                    this.followersData.newFollowersAmount = response.data.newFollowersAmount
+                    this.followersData.lostFollowersAmount = response.data.lostFollowersAmount
+                    this.followersData.youNotFollow = response.data.youNotFollow
+                    this.followersData.notFollowsYou = response.data.notFollowsYou*/
+
+
+                    //console.log(this.followersData.newFollowers)
+                    //console.log(this.followersData.lostFollowers)
+
+
+                    /*console.log('followers: ' + this.followers)
+                    console.log('following: ' + this.following)*/
 
                     /*
                     let followersArray = response.data[1]

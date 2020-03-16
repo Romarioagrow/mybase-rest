@@ -29,6 +29,8 @@ public class InstagramApiController {
     /*GRAPH*/
     @PostMapping("/graph/loadInstFollowersData")
     private InstFollowers loadInstFollowersData(@RequestBody Map<String, String> dataToServer) {
+
+
         return profileService.loadInstFollowersData(dataToServer);
     }
     @PostMapping("/graph/save_profile")
