@@ -2,11 +2,14 @@ package mybase.domain;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 import lombok.extern.java.Log;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -14,6 +17,8 @@ import java.util.UUID;
 @Log
 @Data
 @Entity
+@Transactional
+//@ToString(exclude = "instFollowers", "lostFollowers", "")
 public class InstFollowers implements Serializable {
 
      /*
@@ -36,26 +41,34 @@ public class InstFollowers implements Serializable {
     private String instRID;
 
     @JsonIgnore
-    @OneToOne(mappedBy = "instFollowers")
+    @OneToOne(mappedBy = "instFollowers", cascade=CascadeType.ALL)
     private InstProfile instProfile;
 
-    private Integer followersAmount, followingAmount, lostFollowersAmount, newFollowersAmount;
+    private Integer followersAmount, followingAmount, lostFollowersAmount, newFollowersAmount, youNotAmount, notYouAmount;
 
     private LocalDateTime lastUpdate;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(length = 10000)
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Column(length = 1000)
     private Map<String, String> followers = new LinkedHashMap<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(length = 10000)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @Column(length = 1000)
     private Map<String, String> following = new LinkedHashMap<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(length = 10000)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @Column(length = 1000)
     private Map<String, String> lostFollowers = new LinkedHashMap<>();
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(length = 10000)
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @Column(length = 1000)
     private Map<String, String> newFollowers = new LinkedHashMap<>();
+
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @Column(length = 1000)
+    private Map<String, String> youNotFollowBack = new LinkedHashMap<>();
+
+    @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
+    @Column(length = 1000)
+    private Map<String, String> notFollowsYouBack = new LinkedHashMap<>();
 }

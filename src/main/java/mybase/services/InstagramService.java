@@ -49,14 +49,14 @@ public class InstagramService {
      *
      * */
 
-    public InstFollowers/*LinkedList<Object>*/ loadInstFollowersData(Map<String, String> dataToServer) {
+    public InstFollowers loadInstFollowersData(Map<String, String> dataToServer) {
         log.info("ProcessFollowers:" + dataToServer.toString());
         /*
          * 1. Объект с полями для:
          * V.Подсисчиков и подписок,
-         * Обновленный и прошлый список подписчиков,
-         * Список отписавшихся и подписавшихся,
-         * Список на кого не подписанв ответ и кто не подписан в ответ,
+         * V.Обновленный и прошлый список подписчиков,
+         * V.Список отписавшихся и подписавшихся,
+         * V.Список на кого не подписанв ответ и кто не подписан в ответ,
          *
          * Объект для Главного InstProfile, логин по username
          *
@@ -71,6 +71,7 @@ public class InstagramService {
         /*EXTRACTING FOLLOWERS LISTS*/
         log.info("No local InstFollowers, Creating APi Connection...");
         OkHttpClient httpClient = buildHttpCookieClient(sessionID);
+        log.info(httpClient.toString());
         InstProfile instProfile = Objects.requireNonNull(instRepo.findByUsername(username));
         LinkedHashMap<String, String> graphApiData =  Objects.requireNonNull(collectGraphApiData(httpClient, username, sessionID));
 
@@ -89,23 +90,45 @@ public class InstagramService {
             e.printStackTrace();
         }
 
-
         /*FOLLOWERS DATA!!!*/
-
-
-
         System.out.println();
-        System.out.println();
-        System.out.println();
+        log.info("Relating followers");
         InstFollowers instFollowers = instProfile.getInstFollowers();
+        Map<String, String> followers = instFollowers.getFollowers();
+        Map<String, String> following = instFollowers.getFollowing();
+        Map<String, String> notFollowingYou = !instFollowers.getNotFollowsYouBack().isEmpty() ? instFollowers.getNotFollowsYouBack() : new LinkedHashMap<>();
+        Map<String, String> youNotFollow = !instFollowers.getYouNotFollowBack().isEmpty() ? instFollowers.getYouNotFollowBack() : new LinkedHashMap<>();
+
+        followers.forEach((followerUsername, followerData) -> {
+            if (following.get(followerUsername) == null) {
+                youNotFollow.put(followerUsername, followerData);
+            }
+        });
+
+        following.forEach((followingUsername, followingData) -> {
+            if (followers.get(followingUsername) == null) {
+                notFollowingYou.put(followingUsername, followingData);
+            }
+        });
+
+        instFollowers.setNotFollowsYouBack(notFollowingYou);
+        instFollowers.setYouNotFollowBack(youNotFollow);
+        instFollowers.setNotYouAmount(notFollowingYou.size());
+        instFollowers.setYouNotAmount(youNotFollow.size());
+        instProfile.setInstFollowers(instFollowers);
+        instRepo.save(instProfile);
+        /**/
+
+        /*System.out.println();
+        System.out.println();*/
         log.info("RESULT///");
         log.info("InstProfile: " + instProfile.toString());
         log.info("InstFollowers: " + instFollowers.toString());
         log.info("NewFollowers: " + instFollowers.getNewFollowers().size());
         log.info("LostFollowers: " + instFollowers.getLostFollowers().size());
+        log.info("NotYouAmount: " + instFollowers.getNotYouAmount());
+        log.info("YouNotAmount: " + instFollowers.getYouNotAmount());
         log.info("PROCESSING COMPLETE!!!");
-
-
 
         return instFollowers;
     }
@@ -183,6 +206,7 @@ public class InstagramService {
     }
 
     private LinkedHashMap<String, String> collectGraphApiData(OkHttpClient httpClient, String username, String sessionID) {
+        log.info("Collecting Graph Data");
         try
         {
             LinkedHashMap<String, String> graphApiData = new LinkedHashMap<>();

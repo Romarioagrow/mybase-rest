@@ -90,10 +90,10 @@
                                                 <div>Lost: <div>{{followersData.lostFollowersAmount}}</div></div>
                                             </v-col>
                                             <v-col>
-                                                <div>Not follows you: <div>{{followersData.notFollowsYouAmount}}</div></div>
+                                                <div>Not follows you: <div>{{followersData.notYouAmount}}</div></div>
                                             </v-col>
                                             <v-col>
-                                                <div>You not follow: <div>{{followersData.youNotFollowAmount}}</div></div>
+                                                <div>You not follow: <div>{{followersData.youNotAmount}}</div></div>
                                             </v-col>
                                         </v-row>
                                     </v-expansion-panel-header>
@@ -102,27 +102,98 @@
                                         <v-row>
                                             <v-col cols="3">
 
-                                                <!--<v-avatar>
-                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                                                </v-avatar>-->
+
+                                                <div>New</div>
+                                                <v-container>
+                                                    <v-row>
+                                                        <v-col v-for="(follower, i) in followersData.newFollowers" :key="follower.key">
+                                                            <v-card height="50" width="50">
+                                                                <v-img :src="getPic(follower)"
+                                                                       class="white--text align-end"
+                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                                                       contain
+                                                                >
+                                                                </v-img>
+                                                                <div class="body-2">{{getUsername(follower)}}</div>
+                                                                <div class="caption">{{getName(follower)}}</div>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-container>
+
+
                                             </v-col>
                                             <v-divider vertical/>
                                             <v-col cols="3">
-                                                <v-avatar>
-                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                                                </v-avatar>
+
+
+                                                <div>Lost</div>
+                                                <v-container>
+                                                    <v-row>
+                                                        <v-col v-for="(follower, i) in followersData.lostFollowers" :key="follower.key">
+                                                            <v-card height="50" width="50">
+                                                                <v-img :src="getPic(follower)"
+                                                                       class="white--text align-end"
+                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                                                       contain
+                                                                >
+                                                                </v-img>
+                                                                <div class="body-2">{{getUsername(follower)}}</div>
+                                                                <div class="caption">{{getName(follower)}}</div>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-container>
+
+
                                             </v-col>
                                             <v-divider vertical/>
                                             <v-col cols="3">
-                                                <v-avatar>
-                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                                                </v-avatar>
+
+
+                                                <div>Not You</div>
+                                                <v-container>
+                                                    <v-row>
+                                                        <v-col v-for="(follower, i) in followersData.notFollowsYouBack" :key="follower.key">
+                                                            <v-card height="50" width="50">
+                                                                <v-img :src="getPic(follower)"
+                                                                       class="white--text align-end"
+                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                                                       contain
+                                                                >
+                                                                </v-img>
+                                                                <div class="body-2">{{getUsername(follower)}}</div>
+                                                                <div class="caption">{{getName(follower)}}</div>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-container>
+
+
                                             </v-col>
                                             <v-divider vertical/>
                                             <v-col cols="2">
-                                                <v-avatar>
-                                                    <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
-                                                </v-avatar>
+
+
+                                                <div>You Not</div>
+                                                <v-container>
+                                                    <v-row>
+                                                        <v-col v-for="(follower, i) in followersData.youNotFollowBack" :key="follower.key">
+                                                            <v-card height="50" width="50">
+                                                                <v-img :src="getPic(follower)"
+                                                                       class="white--text align-end"
+                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                                                                       contain
+                                                                >
+                                                                </v-img>
+                                                                <div class="body-2">{{getUsername(follower)}}</div>
+                                                                <div class="caption">{{getName(follower)}}</div>
+                                                            </v-card>
+                                                        </v-col>
+                                                    </v-row>
+                                                </v-container>
+
+
                                             </v-col>
                                         </v-row>
                                     </v-expansion-panel-content>
@@ -305,6 +376,7 @@
         }
     }
     import axios from "axios";
+
     const api = axios.create({
         withCredentials: true
     });
@@ -330,20 +402,7 @@
                 postDialog: false,
                 followersDialog: false,
 
-                /*followersData: {
-                    'followersList':{},
-                    'followingList':{},
-                    'lostFollowersList':{},
-                    'newFollowersList':{},
-                    'newFollowersAmount': 0,
-                    'lostFollowersAmount': 0,
-                    'youNotFollowAmount': 0,
-                    'notFollowsYouAmount': 0,
-                    'lastUpdate': ''
-
-                },*/
                 followersData: {
-
                 }
             }
         },
@@ -367,6 +426,21 @@
 
             },
             /**/
+
+
+            getUsername(lostFollower) {
+                let array = lostFollower.split(", ")
+                return array[1].substr(array[1].indexOf('=') + 1)
+            },
+            getName(lostFollower) {
+                let array = lostFollower.split(", ")
+                return array[2].substr(array[2].indexOf('=') + 1)
+            },
+            getPic(lostFollower) {
+                let array = lostFollower.split(", ")
+                return array[3].substr(array[3].indexOf('=') + 1)
+            },
+
 
             loadInstAccountGraphAPI() {
                 this.instAccount = this.$store.state.instProfile /// GETTER()!

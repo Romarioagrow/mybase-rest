@@ -7,6 +7,7 @@ import lombok.ToString;
 import lombok.extern.java.Log;
 
 import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -15,6 +16,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "inst_profile")
 @ToString(exclude = "instFollowers")
+@Transactional
 @NoArgsConstructor
 public class InstProfile implements Serializable /*extends Account*/ {
 
@@ -50,7 +52,7 @@ public class InstProfile implements Serializable /*extends Account*/ {
     private String mainUserID;
 
     @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL)
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, targetEntity = InstFollowers.class)
     private InstFollowers instFollowers;
 
     @Column(length = 1000)
