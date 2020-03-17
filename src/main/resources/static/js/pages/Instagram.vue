@@ -1,13 +1,12 @@
 <template>
     <v-content>
-        <b-container class="fill-height">
+        <b-container class="fill-height" style="width: 90% !important;">
             <v-row>
                 <v-col>
                     <v-card wight="950" outlined tile>
                         <v-card-title>
                             <v-icon class="mr-3">mdi-instagram</v-icon>
-                            <span>Instagram&nbsp;</span>
-                            <span>{{instProfile.username}}</span>
+                            <div class="headline font-weight-light">Instagram&nbsp;</div><span class="headline font-weight-light">{{instProfile.username}}</span>
                         </v-card-title>
                         <v-card-actions v-if="instProfile">
                             <v-row>
@@ -15,6 +14,7 @@
                                     <v-card width="150" height="150" @click.stop="dialogGraph = true" hover class="ml-12">
                                         <v-img contain :src="instProfile.profile_picture_url"></v-img>
                                     </v-card>
+
                                     <v-dialog v-model="dialogGraph" max-width="800">
                                         <v-card>
                                             <v-img contain :src="instProfile.profile_picture_url"></v-img>
@@ -26,7 +26,8 @@
                                         </v-card>
                                     </v-dialog>
                                 </v-col>
-                                <v-col cols="4">
+
+                                <v-col cols="4" class="pt-0">
                                     <v-row>
                                         <v-col>
                                             <div class="headline font-weight-thin">{{instProfile.name}}</div>
@@ -34,16 +35,32 @@
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <div>Followers:&nbsp;<span class="font-weight-medium">{{instProfile.followers_count}}</span></div>
+                                            <v-btn text outlined >
+                                                <div @click="openFollowersDialog()" class="font-weight-light">Followers:&nbsp;<span class="font-weight-medium">{{instProfile.followers_count}}</span></div>
+                                            </v-btn>
+
+                                            <v-dialog v-model="dialogFollowers" max-width="1500">
+                                                <v-card>
+                                                    <v-card-title>
+                                                        <div class="font-weight-light headline">Your&nbsp;<span class="font-weight-medium">{{instProfile.followers_count}}</span> followers from last to first</div>
+                                                    </v-card-title>
+                                                    <v-card-actions>
+                                                        <follower-chip :followersList="followersData.followers"/>
+                                                    </v-card-actions>
+                                                </v-card>
+                                            </v-dialog>
                                         </v-col>
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <div>Following:&nbsp;<span class="font-weight-medium">{{instProfile.follows_count}}</span></div>
+                                            <v-btn text outlined >
+                                                <div class="font-weight-light">Following:&nbsp;<span class="font-weight-medium">{{instProfile.follows_count}}</span></div>
+                                            </v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-col>
-                                <v-col>
+
+                                <v-col class="pt-0">
                                     <v-row>
                                         <v-col>
                                             <div class="title font-weight-light">{{instProfile.biography}}</div>
@@ -95,20 +112,20 @@
                                     </v-expansion-panel-header>
                                     <v-expansion-panel-content>
                                         <v-row>
-                                            <v-col >
+                                            <v-col>
                                                 <div class="font-weight-thin headline">New followers</div>
                                                 <follower-chip :followersList="followersData.newFollowers"/>
                                             </v-col>
                                             <v-divider vertical/>
 
-                                            <v-col >
+                                            <v-col>
                                                 <div class="font-weight-thin headline">Lost followers</div>
                                                 <follower-chip :followersList="followersData.lostFollowers"/>
 
                                             </v-col>
                                             <v-divider vertical/>
 
-                                            <v-col >
+                                            <v-col>
                                                 <div class="font-weight-thin headline">Not following you back</div>
                                                 <follower-chip :followersList="followersData.notFollowsYouBack"/>
                                             </v-col>
@@ -144,19 +161,16 @@
     });
     import FollowerChip from "components/FollowerChip.vue";
     export default {
-
-
         /*!!!!!!!!!
         *
         * ПРИРОСТ FOLLOWERS FOR/SINCE LAST UPDATE
         *
-        *
         * */
-
-
         components: {FollowerChip},
         data() {
             return {
+
+                dialogFollowers: false,
                 followersLoading: true,
                 buttonColor: 'error',
 
@@ -186,8 +200,6 @@
         },
         computed: {
             lastUpdate() {
-                /*let dataTime = lastUpdate.substr(0, lastUpdate.lastIndexOf('.'))
-                return dataTime.replace('-','.').replace('-','.').replace('T',' at ')*/
                 const update = this.followersData.lastUpdate
                 return update ? this.calculateLastUpdate(update) : 'X'
             },
@@ -205,6 +217,11 @@
                 await this.loadInstFollowersListsDB()
             },
             /**/
+
+            openFollowersDialog() {
+                this.dialogFollowers = true
+
+            },
 
             calculateLastUpdate(lastUpdate) {
                 let dataTime = lastUpdate.substr(0, lastUpdate.lastIndexOf('.'))

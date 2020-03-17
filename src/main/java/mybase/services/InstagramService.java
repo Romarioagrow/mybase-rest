@@ -111,6 +111,9 @@ public class InstagramService {
             }
         });
 
+        //Map<String,String> treeMap = new TreeMap<>(Comparator.comparingInt(String::length));
+        //notFollowingYou.entrySet().
+
         instFollowers.setNotFollowsYouBack(notFollowingYou);
         instFollowers.setYouNotFollowBack(youNotFollow);
         instFollowers.setNotYouAmount(notFollowingYou.size());
@@ -481,6 +484,8 @@ public class InstagramService {
                         }
                     });
 
+
+
                     /*CHECK NEW*/
                     followersDATA.forEach((newFollowerID, newFollowerDATA) -> {
                         if (oldFollowers.get(newFollowerID) == null)
@@ -491,6 +496,11 @@ public class InstagramService {
                             }
                         }
                     });
+
+
+                    //newFollowers.(Comparator.comparing());
+
+
 
                     instFollowers.setLostFollowers(lostFollowers);
                     instFollowers.setNewFollowers(newFollowers);

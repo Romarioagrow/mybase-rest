@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.UUID;
 
 @Log
@@ -63,9 +64,9 @@ public class InstFollowers implements Serializable {
 
     @Column(length = 1000)
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    private Map<String, String> youNotFollowBack = new LinkedHashMap<>();
+    private Map<String, String> youNotFollowBack = new TreeMap<>();
 
     @Column(length = 1000)
     @ElementCollection(fetch = FetchType.LAZY, targetClass = String.class)
-    private Map<String, String> notFollowsYouBack = new LinkedHashMap<>();
+    private Map<String, String> notFollowsYouBack = new TreeMap<>();
 }
