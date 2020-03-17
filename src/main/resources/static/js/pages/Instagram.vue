@@ -1,6 +1,6 @@
 <template>
     <v-content>
-        <b-container class="fill-height" fluid>
+        <b-container class="fill-height">
             <v-row>
                 <v-col>
                     <v-card wight="950" outlined tile>
@@ -16,8 +16,8 @@
                         </v-card-title>
                         <v-card-actions v-if="instProfile">
                             <v-row>
-                                <v-col cols="3">
-                                    <v-card width="150" height="150" @click.stop="dialogGraph = true" hover>
+                                <v-col cols="2">
+                                    <v-card width="150" height="150" @click.stop="dialogGraph = true" hover class="ml-12">
                                         <v-img contain :src="instProfile.profile_picture_url"></v-img>
                                     </v-card>
                                     <v-dialog v-model="dialogGraph" max-width="800">
@@ -39,12 +39,12 @@
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <div>Followers: {{instProfile.followers_count}}</div>
+                                            <div>Followers:&nbsp;<span class="font-weight-medium">{{instProfile.followers_count}}</span></div>
                                         </v-col>
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <div>Following: {{instProfile.follows_count}}</div>
+                                            <div>Following:&nbsp;<span class="font-weight-medium">{{instProfile.follows_count}}</span></div>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -56,7 +56,7 @@
                                     </v-row>
                                     <v-row>
                                         <v-col>
-                                            <v-btn outlined small>{{instProfile.website}}</v-btn>
+                                            <v-btn text outlined small>{{instProfile.website}}</v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-col>
@@ -64,15 +64,9 @@
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions>
-                            <v-row>
-                                <v-col>
-                                    <div>Last Update: <span>{{followersData.lastUpdate}}</span></div>
-                                </v-col>
-                                <v-col>
-                                    <v-btn outlined @click="loadInstFollowersLists()">Update</v-btn>
-                                </v-col>
-                            </v-row>
-
+                            <v-btn outlined @click="loadInstFollowersLists()" class="ml-12">
+                                <div>Last Update: <span>{{calculateLastUpdate(followersData.lastUpdate)}}</span></div>
+                            </v-btn>
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions class="p-0">
@@ -80,120 +74,47 @@
                                 <v-expansion-panel style="border-bottom: 1px solid #e0e0e0;">
                                     <v-expansion-panel-header>
                                         <v-row>
-                                            <v-col>
+                                            <v-col cols="1">
                                                 <strong>Followers</strong>
                                             </v-col>
                                             <v-col>
-                                                <div>New: <div>{{followersData.newFollowersAmount}}</div></div>
+                                                <div>New:&nbsp;<span class="font-weight-medium">{{followersData.newFollowersAmount}}</span></div>
                                             </v-col>
                                             <v-col>
-                                                <div>Lost: <div>{{followersData.lostFollowersAmount}}</div></div>
+                                                <div>Lost:&nbsp;<span class="font-weight-medium">{{followersData.lostFollowersAmount}}</span></div>
                                             </v-col>
                                             <v-col>
-                                                <div>Not follows you: <div>{{followersData.notYouAmount}}</div></div>
+                                                <div>Not follows you:&nbsp;<span class="font-weight-medium">{{followersData.notYouAmount}}</span></div>
                                             </v-col>
                                             <v-col>
-                                                <div>You not follow: <div>{{followersData.youNotAmount}}</div></div>
+                                                <div>You not follow:&nbsp;<span class="font-weight-medium">{{followersData.youNotAmount}}</span></div>
                                             </v-col>
                                         </v-row>
                                     </v-expansion-panel-header>
                                     <v-expansion-panel-content>
-                                        FOLLOWERS DATA
                                         <v-row>
-                                            <v-col cols="3">
+                                            <v-col >
+                                                <div class="font-weight-thin headline">New followers</div>
+                                                <follower-chip :followersList="followersData.newFollowers"/>
+                                            </v-col>
+                                            <v-divider vertical/>
 
-
-                                                <div>New</div>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col v-for="(follower, i) in followersData.newFollowers" :key="follower.key">
-                                                            <v-card height="50" width="50">
-                                                                <v-img :src="getPic(follower)"
-                                                                       class="white--text align-end"
-                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                                                       contain
-                                                                >
-                                                                </v-img>
-                                                                <div class="body-2">{{getUsername(follower)}}</div>
-                                                                <div class="caption">{{getName(follower)}}</div>
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-
+                                            <v-col >
+                                                <div class="font-weight-thin headline">Lost followers</div>
+                                                <follower-chip :followersList="followersData.lostFollowers"/>
 
                                             </v-col>
                                             <v-divider vertical/>
-                                            <v-col cols="3">
 
-
-                                                <div>Lost</div>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col v-for="(follower, i) in followersData.lostFollowers" :key="follower.key">
-                                                            <v-card height="50" width="50">
-                                                                <v-img :src="getPic(follower)"
-                                                                       class="white--text align-end"
-                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                                                       contain
-                                                                >
-                                                                </v-img>
-                                                                <div class="body-2">{{getUsername(follower)}}</div>
-                                                                <div class="caption">{{getName(follower)}}</div>
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-
-
+                                            <v-col >
+                                                <div class="font-weight-thin headline">Not following you back</div>
+                                                <follower-chip :followersList="followersData.notFollowsYouBack"/>
                                             </v-col>
                                             <v-divider vertical/>
-                                            <v-col cols="3">
 
-
-                                                <div>Not You</div>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col v-for="(follower, i) in followersData.notFollowsYouBack" :key="follower.key">
-                                                            <v-card height="50" width="50">
-                                                                <v-img :src="getPic(follower)"
-                                                                       class="white--text align-end"
-                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                                                       contain
-                                                                >
-                                                                </v-img>
-                                                                <div class="body-2">{{getUsername(follower)}}</div>
-                                                                <div class="caption">{{getName(follower)}}</div>
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-
-
-                                            </v-col>
-                                            <v-divider vertical/>
-                                            <v-col cols="2">
-
-
-                                                <div>You Not</div>
-                                                <v-container>
-                                                    <v-row>
-                                                        <v-col v-for="(follower, i) in followersData.youNotFollowBack" :key="follower.key">
-                                                            <v-card height="50" width="50">
-                                                                <v-img :src="getPic(follower)"
-                                                                       class="white--text align-end"
-                                                                       gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                                                       contain
-                                                                >
-                                                                </v-img>
-                                                                <div class="body-2">{{getUsername(follower)}}</div>
-                                                                <div class="caption">{{getName(follower)}}</div>
-                                                            </v-card>
-                                                        </v-col>
-                                                    </v-row>
-                                                </v-container>
-
-
+                                            <v-col>
+                                                <div class="font-weight-thin headline">You not follow back</div>
+                                                <follower-chip :followersList="followersData.youNotFollowBack"/>
                                             </v-col>
                                         </v-row>
                                     </v-expansion-panel-content>
@@ -380,8 +301,9 @@
     const api = axios.create({
         withCredentials: true
     });
-
+    import FollowerChip from "components/FollowerChip.vue";
     export default {
+        components: {FollowerChip},
         data() {
             return {
 
@@ -423,22 +345,12 @@
                 await this.loadInstAccountGraphAPI()
 
                 await this.loadInstFollowersListsDB()
-
             },
             /**/
 
-
-            getUsername(lostFollower) {
-                let array = lostFollower.split(", ")
-                return array[1].substr(array[1].indexOf('=') + 1)
-            },
-            getName(lostFollower) {
-                let array = lostFollower.split(", ")
-                return array[2].substr(array[2].indexOf('=') + 1)
-            },
-            getPic(lostFollower) {
-                let array = lostFollower.split(", ")
-                return array[3].substr(array[3].indexOf('=') + 1)
+            calculateLastUpdate(lastUpdate) {
+                let dataTime = lastUpdate.substr(0, lastUpdate.lastIndexOf('.'))
+                return dataTime.replace('-','.').replace('-','.').replace('T',' at ')
             },
 
 
