@@ -70,10 +70,11 @@
                         </v-card-actions>
                         <v-divider/>
                         <v-card-actions class="p-0">
-                            <v-expansion-panels accordion multiple tile flat>
+                            <v-expansion-panels accordion multiple tile flat hover focusable>
                                 <v-expansion-panel style="border-bottom: 1px solid #e0e0e0;"
-                                                   :disabled="followersLoading">
-                                    <v-expansion-panel-header>
+                                                   :disabled="followersLoading"
+                                >
+                                    <v-expansion-panel-header >
                                         <v-row>
                                             <v-col cols="1">
                                                 <strong>Followers</strong>
