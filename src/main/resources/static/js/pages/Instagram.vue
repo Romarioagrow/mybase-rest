@@ -41,9 +41,26 @@
 
                                             <v-dialog v-model="dialogFollowers" max-width="1500">
                                                 <v-card>
-                                                    <v-card-title>
+                                                    <v-card-title class="pb-0">
                                                         <div class="font-weight-light headline">Your&nbsp;<span class="font-weight-medium">{{instProfile.followers_count}}</span> followers from last to first</div>
                                                     </v-card-title>
+                                                    <v-card-actions >
+                                                        <v-row class="pt-0" style="height: 3rem !important;">
+                                                            <v-col cols="1">
+                                                                <v-btn text small>
+                                                                    <v-icon dark>mdi-wrench</v-icon>
+                                                                </v-btn>
+                                                            </v-col>
+                                                            <v-col cols="1">
+                                                                <v-btn text small>
+                                                                    <v-icon dark>mdi-cloud-upload</v-icon>
+                                                                </v-btn>
+                                                            </v-col>
+                                                            <v-col cols="3">
+                                                                <v-text-field label="Solo" single-line solo dense/>
+                                                            </v-col >
+                                                        </v-row>
+                                                    </v-card-actions>
                                                     <v-card-actions>
                                                         <follower-chip :followersList="followersData.followers"/>
                                                     </v-card-actions>
