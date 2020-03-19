@@ -8,20 +8,21 @@ import router from './router'
 
 export default new Vuex.Store({
     state: {
-        currentUser: null,
-        instProfile: null,
-        newFollowersData: null,
+        /*currentUser: null,*/
 
+        instProfile: null,
         instFollowers: null
+
+        //newFollowersData: null,
     },
     mutations: {
         setInstFollowers(currentState, instFollowers) {
             currentState.instFollowers = instFollowers
         },
 
-        addNewFollowersData(currentState, newFollowersData) {
+        /*addNewFollowersData(currentState, newFollowersData) {
             currentState.newFollowersData = newFollowersData
-        },
+        },*/
 
         setInstProfile(currentState, profile) {
             currentState.instProfile = profile
@@ -30,17 +31,24 @@ export default new Vuex.Store({
             currentState.currentUser = user
         },
         logoutUser(currentState) {
-            currentState.currentUser = null
+            currentState.instProfile = null
+            currentState.instFollowers = null
         }
     },
     actions: {
+        async doLogout(context) {
+            context.commit('logoutUser')
+            //await axios.post('https://localhost:8080/logout')
+        },
+
+
         loadInstDataToStorage(context, instFollowers) {
             context.commit('setInstFollowers', instFollowers)
         },
 
-        newFollowersData(context, user) {
+        /*newFollowersData(context, user) {
             context.commit('addNewFollowersData', user)
-        },
+        },*/
 
         loadInstUserProfile(context, instProfile) {
             context.commit('setInstProfile', instProfile)
@@ -52,10 +60,8 @@ export default new Vuex.Store({
             ///window.open('http://localhost:8080/login', '_blank');
             window.location.href = 'https://localhost:8080/login'
         },
-        async doLogout(context) {
-            await axios.post('https://localhost:8080/logout')
-            context.commit('logoutUser')
-        },
+
+
         loadUser(context, user) {
             console.log('USER LOADED: ' + user.toString())
             context.commit('setCurrentUser', user)

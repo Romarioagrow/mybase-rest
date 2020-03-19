@@ -1,7 +1,10 @@
 package mybase.config;
 
-import mybase.domain.MainUser;
-import mybase.repo.UserRepo;
+import lombok.AllArgsConstructor;
+import lombok.extern.java.Log;
+import mybase.domain.FBAuthUser;
+import mybase.repo.FBAuthRepo;
+import mybase.repo.GoogleUserRepo;
 import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
@@ -10,14 +13,14 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-import java.time.LocalDateTime;
-
 @Configuration
 @EnableWebSecurity
 @EnableOAuth2Sso
+@Log
+@AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    /*@Override
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .antMatcher("/**")
@@ -27,29 +30,32 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().logout().logoutSuccessUrl("/").permitAll()
                 .and()
                 .csrf().disable();
-    }*/
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
-                .authorizeRequests()
-                .anyRequest().permitAll()
-
-                /*.antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
-                .anyRequest().authenticated()
-                .and().logout().logoutSuccessUrl("/").permitAll()*/
-                .and()
-                .csrf().disable();
     }
 
-
+    /*GOOGLE AUTH*/
     @Bean
-    public PrincipalExtractor principalExtractor(UserRepo userDetailsRepo) {
+    public PrincipalExtractor principalExtractor(FBAuthRepo userDetailsRepo) {
         return map -> {
-            String userID = map.get("sub").toString();
+
+            log.info(map.toString());
+
+            String userID = map.get("id").toString();
+            String name = map.get("name").toString();
+
+            FBAuthUser user = userDetailsRepo.findById(userID).orElseGet(() ->
+            {
+                /*newUser.setUserID(userID);
+                newUser.setName(map.get("name").toString());
+                newUser.setEmail(map.get("email").toString());
+                newUser.setLocale(map.get("locale").toString());
+                newUser.setUser_pic(map.get("picture").toString());*/
+                return new FBAuthUser(userID, name);
+            });
+            //user.setLastVisit(LocalDateTime.now());
+            return userDetailsRepo.save(user);
+
+
+            /*String userID = map.get("sub").toString();
             MainUser user = userDetailsRepo.findById(userID).orElseGet(() ->
             {
                 MainUser newUser = new MainUser();
@@ -61,14 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 return newUser;
             });
             user.setLastVisit(LocalDateTime.now());
-            return userDetailsRepo.save(user);
+            return userDetailsRepo.save(user);*/
         };
     }
-
 }
-/*server.port=8080
-security.require-ssl=true
-server.ssl.key-store-type:PKCS12
-server.ssl.key-store=classpath:keystore.p12
-server.ssl.key-store-password=160816
-server.ssl.key-alias=tomcat*/

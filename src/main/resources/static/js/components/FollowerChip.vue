@@ -22,12 +22,8 @@
         methods: {
             goToInst(username) {
                 let url = 'https://www.instagram.com/' + username
-
-                //function openInNewTab(url) {
-                    let win = window.open(url, '_blank');
-                    win.focus();
-                //}
-
+                let win = window.open(url, '_blank');
+                win.focus();
             },
 
 

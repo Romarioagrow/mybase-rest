@@ -32,10 +32,11 @@ public class InstagramApiController {
         try
         {
             String username = dataToServer.get("username");
-            log.info("username: " + username);
-            InstProfile instProfile = instRepo.findById(username).get();
+            InstProfile instProfile = instRepo.findByUsername(username);
 
+            log.info("username: " + username);
             log.info("instProfile: " + instProfile.toString());
+
             if (instProfile.hasStoredFollowers())
             {
                 log.info("Loading from DB for user: " + username);

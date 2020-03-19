@@ -11,9 +11,9 @@ import java.time.LocalDateTime;
 
 @Data
 @Entity
-@Table(name = "main_usr")
+@Table(name = "google_usr")
 @NoArgsConstructor
-public class MainUser  {
+public class GoogleAuthUser {
     @Id
     @Column(name = "user_id")
     private String userID;

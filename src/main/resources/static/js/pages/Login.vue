@@ -4,36 +4,29 @@
             <v-row>
                 <v-col>
                     <v-card>
+                        <v-card-title>
+                            User Authorization
+                        </v-card-title>
                         <v-card-actions>
-                            <div > <!--v-if="!userAuth"-->
-                                <v-card-title>
-                                    User Authorization
-                                </v-card-title>
-                                <v-row >
-                                    <v-col>
-                                        <v-btn color="primary" outlined @click="googleAuth()" height="300" width="300">
-                                            Авторизация Google
-                                        </v-btn>
-                                    </v-col>
-                                    <v-col>
-                                        <v-btn color="red" outlined @click="instAuth()" height="300" width="300">
-                                            Авторизация Instagram
-                                        </v-btn>
-                                    </v-col>
-                                    <v-col>
-                                        <v-btn color="blue" outlined @click="facebookAuth()" height="300" width="300">
-                                            Авторизация Facebook
-                                        </v-btn>
-                                        <!--<facebook-login class="button"
-                                                        appId="547193729487262"
-                                                        @login="getUserData"
-                                                        @logout="onLogout"
-                                                        @get-initial-status="getUserData">
-                                        </facebook-login>-->
-                                        <!--<v-btn @click="fbTest">fb test</v-btn>-->
-                                    </v-col>
-                                </v-row>
-                            </div>
+                            <!--v-if="!userAuth"-->
+                            <v-row>
+                                <v-col>
+                                    <v-btn color="blue" outlined @click="facebookAuth()" height="300" width="300">
+                                        Авторизация Facebook
+                                    </v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn disabled color="red" outlined @click="instAuth()" height="300" width="300">
+                                        Авторизация Instagram
+                                    </v-btn>
+                                </v-col>
+                                <v-col>
+                                    <v-btn disabled color="primary" outlined @click="googleAuth()" height="300" width="300">
+                                        Авторизация Google
+                                    </v-btn>
+                                </v-col>
+
+                            </v-row>
                         </v-card-actions>
                     </v-card>
                 </v-col>
@@ -82,40 +75,6 @@
                         </div>
                     </v-card>
                 </v-col>
-
-                <!--<v-card>
-                    <div v-if="user">
-                        <v-card-title>
-                            <v-row>
-                                <v-col cols="3">
-                                    <v-avatar class="profile" color="grey" size="164" tile>
-                                        <v-img :src="user.user_pic"></v-img>
-                                    </v-avatar>
-                                </v-col>
-                                <v-col>
-                                    <div>Hey, {{user.name}}</div>
-                                    <v-text-field
-                                            label="Username"
-                                            solo
-                                            disabled
-                                            class="w-25"
-                                            :value="oldName"
-                                            v-model="oldNameText"
-                                    ></v-text-field>
-                                    <v-btn outlined disabled color="warning" @click="renameUser(user)">Rename</v-btn>
-                                </v-col>
-                            </v-row>
-                            <v-row>
-                                <v-col>
-                                    <v-btn outlined block color="error" @click="logout()"> &lt;!&ndash; v-else&ndash;&gt;
-                                        Logout
-                                    </v-btn>
-                                </v-col>
-                            </v-row>
-                        </v-card-title>
-                        <v-divider/>
-                    </div>
-                </v-card>-->
             </v-row>
         </v-container>
     </v-content>
@@ -159,6 +118,21 @@
             }
         },
         methods: {
+            logoutInstProfile() {
+
+
+                this.$store.dispatch('doLogout')
+
+                /*axios.post('', configJson).then(response => {
+                    console.log(response.data.lostFollowersAmount)
+
+                    this.followersData = response.data
+                    this.$store.dispatch('loadInstDataToStorage', response.data)
+                    this.followersLoading = false
+                })*/
+
+            },
+
             async fbTest() {
             },
 
@@ -222,29 +196,26 @@
                                         let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
                                         FB.api(apiURL, (instUser) => {
                                             console.log(instUser)
-                                            this.$store.dispatch('loadInstUserProfile', instUser) ///To Storage
+                                            this.$store.dispatch('loadInstUserProfile', instUser)
+                                            window.location.href = 'https://localhost:8080/login'///To Storage
                                         })
 
-                                        let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
+                                        /*let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
                                         FB.api(apiURLNewFollowers, (response) => {
-
                                             let followersObject = response.data[0].values
                                             let nextPage = response.paging.next
-
                                             console.log(followersObject)
                                             console.log(nextPage)
-
                                             let newFollowersData = new Map()
                                             followersObject.forEach((arrayItem) => {
                                                 if (arrayItem.value!== 0) {
                                                     console.log(arrayItem.end_time + ': ' + arrayItem.value)
-
                                                     newFollowersData.set(arrayItem.end_time, arrayItem.value)
                                                 }
                                             });
                                             console.log(newFollowersData)
                                             this.$store.dispatch('newFollowersData', newFollowersData)
-                                        })
+                                        })*/
                                     })
                                 });
                             }

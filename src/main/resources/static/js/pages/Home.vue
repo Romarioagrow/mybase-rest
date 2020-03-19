@@ -14,6 +14,11 @@
                     <div class="display-2 font-weight-thin">myBase Main Page for <span class="font-weight-light">{{user.name}}</span></div>
                 </v-col>
             </v-row>
+            <v-row v-else>
+                <v-col>
+                    <div class="display-2 font-weight-light">MyBase Instagram</div>
+                </v-col>
+            </v-row>
             <v-row>
                 <v-col>
                     <v-card max-width="434" tile>
