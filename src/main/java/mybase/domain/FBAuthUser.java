@@ -15,13 +15,9 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FBAuthUser {
-
     @Id
     @Column(name = "user_id")
     private String userID;
 
     private String name;
-
-    //public FBAuthUser(String )
-
 }

@@ -4,7 +4,6 @@ import axios from 'axios'
 import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
-import router from './router'
 
 export default new Vuex.Store({
     state: {
@@ -12,7 +11,6 @@ export default new Vuex.Store({
         instFollowers: null
     },
     mutations: {
-
         setInstFollowers(currentState, instFollowers) {
             currentState.instFollowers = instFollowers
         },
@@ -33,7 +31,6 @@ export default new Vuex.Store({
         loadInstDataToStorage(context, instFollowers) {
             context.commit('setInstFollowers', instFollowers)
         },
-
         loadInstUserProfile(context, instProfile) {
             context.commit('setInstProfile', instProfile)
             axios.post('/api/social/instagram/graph/save_profile', instProfile).then(value => {

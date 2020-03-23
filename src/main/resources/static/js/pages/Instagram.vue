@@ -114,16 +114,24 @@
                                                 <strong>Followers</strong>
                                             </v-col>
                                             <v-col>
-                                                <div>New:&nbsp;<span class="font-weight-medium">{{followersData.newFollowersAmount}}</span></div>
+                                                <div>
+                                                    New:&nbsp;<span class="font-weight-medium">{{followersData.newFollowersAmount}}</span>
+                                                </div>
                                             </v-col>
                                             <v-col>
-                                                <div>Lost:&nbsp;<span class="font-weight-medium">{{followersData.lostFollowersAmount}}</span></div>
+                                                <div>
+                                                    Lost:&nbsp;<span class="font-weight-medium">{{followersData.lostFollowersAmount}}</span>
+                                                </div>
                                             </v-col>
                                             <v-col>
-                                                <div>Not follows you:&nbsp;<span class="font-weight-medium">{{followersData.notYouAmount}}</span></div>
+                                                <div>
+                                                    Not follows you:&nbsp;<span class="font-weight-medium">{{followersData.notYouAmount}}</span>
+                                                </div>
                                             </v-col>
                                             <v-col>
-                                                <div>You not follow:&nbsp;<span class="font-weight-medium">{{followersData.youNotAmount}}</span></div>
+                                                <div>
+                                                    You not follow:&nbsp;<span class="font-weight-medium">{{followersData.youNotAmount}}</span>
+                                                </div>
                                             </v-col>
                                         </v-row>
                                     </v-expansion-panel-header>
@@ -134,20 +142,16 @@
                                                 <follower-chip :followersList="followersData.newFollowers"/>
                                             </v-col>
                                             <v-divider vertical/>
-
                                             <v-col>
                                                 <div class="font-weight-thin headline">Lost followers</div>
                                                 <follower-chip :followersList="followersData.lostFollowers"/>
-
                                             </v-col>
                                             <v-divider vertical/>
-
                                             <v-col>
                                                 <div class="font-weight-thin headline">Not following you back</div>
                                                 <follower-chip :followersList="followersData.notFollowsYouBack"/>
                                             </v-col>
                                             <v-divider vertical/>
-
                                             <v-col>
                                                 <div class="font-weight-thin headline">You not follow back</div>
                                                 <follower-chip :followersList="followersData.youNotFollowBack"/>
@@ -178,19 +182,22 @@
     });
     import FollowerChip from "components/FollowerChip.vue";
     export default {
-        /*!!!!!!!!!
-        *
-        * ПРИРОСТ FOLLOWERS FOR/SINCE LAST UPDATE
-        *
-        * */
+
         components: {FollowerChip},
         data() {
             return {
-
+                /**/
+                newAmountDifference: 0,
+                lostAmountDifference: 0,
+                followersAmount: 0,
+                followingAmount: 0,
+                notFollowAmount: 0,
+                notFollowingAmount: 0,
+                /**/
                 dialogFollowers: false,
                 followersLoading: true,
                 buttonColor: 'error',
-
+                /**/
                 instAccount: {},
                 instUsername: 'romarioagrow',
                 scrapperInstUsername: 'romarioagrow',
@@ -203,11 +210,11 @@
                 dialog: false,
                 postsLoading: true,
                 totalPosts: '',
-
+                /**/
                 followsLoading: true,
                 postDialog: false,
                 followersDialog: false,
-
+                /**/
                 followersData: {
                 }
             }
@@ -220,12 +227,8 @@
                 const update = this.followersData.lastUpdate
                 return update ? this.calculateLastUpdate(update) : 'X'
             },
-
             instProfile() {
                 return this.$store.state.instProfile
-            },
-            newFollowersData() {
-                return this.$store.state.newFollowersData
             }
         },
         methods: {
@@ -239,13 +242,10 @@
                 this.dialogFollowers = true
 
             },
-
             calculateLastUpdate(lastUpdate) {
                 let dataTime = lastUpdate.substr(0, lastUpdate.lastIndexOf('.'))
                 return dataTime.replace('-','.').replace('-','.').replace('T',' at ')
             },
-
-
             loadInstAccountGraphAPI() {
                 this.instAccount = this.$store.state.instProfile /// GETTER()!
             },
@@ -264,8 +264,12 @@
                     this.loadInstFollowersLists(url, 'no_color')
                 }
             },
+
             async loadInstFollowersLists(url, no_color) {
                 this.followersLoading = true
+
+                let newAmountOld = this.followersData.newFollowersAmount
+                let lostAmountOld = this.followersData.lostFollowersAmount
 
                 let requestURL = url ? url : '/api/social/instagram/graph/loadInstFollowersData'
                 console.log('loadInstFollowersLists')
@@ -277,18 +281,24 @@
                     'sessionid': this.sessionid
                 }
                 await axios.post(requestURL, dataToServer, configJson).then(response => {
-                    console.log(response.data.lostFollowersAmount)
-
+                    ///console.log(response.data.lostFollowersAmount)
                     this.followersData = response.data
                     this.$store.dispatch('loadInstDataToStorage', response.data)
+
+                    let newFollowersAmount = this.followersData.newFollowersAmount
+                    this.newAmountDifference = newFollowersAmount > newAmountOld ? newFollowersAmount - newAmountOld : newAmountOld - newFollowersAmount
+
+                    let lostFollowersAmount = this.followersData.lostFollowersAmount
+                    this.lostAmountDifference = lostFollowersAmount > lostAmountOld ? lostFollowersAmount = lostAmountOld : lostAmountOld - lostFollowersAmount
+
                     this.followersLoading = false
                 })
 
                 this.followersLoading = false
                 if (!no_color) this.buttonColor = 'success'
             },
-            /**/
 
+            /**/
             loadCrapperInstAccount() {
                 console.log('loadInstAccount')
                 this.loading = true

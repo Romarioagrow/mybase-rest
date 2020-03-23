@@ -6,7 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface InstProfileRepo extends JpaRepository<InstProfile, String> {
-
-
     InstProfile findByUsername(String username);
 }

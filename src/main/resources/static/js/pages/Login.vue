@@ -25,7 +25,6 @@
                                         Авторизация Google
                                     </v-btn>
                                 </v-col>
-
                             </v-row>
                         </v-card-actions>
                     </v-card>
@@ -81,7 +80,6 @@
 </template>
 
 <script>
-    import axios from "axios";
     import facebookLogin from 'facebook-login-vuejs';
     export default {
         components: {
@@ -112,44 +110,13 @@
             },
             userAuth() {
                 return this.$store.state.currentUser
-            },
-            oldName() {
-                return this.$store.state.currentUser.name
             }
         },
         methods: {
             logoutInstProfile() {
-
-
                 this.$store.dispatch('doLogout')
-
-                /*axios.post('', configJson).then(response => {
-                    console.log(response.data.lostFollowersAmount)
-
-                    this.followersData = response.data
-                    this.$store.dispatch('loadInstDataToStorage', response.data)
-                    this.followersLoading = false
-                })*/
-
             },
-
-            async fbTest() {
-            },
-
             facebookAuth() {
-
-                /// ОСНОВНОЙ АЛГОРИТМ ПОЛУЧЕНИЯ ДАННЫХ INSTAGRAM API
-                /*
-                * 1.X Авторизация на фейсбук
-                * 2.X Получение фейсбук id и access-token
-                * 3.X Получение инстаграм-business-id
-                * 4.X Получение информации о профиле и базовые данные
-                * 5. Получение постов и медиа
-                * 6. Получение охватов и инсайдов
-                * 7. Получение стори и хайлайтс
-                * 8. ПОЛУЧЕНИЕ СПИСКА ПОДПИСЧИКОВ!!!
-                *
-                * */
 
                 FB.login((response) =>
                 {
@@ -172,7 +139,7 @@
                                 console.log('accessToken:' + accessToken)
                                 console.log('uid:' + uid)
 
-                                /*!!!!!ВСЕ В БЭК!!!!!*/
+                                /*В БЭК!*/
                                 /*getFB_AccountData*/
                                 FB.api('/me/accounts', (response) =>
                                 {
@@ -195,7 +162,7 @@
                                         /*get Object INST_USER*/
                                         let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
                                         FB.api(apiURL, (instUser) => {
-                                            console.log(instUser)
+                                            //console.log(instUser)
                                             this.$store.dispatch('loadInstUserProfile', instUser)
                                             window.location.href = 'https://localhost:8080/login'///To Storage
                                         })

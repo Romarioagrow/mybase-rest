@@ -54,7 +54,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             //user.setLastVisit(LocalDateTime.now());
             return userDetailsRepo.save(user);
 
-
             /*String userID = map.get("sub").toString();
             MainUser user = userDetailsRepo.findById(userID).orElseGet(() ->
             {

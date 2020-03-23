@@ -39,11 +39,3 @@ public class WebMvcConfig  {
     }
 }
 
-/*security.oauth2.client.clientId=547193729487262
-security.oauth2.client.clientSecret=e70a24c61fddedf03e20dece7b03e932
-security.oauth2.client.accessTokenUri=https://graph.facebook.com/oauth/access_token
-security.oauth2.client.userAuthorizationUri=https://www.facebook.com/dialog/oauth
-security.oauth2.client.tokenName=oauth_token
-security.oauth2.client.authenticationScheme=query
-security.oauth2.client.clientAuthenticationScheme=form
-security.oauth2.resource.userInfoUri=https://graph.facebook.com/me*/

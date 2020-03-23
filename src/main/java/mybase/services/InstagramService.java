@@ -40,28 +40,8 @@ public class InstagramService {
     private final InstFollowersRepo followersRepo;
     private final WebMvcConfig httpClient;
 
-    /*
-     * Отедльно вывод инфо
-     * Отдельно вывод постов
-     * Отдельно вывод подпсичиков
-     * Отдельно сборка профиля в базу
-     *
-     *
-     * */
-
     public InstFollowers loadInstFollowersData(Map<String, String> dataToServer) {
         log.info("ProcessFollowers:" + dataToServer.toString());
-        /*
-         * 1. Объект с полями для:
-         * V.Подсисчиков и подписок,
-         * V.Обновленный и прошлый список подписчиков,
-         * V.Список отписавшихся и подписавшихся,
-         * V.Список на кого не подписанв ответ и кто не подписан в ответ,
-         *
-         * Объект для Главного InstProfile, логин по username
-         *
-         *
-         * */
 
         /*LOAD USER DATA*/
         String username = dataToServer.get("username");
@@ -111,8 +91,8 @@ public class InstagramService {
             }
         });
 
-        //Map<String,String> treeMap = new TreeMap<>(Comparator.comparingInt(String::length));
-        //notFollowingYou.entrySet().
+        /*Map<String,String> treeMap = new TreeMap<>(Comparator.comparingInt(String::length));
+        notFollowingYou.entrySet()*/
 
         instFollowers.setNotFollowsYouBack(notFollowingYou);
         instFollowers.setYouNotFollowBack(youNotFollow);
@@ -122,9 +102,7 @@ public class InstagramService {
         instRepo.save(instProfile);
         /**/
 
-        /*System.out.println();
-        System.out.println();*/
-        log.info("RESULT///");
+        log.info("RESULT\n");
         log.info("InstProfile: " + instProfile.toString());
         log.info("InstFollowers: " + instFollowers.toString());
         log.info("NewFollowers: " + instFollowers.getNewFollowers().size());
@@ -180,10 +158,6 @@ public class InstagramService {
             return new ResponseEntity<>(e, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    /*private boolean needToChange() {
-        return false;
-    }*/
 
     private ResponseEntity<?> updateInstProfile(InstProfile instProfileDB, InstProfile instProfileDATA) {
         log.info("Updating: " + instProfileDATA.toString());
@@ -462,7 +436,8 @@ public class InstagramService {
                 }
 
 
-                /*////////////////////*/
+                /*!!!TO THREADS
+                *////////////////////*/
                 InstFollowers instFollowers = instProfile.getInstFollowers();
                 Map<String, String> oldFollowers = instFollowers.getFollowers();
                 Map<String, String> lostFollowers = instFollowers.getLostFollowers();
@@ -485,8 +460,6 @@ public class InstagramService {
                         }
                     });
 
-
-
                     /*CHECK NEW*/
                     followersDATA.forEach((newFollowerID, newFollowerDATA) -> {
                         if (oldFollowers.get(newFollowerID) == null)
@@ -498,10 +471,7 @@ public class InstagramService {
                         }
                     });
 
-
                     //newFollowers.(Comparator.comparing());
-
-
 
                     instFollowers.setLostFollowers(lostFollowers);
                     instFollowers.setNewFollowers(newFollowers);
@@ -547,7 +517,7 @@ public class InstagramService {
                     properties.put(followerKey, followerVal);
                 });
 
-                followersDATA.put(followerUsername, properties.toString()); /// TO_STRING???
+                followersDATA.put(followerUsername, properties.toString()); /// TO_STRING?
             });
         });
         log.info("followers: " + followersDATA.size());
@@ -555,8 +525,8 @@ public class InstagramService {
     }
 
     private JsonElement parseJsonBody(String responseString) throws IOException, NullPointerException, IllegalStateException {
-        //String responseBody = Objects.requireNonNull(response.body()).string();
-        //String responseBody = response.body().string();
+        /*String responseBody = Objects.requireNonNull(response.body()).string();
+        String responseBody = response.body().string();*/
         return new JsonParser().parse(responseString);
     }
 
