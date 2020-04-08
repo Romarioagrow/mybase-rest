@@ -22,6 +22,14 @@ repositories {
     mavenCentral()
 }
 
+/*task buildFront(type: YarnTask) {
+    args = ['start']
+}
+
+yarn_install.dependsOn(yarn_cache_clean)
+buildFront.dependsOn(yarn_install)
+processResources.dependsOn(buildFront)*/
+
 dependencies {
     //compile group: 'com.android.volley', name: 'volley', version: '1.1.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
