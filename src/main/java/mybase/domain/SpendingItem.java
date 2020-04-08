@@ -31,4 +31,5 @@ public class SpendingItem implements Serializable {
         this.type = type;
         this.currency = currency;
     }
+    /**/
 }
