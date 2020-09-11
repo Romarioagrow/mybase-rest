@@ -1,12 +1,11 @@
-import Vue          from 'vue';
-import VueRouter    from "vue-router";
-import Home      from "pages/Home.vue";
-import User      from "pages/User.vue";
-import Login      from "pages/Login.vue";
-import Posts      from "pages/Posts.vue";
-import Instagram      from "pages/Instagram.vue";
-import Spending      from "pages/Spending.vue";
-
+import Vue from 'vue';
+import VueRouter from "vue-router";
+import Home from "pages/Home.vue";
+import User from "pages/User.vue";
+import Login from "pages/Login.vue";
+import Posts from "pages/Posts.vue";
+import Instagram from "pages/Instagram.vue";
+import Spending from "pages/Spending.vue";
 
 Vue.use(VueRouter);
 const routes = [

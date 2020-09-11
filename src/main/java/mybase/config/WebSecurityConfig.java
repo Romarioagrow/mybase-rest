@@ -36,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PrincipalExtractor principalExtractor(FBAuthRepo userDetailsRepo) {
         return map -> {
-
             log.info(map.toString());
 
             String userID = map.get("id").toString();

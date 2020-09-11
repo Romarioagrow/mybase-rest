@@ -28,21 +28,18 @@ public class InstagramApiController {
     /*GRAPH*/
     @PostMapping("/graph/loadInstFollowersListsDB")
     private InstFollowers loadInstFollowersListsDB(@RequestBody Map<String, String> dataToServer) {
-        try
-        {
+        try {
             String username = dataToServer.get("username");
             InstProfile instProfile = instRepo.findByUsername(username);
 
             log.info("username: " + username);
             log.info("instProfile: " + instProfile.toString());
 
-            if (instProfile.hasStoredFollowers())
-            {
+            if (instProfile.hasStoredFollowers()) {
                 log.info("Loading from DB for user: " + username);
                 return instProfile.getInstFollowers();
             }
-            else
-            {
+            else {
                 log.info("Loading from API for user: " + username);
                 return loadInstFollowersData(dataToServer);
             }

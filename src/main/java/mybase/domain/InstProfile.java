@@ -20,7 +20,37 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class InstProfile implements Serializable /*extends Account*/ {
 
-       /*
+    public InstProfile(String username) {
+        this.username = username;
+    }
+
+    @Id
+    private String username;
+
+    @Column(name = "main_user_id")
+    private String mainUserID;
+
+    @JsonIgnore
+    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, targetEntity = InstFollowers.class)
+    private InstFollowers instFollowers;
+
+    @Column(length = 1000)
+    private String profile_picture_url, website;
+
+    private String biography, id, ig_id, name;
+    /// youUnfollowedFrom
+
+    private Integer followers_count, follows_count, media_count;
+
+    private LocalDateTime lastDataChange;
+
+    private boolean hasStoredFollowers = false;
+
+    public boolean hasStoredFollowers() {
+        return this.hasStoredFollowers;
+    }
+
+           /*
       "biography": "500 internal server error",
       "id": "17841401343956222",
       "ig_id": 1038252798,
@@ -40,34 +70,4 @@ public class InstProfile implements Serializable /*extends Account*/ {
      * 3.V Сохранить Объект UserProfile в хранилище Store на клиенте
      * 4.V Отправить Объект UserProfile на сервер для обработки
      * */
-
-    public InstProfile(String username) {
-        this.username = username;
-    }
-
-    @Id
-    private String username;
-
-    @Column(name = "main_user_id")
-    private String mainUserID;
-
-    @JsonIgnore
-    @OneToOne(fetch = FetchType.EAGER, cascade=CascadeType.ALL, targetEntity = InstFollowers.class)
-    private InstFollowers instFollowers;
-
-    @Column(length = 1000)
-    private String profile_picture_url, website;
-
-    private String biography, id, ig_id, name;
-    ///youUnfollowedFrom
-
-    private Integer followers_count, follows_count, media_count;
-
-    private LocalDateTime lastDataChange;
-
-    private boolean hasStoredFollowers = false;
-
-    public boolean hasStoredFollowers() {
-        return this.hasStoredFollowers;
-    }
 }

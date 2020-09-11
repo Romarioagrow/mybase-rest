@@ -16,12 +16,12 @@
                                     </v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn disabled color="red" outlined @click="instAuth()" height="300" width="300">
+                                    <v-btn color="red" outlined @click="instAuth()" height="300" width="300">
                                         Авторизация Instagram
                                     </v-btn>
                                 </v-col>
                                 <v-col>
-                                    <v-btn disabled color="primary" outlined @click="googleAuth()" height="300" width="300">
+                                    <v-btn color="primary" outlined @click="googleAuth()" height="300" width="300">
                                         Авторизация Google
                                     </v-btn>
                                 </v-col>

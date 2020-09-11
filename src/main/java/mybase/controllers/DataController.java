@@ -16,16 +16,6 @@ import java.util.Map;
 public class DataController {
     private final DataService dataService;
 
-    /*@PostMapping("/instProfile")
-    private void instProfile(){
-        dataService.instProfile();
-    }
-
-    @PostMapping("/instFollowers")
-    private void instFollowers() throws IOException {
-        dataService.instFollowers();
-    }*/
-
     @GetMapping("/loadSpendingItems")
     private Map<String, Object> loadSpendingItems(@AuthenticationPrincipal GoogleAuthUser user) {
         return dataService.allUserSpending(user.getUserID());
@@ -42,4 +32,14 @@ public class DataController {
     ){
         return dataService.deleteSpendingItem(user.getUserID(), spendingID);
     }
+
+     /*@PostMapping("/instProfile")
+    private void instProfile(){
+        dataService.instProfile();
+    }
+
+    @PostMapping("/instFollowers")
+    private void instFollowers() throws IOException {
+        dataService.instFollowers();
+    }*/
 }

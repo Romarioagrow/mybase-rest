@@ -31,18 +31,13 @@ buildFront.dependsOn(yarn_install)
 processResources.dependsOn(buildFront)*/
 
 dependencies {
-    //compile group: 'com.android.volley', name: 'volley', version: '1.1.0'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
     compile group: 'org.springframework.social', name: 'spring-social-facebook', version: '2.0.3.RELEASE'
-
     compile group: 'org.seleniumhq.selenium', name: 'selenium-java'
-
-
     compile 'org.brunocvcunha.instagram4j:instagram4j:1.13'
     compile group: 'com.github.igor-suhorukov', name: 'instagramscraper', version: '2.2'
     compile group: 'com.sachinhandiekar', name: 'jInstagram', version: '1.2.2'
     compile group: 'com.restfb', name: 'restfb', version: '2.8.0'
-
     compile('org.springframework.boot:spring-boot-starter-security')
     compile('org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.0.0.RELEASE')
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
@@ -51,10 +46,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.2.3.RELEASE'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-
-
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
-
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
