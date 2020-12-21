@@ -51,7 +51,6 @@
       </v-btn>
     </v-app-bar>
 
-
     <router-view></router-view>
 
   </div>
