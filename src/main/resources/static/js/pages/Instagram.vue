@@ -8,7 +8,7 @@
                             <v-icon class="mr-3">mdi-instagram</v-icon>
                             <div class="headline font-weight-light">Instagram&nbsp;</div><span class="headline font-weight-light">{{instProfile.username}}</span>
                         </v-card-title>
-                        <v-card-actions v-if="instProfile">
+                        <v-card-actions > <!--v-if="instProfile"-->
                             <v-row>
                                 <v-col cols="2">
                                     <v-card width="150" height="150" @click.stop="dialogGraph = true" hover class="ml-12">

@@ -1,4 +1,4 @@
-package mybase.config;
+package mybase.config.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
@@ -20,16 +20,30 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @AllArgsConstructor
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    /*@Override
+    protected void configure(HttpSecurity http) throws Exception {
+        http
+                .antMatcher("/**")
+                .authorizeRequests()
+                .antMatchers("/login**", "/js/**", "/error**").permitAll()
+                .anyRequest().authenticated()
+                //.anyRequest().permitAll()
+                .and().logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                .csrf().disable();
+    }*/
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .antMatcher("/**")
                 .authorizeRequests()
-                .antMatchers("/", "/login**", "/js/**", "/error**").permitAll()
                 .anyRequest().authenticated()
-                .and().logout().logoutSuccessUrl("/").permitAll()
+                //.anyRequest().permitAll()
                 .and()
-                .csrf().disable();
+                    .logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                    .csrf().disable();
     }
 
     /*GOOGLE AUTH*/
@@ -41,8 +55,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             String userID = map.get("id").toString();
             String name = map.get("name").toString();
 
-            FBAuthUser user = userDetailsRepo.findById(userID).orElseGet(() ->
-            {
+            FBAuthUser user = userDetailsRepo.findById(userID).orElseGet(() -> {
                 /*newUser.setUserID(userID);
                 newUser.setName(map.get("name").toString());
                 newUser.setEmail(map.get("email").toString());

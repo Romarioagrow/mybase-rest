@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueResource from 'vue-resource'
 import router from "./router";
-import App from "pages/App.vue"
+import App from "App.vue"
 import Vuetify from "vuetify";
 import Vuesax from 'vuesax'
 import 'vuetify/dist/vuetify.min.css'

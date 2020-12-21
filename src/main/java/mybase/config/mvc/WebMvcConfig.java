@@ -1,4 +1,4 @@
-package mybase.config;
+package mybase.config.mvc;
 
 import me.postaddict.instagram.scraper.cookie.CookieHashSet;
 import me.postaddict.instagram.scraper.cookie.DefaultCookieJar;

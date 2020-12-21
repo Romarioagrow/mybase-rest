@@ -8,7 +8,7 @@
             </v-row>
             <v-row v-else>
                 <v-col>
-                    <div class="display-2 font-weight-light">MyBase Instagram</div>
+                    <div class="display-2 font-weight-light">MyBase</div>
                 </v-col>
             </v-row>
             <v-row>
@@ -28,7 +28,7 @@
                         </v-img>
                     </v-card>
                 </v-col>
-                <v-col v-if="!user">
+                <v-col > <!--v-if="!user"-->
                     <v-card
                             height="600"
                             max-width="400"

@@ -7,6 +7,7 @@ import mybase.services.DataService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @Log
@@ -18,7 +19,10 @@ public class DataController {
 
     @GetMapping("/loadSpendingItems")
     private Map<String, Object> loadSpendingItems(@AuthenticationPrincipal GoogleAuthUser user) {
-        return dataService.allUserSpending(user.getUserID());
+        if (user != null) {
+            return dataService.allUserSpending(user.getUserID());
+        }
+        return new HashMap<>();
     }
 
     @PostMapping("/addNewSpendingItem")
