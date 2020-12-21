@@ -9,8 +9,6 @@
 <script>
     import AppTemplate from "components/AppTemplate.vue";
 
-    //import ClientApiService from "services/ClientApiService.js"
-
     const clientApiService = require('services/ClientApiService.js');
 
     export default {
@@ -26,8 +24,11 @@
       methods: {
         initApp() {
           console.log('App loaded')
-
           clientApiService.showInfo();
+
+          this.$store.dispatch('hasAuth')
+
+          //const hasAuth = clientApiService
 
 
 

@@ -5,12 +5,26 @@ import createPersistedState from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
+const clientApiService = require('services/ClientApiService.js');
+
 export default new Vuex.Store({
     state: {
-        instProfile: null,
-        instFollowers: null
+
+        user: {
+            currentProfile: null,
+            instProfile: null,
+            instFollowers: null
+        }
+
+
     },
+
     mutations: {
+        setCurrentProfile(currentState, currentProfile) {
+            currentState.currentProfile = currentProfile
+        },
+
+
         setInstFollowers(currentState, instFollowers) {
             currentState.instFollowers = instFollowers
         },
@@ -22,7 +36,21 @@ export default new Vuex.Store({
             currentState.instFollowers = null
         }
     },
+
     actions: {
+        hasAuth(context) {
+            //context.commit('')
+            const hasAuth = clientApiService.hasAuth()
+
+            if (hasAuth) {
+
+            }
+            else {
+
+            }
+        },
+
+
         async doLogout(context) {
             context.commit('logoutUser')
             window.location.href = 'https://localhost:8080/logout'
