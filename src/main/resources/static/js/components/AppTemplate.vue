@@ -1,6 +1,9 @@
 <template>
   <div>
-    <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app> <!--v-if="userAuth"-->
+
+<!--<app-main-drawer>-->
+
+    <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app absolute > <!--v-if="userAuth"-->
       <v-list dense>
         <template v-for="item in menuLinks">
           <v-list-item :key="item.text" link @click="goTo(item.link)">
@@ -26,9 +29,9 @@
     >
 
       <div style="width: 5rem; margin-left: -1rem; cursor: pointer;" @click="goTo('/')">
-        <v-img src="https://i.pinimg.com/originals/c0/c8/76/c0c876ca5ddde13f55fd2b3d19a5e53d.jpg" height="64"></v-img>
+        <v-img @click.stop="drawer = !drawer" src="https://i.pinimg.com/originals/c0/c8/76/c0c876ca5ddde13f55fd2b3d19a5e53d.jpg" height="64"></v-img>
       </div>
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer" v-if="userAuth"/>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" /> <!--v-if="userAuth"-->
       <v-toolbar-title style="width: 300px" class="ml-0 pl-4">
       </v-toolbar-title>
       <v-spacer/>
@@ -67,12 +70,13 @@ export default {
     return {
       user: null,
       dialog: false,
-      drawer: null,
+      drawer: true,
       menuLinks: [
         {icon: 'mdi-airplay', text: 'Main page', link: '/'},
         {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/cabinet'},
         {icon: 'mdi-instagram', text: 'Instagram', link: '/instagram'},
         {icon: 'mdi-currency-usd', text: 'Spending', link: '/spending'},
+        {icon: 'mdi-menu', text: 'The Logs', link: '/thelogs'},
       ]
     }
   },

@@ -16,7 +16,7 @@ export function doRequest(url, data, config) {
 
 export function hasAuth() {
     //const apiUrl = ''
-    console.log('hasAuth')
+    //console.log('hasAuth')
     return doGetRequest(request01)
 }
 

@@ -16,7 +16,6 @@ export default new Vuex.Store({
             instFollowers: null
         }
 
-
     },
 
     mutations: {
@@ -43,10 +42,10 @@ export default new Vuex.Store({
             const hasAuth = clientApiService.hasAuth()
 
             if (hasAuth) {
-
+                console.log('hasAuth')
             }
             else {
-
+                console.log('NO AUTH')
             }
         },
 

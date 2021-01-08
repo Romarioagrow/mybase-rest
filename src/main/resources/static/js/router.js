@@ -6,6 +6,7 @@ import Login from "pages/Login.vue";
 import Posts from "pages/Posts.vue";
 import Instagram from "pages/Instagram.vue";
 import Spending from "pages/Spending.vue";
+import TheLogs from "pages/TheLogs.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -15,6 +16,7 @@ const routes = [
     {path: '/posts', component: Posts},
     {path: '/instagram', component: Instagram},
     {path: '/spending', component: Spending},
+    {path: '/thelogs', component: TheLogs},
 ];
 
 export default new VueRouter({
