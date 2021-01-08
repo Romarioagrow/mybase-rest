@@ -2,12 +2,12 @@ package mybase.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import mybase.domain.AccountUser;
 import mybase.domain.GoogleAuthUser;
 import mybase.services.DataService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.Map;
 
 @Log
@@ -17,22 +17,28 @@ import java.util.Map;
 public class DataController {
     private final DataService dataService;
 
+    private static final String hardcodedUserID = "hardcodeID0";
+
     @GetMapping("/loadSpendingItems")
     private Map<String, Object> loadSpendingItems(@AuthenticationPrincipal GoogleAuthUser user) {
         if (user != null) {
             return dataService.allUserSpending(user.getUserID());
         }
-        return new HashMap<>();
+        else {
+            return dataService.allUserSpending(hardcodedUserID);
+        }
     }
 
     @PostMapping("/addNewSpendingItem")
-    private Map<String, Object> addNewSpendingItem(@AuthenticationPrincipal GoogleAuthUser user, @RequestBody Map<String, String> spendingData
+    private Map<String, Object> addNewSpendingItem(@AuthenticationPrincipal AccountUser user,
+                                                   @RequestBody Map<String, String> spendingData
     ){
-        return dataService.addNewSpendingItem(user.getUserID(), spendingData);
+        return dataService.addNewSpendingItem(user, spendingData);
     }
 
     @PostMapping("/deleteSpendingItem")
-    private Map<String, Object> deleteSpendingItem(@AuthenticationPrincipal GoogleAuthUser user, @RequestBody Integer spendingID
+    private Map<String, Object> deleteSpendingItem(@AuthenticationPrincipal GoogleAuthUser user,
+                                                   @RequestBody Integer spendingID
     ){
         return dataService.deleteSpendingItem(user.getUserID(), spendingID);
     }

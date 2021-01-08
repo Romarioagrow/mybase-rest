@@ -2,27 +2,11 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import me.postaddict.instagram.scraper.Instagram;
-import me.postaddict.instagram.scraper.cookie.CookieHashSet;
-import me.postaddict.instagram.scraper.cookie.DefaultCookieJar;
-import me.postaddict.instagram.scraper.interceptor.ErrorInterceptor;
-import me.postaddict.instagram.scraper.model.Account;
-import me.postaddict.instagram.scraper.model.Media;
-import me.postaddict.instagram.scraper.model.PageObject;
+import mybase.domain.AccountUser;
 import mybase.domain.SpendingItem;
 import mybase.repo.SpendingRepo;
-import okhttp3.OkHttpClient;
-import okhttp3.logging.HttpLoggingInterceptor;
-import org.brunocvcunha.instagram4j.Instagram4j;
-import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowersRequest;
-import org.brunocvcunha.instagram4j.requests.InstagramGetUserFollowingRequest;
-import org.brunocvcunha.instagram4j.requests.InstagramSearchUsernameRequest;
-import org.brunocvcunha.instagram4j.requests.payload.InstagramGetUserFollowersResult;
-import org.brunocvcunha.instagram4j.requests.payload.InstagramSearchUsernameResult;
-import org.brunocvcunha.instagram4j.requests.payload.InstagramUserSummary;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -48,18 +32,31 @@ public class DataService {
         return payload;
     }
 
-    public Map<String, Object> addNewSpendingItem(String userID, Map<String, String> spendingData) {
+    public Map<String, Object> addNewSpendingItem(AccountUser accountUser, Map<String, String> spendingData) {
         double amount = Double.parseDouble(spendingData.get("amount"));
         String type = spendingData.get("type");
         String info = spendingData.get("info");
         String currency = spendingData.get("currency");
         LocalDate date = LocalDate.parse(spendingData.get("date"));
 
+        String userID;
+
+        if (userAccountAuthenticated(accountUser)) {
+            userID = accountUser.getUserID();
+        }
+        else {
+            userID = "hardcodeID0";
+        }
+
         SpendingItem spending = new SpendingItem(userID, amount, type, info, currency);
         spending.setDate(date);
         spendingRepo.save(spending);
 
         return allUserSpending(userID);
+    }
+
+    private boolean userAccountAuthenticated(AccountUser accountUser) {
+        return false;
     }
 
     public Map<String, Object> deleteSpendingItem(String userID, Integer spendingID) {
