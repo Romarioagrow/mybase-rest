@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 @Log
 @Service
 @AllArgsConstructor
-public class DataService {
+public class SpendingItemService {
     private final SpendingRepo spendingRepo;
-    public Map<String, Object> allUserSpending(String userID) {
+    public Map<String, Object> loadAllUserSpending(String userID) {
         Map<String, Object> payload = new LinkedHashMap<>();
 
         /*Все Спендинги*/
@@ -52,7 +52,7 @@ public class DataService {
         spending.setDate(date);
         spendingRepo.save(spending);
 
-        return allUserSpending(userID);
+        return loadAllUserSpending(userID);
     }
 
     private boolean userAccountAuthenticated(AccountUser accountUser) {
@@ -62,6 +62,6 @@ public class DataService {
     public Map<String, Object> deleteSpendingItem(String userID, Integer spendingID) {
         SpendingItem deleteItem = spendingRepo.findItemById(spendingID);
         spendingRepo.delete(deleteItem);
-        return allUserSpending(userID);
+        return loadAllUserSpending(userID);
     }
 }
