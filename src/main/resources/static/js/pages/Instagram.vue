@@ -220,7 +220,7 @@
             }
         },
         created() {
-            this.loadInstagramPage()
+            //this.loadInstagramPage()
         },
         computed: {
             lastUpdate() {
@@ -233,8 +233,8 @@
         },
         methods: {
             async loadInstagramPage() {
-                await this.loadInstAccountGraphAPI()
-                await this.loadInstFollowersListsDB()
+              //  await this.loadInstAccountGraphAPI()
+              //  await this.loadInstFollowersListsDB()
             },
             /**/
 
