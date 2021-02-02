@@ -7,6 +7,7 @@ import mybase.domain.GoalEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,6 +17,6 @@ import java.util.List;
 public class MainUser extends AccountUser {
 
     @OneToMany
-    private List<GoalEntity> goalEntities;
+    private List<GoalEntity> goalEntities = new ArrayList<>();
 
 }

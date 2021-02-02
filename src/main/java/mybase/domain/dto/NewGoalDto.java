@@ -7,6 +7,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class NewGoalDto {
 
-    String s;
+    String goalText;
+
+
+
 
 }

@@ -1,6 +1,7 @@
 package mybase.domain;
 
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import mybase.domain.jpa.MainUser;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "goal_entities")
+@RequiredArgsConstructor
 public class GoalEntity {
 
     @Id
@@ -18,9 +20,9 @@ public class GoalEntity {
 
     private String goalName;
 
-    private LocalDateTime goalTime;
+    private LocalDateTime goalSetTime;
 
-    private Boolean isCompleted;
+    private Boolean isCompleted = false;
 
     @OneToMany
     private List<TaskEntity> taskEntityList;
