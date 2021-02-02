@@ -1,6 +1,6 @@
 package mybase.services;
 
-import mybase.domain.GoalEntity;
+import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import org.springframework.stereotype.Service;
 

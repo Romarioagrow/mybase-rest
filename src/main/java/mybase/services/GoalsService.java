@@ -3,7 +3,7 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mybase.domain.GoalEntity;
+import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
 import mybase.domain.jpa.MainUser;
@@ -32,7 +32,7 @@ public class GoalsService implements GoalServiceApi {
         GoalEntity newGoalEntity = new GoalEntity();
 
         goalText = newGoalDto.getGoalText();
-        newGoalEntity.setGoalName(goalText);
+        newGoalEntity.setGoalText(goalText);
         newGoalEntity.setGoalSetTime(LocalDateTime.now());
 
         if (hasUser(mainUser)) {

@@ -1,7 +1,8 @@
-package mybase.domain;
+package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import mybase.domain.TaskEntity;
 import mybase.domain.jpa.MainUser;
 
 import javax.persistence.*;
@@ -18,7 +19,7 @@ public class GoalEntity {
     @GeneratedValue
     private Long goalID;
 
-    private String goalName;
+    private String goalText;
 
     private LocalDateTime goalSetTime;
 

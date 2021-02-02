@@ -1,15 +1,16 @@
 package mybase.domain.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
+
 
 @Data
 @RequiredArgsConstructor
-public class NewGoalDto {
+@EqualsAndHashCode(callSuper = true)
+public class NewGoalDto extends BaseDto {
 
     String goalText;
-
-
 
 
 }

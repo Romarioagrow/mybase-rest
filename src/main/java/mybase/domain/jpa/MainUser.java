@@ -3,7 +3,6 @@ package mybase.domain.jpa;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import mybase.domain.AccountUser;
-import mybase.domain.GoalEntity;
 
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
