@@ -6,12 +6,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.MappedSuperclass;
 import javax.persistence.Table;
 import java.util.Collection;
 
 @Data
-@Entity
-@Table(name = "account-users")
+@Table(name = "account_usr")
+@MappedSuperclass
 public class AccountUser implements UserDetails {
 
     @Id
