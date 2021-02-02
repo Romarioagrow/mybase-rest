@@ -39,15 +39,15 @@
             <v-col>
               <v-card outlined min-width="" width="350" min-height="350">
                 <v-card-actions>
-                  <v-btn color="primary">
+                  <v-btn color="primary" @click="sendNewGoalToServer()">
                     ADD
                   </v-btn>
                 </v-card-actions>
                 <v-card-actions>
-                  <v-textarea outlined></v-textarea>
+                  <v-textarea outlined v-model="new_goal_text"></v-textarea>
                 </v-card-actions>
                 <v-card-actions>
-                  <v-text-field outlined label="МЕТКА"></v-text-field>
+                  <v-text-field outlined label="МЕТКА" v-model="new_goal_label"></v-text-field>
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -74,8 +74,44 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
   name: "GoalsPage",
+
+  data() {
+    return {
+
+      new_goal_text: '',
+      new_goal_label: ''
+
+
+    }
+  },
+
+  methods: {
+    sendNewGoalToServer() {
+
+      let newGoalData = {
+        goalText: this.new_goal_text,
+        new_goal_label: this.new_goal_label
+
+      }
+
+      const sendHost = ''
+      const sendURL = '/api/goals/add/new'
+
+      //let sendURL = ''
+
+      axios.post(sendURL, newGoalData).then(response => {
+        console.log('response', response)
+      })
+
+
+    }
+
+  },
+
   computed: {
 
     distanceToBottom() {

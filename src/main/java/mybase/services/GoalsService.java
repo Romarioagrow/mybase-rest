@@ -23,6 +23,8 @@ public class GoalsService implements GoalServiceApi {
     private final AccountUserRepo userRepo;
     private final GoalsObjectMapper goalsObjectMapper;
 
+
+
     @Override
     public GoalDto addNewGoal(NewGoalDto newGoalDto, MainUser mainUser) {
         String goalText;
@@ -32,17 +34,22 @@ public class GoalsService implements GoalServiceApi {
         goalText = newGoalDto.getGoalText();
         newGoalEntity.setGoalName(goalText);
         newGoalEntity.setGoalSetTime(LocalDateTime.now());
-        newGoalEntity.setMainUser(mainUser);
 
-        updateUserGoals = mainUser.getGoalEntities();
-        updateUserGoals.add(newGoalEntity);
-        mainUser.setGoalEntities(updateUserGoals);
+        if (hasUser(mainUser)) {
+            newGoalEntity.setMainUser(mainUser);
+            updateUserGoals = mainUser.getGoalEntities();
+            updateUserGoals.add(newGoalEntity);
+            mainUser.setGoalEntities(updateUserGoals);
+            persistUser(mainUser);
+        }
 
         persistNewGoal(newGoalEntity);
 
-        persistUser(mainUser);
-
         return goalsObjectMapper.mapGoalEntityToDto(newGoalEntity);
+    }
+
+    private boolean hasUser(MainUser mainUser) {
+        return mainUser != null;
     }
 
     private void persistUser(MainUser mainUser) {
