@@ -19,15 +19,13 @@ public class GoalsController {
     private final GoalsService goalsService;
 
 
-
-
-
     @PostMapping("/add/new")
     public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto, @AuthenticationPrincipal MainUser mainUser) {
 
 
-
         return goalsService.addNewGoal(newGoalDto, mainUser);//new GoalDto();
+
+
     }
 
 

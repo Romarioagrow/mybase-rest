@@ -77,6 +77,7 @@ export default {
         {icon: 'mdi-instagram', text: 'Instagram', link: '/instagram'},
         {icon: 'mdi-currency-usd', text: 'Spending', link: '/spending'},
         {icon: 'mdi-menu', text: 'The Logs', link: '/thelogs'},
+        {icon: 'mdi-menu', text: 'Goals', link: '/goals'},
       ]
     }
   },

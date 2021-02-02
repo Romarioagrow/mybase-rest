@@ -11,8 +11,9 @@ import javax.persistence.Table;
 import java.util.Collection;
 
 @Data
+@Entity
 @Table(name = "account_usr")
-@MappedSuperclass
+//@MappedSuperclass
 public class AccountUser implements UserDetails {
 
     @Id
@@ -21,7 +22,6 @@ public class AccountUser implements UserDetails {
     String username;
 
     String password;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -58,5 +58,4 @@ public class AccountUser implements UserDetails {
         return true;
     }
 
-    //public
 }
