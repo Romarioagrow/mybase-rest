@@ -3,7 +3,7 @@ package mybase.services;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import mybase.domain.AccountUser;
-import mybase.domain.SpendingItem;
+import mybase.domain.jpa.SpendingItem;
 import mybase.repo.SpendingRepo;
 import org.springframework.stereotype.Service;
 

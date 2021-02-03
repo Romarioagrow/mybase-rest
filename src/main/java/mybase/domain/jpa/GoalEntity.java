@@ -2,12 +2,12 @@ package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import mybase.domain.TaskEntity;
-import mybase.domain.jpa.MainUser;
+import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 @Data
 @Entity
@@ -30,5 +30,9 @@ public class GoalEntity {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private MainUser mainUser;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<GoalType> goalTypes;
+
 
 }

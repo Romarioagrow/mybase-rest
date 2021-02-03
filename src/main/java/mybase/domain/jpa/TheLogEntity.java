@@ -1,4 +1,4 @@
-package mybase.domain;
+package mybase.domain.jpa;
 
 public class TheLogEntity {
 }
