@@ -2,7 +2,6 @@
   <v-content>
     <v-container fluid >
 
-
       <!--v-card-title-->
       <v-card>
         <v-card-title class="justify-center">
@@ -11,12 +10,8 @@
       </v-card>
 
 
-
-
       <!--      -->
       <v-card height='100%' style="position: relative">
-
-
         <v-card-subtitle>
           my goals
         </v-card-subtitle>
@@ -25,16 +20,6 @@
         <!--BUTTON ADD -->
         <v-card-actions >
           <v-row>
-<!--            <v-col>
-              <v-btn
-                  depressed
-                  color="primary"
-              >
-                ПО НАЖАТИЮ
-              </v-btn>
-            </v-col>-->
-
-
             <!-- CARD ADD NEW GOAL       -->
             <v-col>
               <v-card outlined min-width="" width="350" min-height="350">
@@ -53,17 +38,6 @@
             </v-col>
           </v-row>
 
-          <v-row>
-            <v-col>
-              <v-container>
-
-
-
-
-
-              </v-container>
-            </v-col>
-          </v-row>
         </v-card-actions>
 
 
@@ -74,30 +48,12 @@
         <v-card-actions>
 
           <v-row>
-            <v-col>
-              <v-container v-for="goal in all_goals">
+            <v-card width="200" v-for="goal in all_goals">
+              <v-card-text>
+                {{goal.goalText}}
+              </v-card-text>
+            </v-card>
 
-
-                <v-card>
-
-                  <v-card-text>
-                    {{goal.goalText}}
-                  </v-card-text>
-
-                </v-card>
-
-
-<!--                <v-list v-for="goal in all_goals" >
-
-                  <v-list-item></v-list-item>
-
-                </v-list>-->
-
-
-
-
-              </v-container>
-            </v-col>
           </v-row>
 
         </v-card-actions>
@@ -165,6 +121,7 @@ export default {
 
       axios.post(sendURL, newGoalData).then(response => {
         console.log('response', response);
+        this.all_goals.push(response.data)
       })
 
 
