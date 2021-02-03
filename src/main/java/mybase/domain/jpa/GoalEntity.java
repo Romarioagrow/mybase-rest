@@ -19,6 +19,7 @@ public class GoalEntity {
     @GeneratedValue
     private Long goalID;
 
+    @Lob
     private String goalText;
 
     private LocalDateTime goalSetTime;

@@ -101,14 +101,10 @@
             </v-col>
           </v-row>
         </v-card-actions>
-
-
+        
         <v-card-subtitle>
           all my goals
         </v-card-subtitle>
-
-
-
 
         <v-card-actions>
           <v-flex d-flex>
