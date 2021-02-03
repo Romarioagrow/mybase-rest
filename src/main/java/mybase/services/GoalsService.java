@@ -3,6 +3,7 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import mybase.domain.AccountUser;
 import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
@@ -65,5 +66,18 @@ public class GoalsService implements GoalServiceApi {
     @Override
     public List<GoalEntity> getAllGoals() {
         return goalRepo.findAll();
+    }
+
+    @Override
+    public List<GoalDto> loadAllGoals(AccountUser accountUser) {
+
+        log.info("accountUser", accountUser);
+
+
+        return goalsObjectMapper.mapGoalEntitiesToDto(goalRepo.findAll());
+
+               // ;
+
+
     }
 }

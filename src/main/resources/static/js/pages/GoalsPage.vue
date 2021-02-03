@@ -18,7 +18,7 @@
 
 
         <v-card-subtitle>
-          all my goals
+          my goals
         </v-card-subtitle>
 
 
@@ -58,11 +58,52 @@
               <v-container>
 
 
+
+
+
+              </v-container>
+            </v-col>
+          </v-row>
+        </v-card-actions>
+
+
+        <v-card-subtitle>
+          all my goals
+        </v-card-subtitle>
+
+        <v-card-actions>
+
+          <v-row>
+            <v-col>
+              <v-container v-for="goal in all_goals">
+
+
+                <v-card>
+
+                  <v-card-text>
+                    {{goal.goalText}}
+                  </v-card-text>
+
+                </v-card>
+
+
+<!--                <v-list v-for="goal in all_goals" >
+
+                  <v-list-item></v-list-item>
+
+                </v-list>-->
+
+
+
+
               </v-container>
             </v-col>
           </v-row>
 
         </v-card-actions>
+
+
+
       </v-card>
 
 
@@ -79,17 +120,36 @@ import axios from "axios";
 export default {
   name: "GoalsPage",
 
+  created() {
+    this.loadAllUsersGoals();
+
+
+  },
+
   data() {
     return {
 
       new_goal_text: '',
-      new_goal_label: ''
+      new_goal_label: '',
+      all_goals: [],
 
 
     }
   },
 
   methods: {
+
+    loadAllUsersGoals() {
+
+      const sendURL = '/api/goals/load/all';
+
+      axios.get(sendURL).then(response => {
+        console.log('response', response)
+        this.all_goals = response.data;
+      })
+
+    },
+
     sendNewGoalToServer() {
 
       let newGoalData = {
@@ -104,7 +164,7 @@ export default {
       //let sendURL = ''
 
       axios.post(sendURL, newGoalData).then(response => {
-        console.log('response', response)
+        console.log('response', response);
       })
 
 
