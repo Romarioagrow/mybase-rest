@@ -8,11 +8,13 @@ import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
 import mybase.domain.jpa.MainUser;
+import mybase.domain.types.GoalType;
 import mybase.repo.AccountUserRepo;
 import mybase.repo.GoalRepo;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 @Slf4j
@@ -79,5 +81,10 @@ public class GoalsService implements GoalServiceApi {
                // ;
 
 
+    }
+
+    @Override
+    public List<GoalType> loadAllGoalTypes() {
+        return GoalType.getAllTypes();
     }
 }

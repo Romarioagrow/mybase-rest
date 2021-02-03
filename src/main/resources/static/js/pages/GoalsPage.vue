@@ -32,7 +32,27 @@
                   <v-textarea outlined v-model="new_goal_text"></v-textarea>
                 </v-card-actions>
                 <v-card-actions>
-                  <v-text-field outlined label="МЕТКА" v-model="new_goal_label"></v-text-field>
+
+                  <v-row>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  >
+                    <v-select
+                        v-model="value"
+                        :items="items"
+                        chips
+                        label="Chips"
+                        multiple
+                        outlined
+                    ></v-select>
+                  </v-col>
+                  <v-col
+                      cols="12"
+                      sm="6"
+                  />
+                  </v-row>
+<!--                  <v-text-field outlined label="МЕТКА" v-model="new_goal_label"></v-text-field>-->
                 </v-card-actions>
               </v-card>
             </v-col>
@@ -79,6 +99,8 @@ export default {
   created() {
     this.loadAllUsersGoals();
 
+    this.loadAllGoalTypes();
+
 
   },
 
@@ -89,11 +111,24 @@ export default {
       new_goal_label: '',
       all_goals: [],
 
+      items: [],
+      value: [],
 
     }
   },
 
   methods: {
+
+    loadAllGoalTypes() {
+      const sendURL = '/api/goals/load/types';
+
+      axios.get(sendURL).then(response => {
+        console.log('response', response)
+        //this.value = response.data
+        this.items = response.data
+      })
+
+    },
 
     loadAllUsersGoals() {
 

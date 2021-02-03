@@ -1,5 +1,8 @@
 package mybase.domain.types;
 
+import java.util.Arrays;
+import java.util.List;
+
 public enum GoalType {
 
     /*цели : личное, здоровье, работа, быт, финансовое благополучие, досуг, учеба, семья, творчество, ремесло*/
@@ -22,5 +25,9 @@ public enum GoalType {
     GoalType(int code, String name) {
         this.code = code;
         this.name = name;
+    }
+
+    public static List<GoalType> getAllTypes() {
+        return Arrays.asList(GoalType.values());
     }
 }

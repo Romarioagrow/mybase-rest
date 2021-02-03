@@ -5,6 +5,7 @@ import mybase.domain.AccountUser;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
 import mybase.domain.jpa.MainUser;
+import mybase.domain.types.GoalType;
 import mybase.services.GoalsService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -28,9 +29,12 @@ public class GoalsController {
 
     @GetMapping("/load/all")
     public List<GoalDto> loadAllGoals(@AuthenticationPrincipal AccountUser accountUser) {
-
         return goalsService.loadAllGoals(accountUser);
+    }
 
+    @GetMapping("/load/types")
+    public List<GoalType> loadAllGoalTypes() {
+        return goalsService.loadAllGoalTypes();
     }
 
 
