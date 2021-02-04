@@ -21,7 +21,7 @@
       },
       methods: {
         initApp() {
-          console.log('App loaded')
+          console.log('initApp')
           this.$store.dispatch('hasAuth')
         }
       },

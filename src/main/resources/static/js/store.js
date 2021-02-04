@@ -37,12 +37,27 @@ export default new Vuex.Store({
     },
 
     actions: {
+
+        authUser(user) {
+            console.log('authUser(user)', user)
+        },
+
+
+        isUserAuth() {
+            console.log('this.state.currentProfile != null',this.state.currentProfile != null)
+            return this.state.currentProfile != null;
+        },
+
         hasAuth(context) {
-            //context.commit('')
             const hasAuth = clientApiService.hasAuth()
+
+            let user = {
+
+            }
 
             if (hasAuth) {
                 console.log('hasAuth')
+                this.authUser(user)
             }
             else {
                 console.log('NO AUTH')

@@ -34,7 +34,7 @@
                             max-width="400"
                             color="#9dbedf"
                             hover
-                            @click="goTo('/cabinet')"
+                            @click="goTo('/auth')"
                     >
                         <v-img class="white--text align-end" height="200px" src="https://vistapointe.net/images/art-6.jpg">
                             <v-card-title>LOGIN</v-card-title>

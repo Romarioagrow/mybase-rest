@@ -3,7 +3,7 @@
 
 <!--<app-main-drawer>-->
 
-    <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app absolute > <!--v-if="userAuth"-->
+    <v-navigation-drawer v-if="userAuth" v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app absolute > <!--v-if="userAuth"-->
       <v-list dense>
         <template v-for="item in menuLinks">
           <v-list-item :key="item.text" link @click="goTo(item.link)">
@@ -73,7 +73,7 @@ export default {
       drawer: true,
       menuLinks: [
         {icon: 'mdi-airplay', text: 'Main page', link: '/'},
-        {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/cabinet'},
+        {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/auth'},
         {icon: 'mdi-instagram', text: 'Instagram', link: '/instagram'},
         {icon: 'mdi-currency-usd', text: 'Spending', link: '/spending'},
         {icon: 'mdi-menu', text: 'The Logs', link: '/thelogs'},
@@ -84,7 +84,7 @@ export default {
   async created() {
     await this.loadUser()
     if (!this.userAuth) {
-      this.$router.push('/cabinet')
+      this.$router.push('/auth')
     }
   },
   methods: {
@@ -102,13 +102,28 @@ export default {
   },
   computed: {
     userPic() {
-      return this.$store.state.instProfile.profile_picture_url
+      return ''
+      //return this.$store.state.instProfile.profile_picture_url
     },
     userAuth() {
-      return this.$store.state.instProfile
+
+      let h;
+
+      let b = this.$store.dispatch('isUserAuth').then(value => {
+        console.log('valuevaluevalue',value)
+        h = value
+      })
+
+      console.log(' b',  b)
+      console.log(' h',  h)
+      return h;
     },
+    /*userAuth() {
+      return this.$store.state.instProfile
+    },*/
     userName() {
-      return this.$store.state.instProfile.username
+      //return this.$store.state.instProfile.username
+      return ''
     }
   }
 }

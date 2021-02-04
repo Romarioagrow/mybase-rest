@@ -1,14 +1,14 @@
 package mybase.domain;
 
 import lombok.Data;
+import mybase.domain.types.UserRole;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.MappedSuperclass;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Set;
 
 @Data
 @Entity
@@ -17,15 +17,26 @@ import java.util.Collection;
 public class AccountUser implements UserDetails {
 
     @Id
-    String userID;
+    private String userID;
 
-    String username;
+    private String username;
 
-    String password;
+    private String password;
+
+    private String email;
+
+    private Boolean isEnabled;
+
+    private LocalDateTime registrationDate;
+
+    @ElementCollection(targetClass = UserRole.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private Set<UserRole> roles;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return null;
+        return getRoles();
     }
 
     @Override
@@ -55,7 +66,7 @@ public class AccountUser implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return this.isEnabled;
     }
 
 }

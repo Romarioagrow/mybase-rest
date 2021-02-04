@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const request01 = '/api/user/auth/check'
+const hasAuthRequest = '/api/user/auth/check'
 
 export function showInfo() {
     console.log('ClientApiService Info')
@@ -9,15 +9,14 @@ export function showInfo() {
 export function doRequest(url, data, config) {
     switch (url) {
 
-        case request01 : return doGetRequest(url, data);
+        case hasAuthRequest : return doGetRequest(url, data);
 
     }
 }
 
 export function hasAuth() {
-    //const apiUrl = ''
-    //console.log('hasAuth')
-    return doGetRequest(request01)
+
+    return doGetRequest(hasAuthRequest)
 }
 
 function doGetRequest(url, config) {
