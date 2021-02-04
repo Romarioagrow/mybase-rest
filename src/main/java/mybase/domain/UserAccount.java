@@ -2,6 +2,7 @@ package mybase.domain;
 
 import lombok.Data;
 import mybase.domain.types.UserRole;
+import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -17,6 +18,8 @@ import java.util.Set;
 public class UserAccount implements UserDetails {
 
     @Id
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String userID;
 
     private String username;

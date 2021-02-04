@@ -107,7 +107,10 @@ export default {
     },
     userAuth() {
 
-      let h;
+      return this.$store.state.hasServerAuthorisation
+
+
+      /*let h;
 
       let b = this.$store.dispatch('isUserAuth').then(value => {
         console.log('valuevaluevalue',value)
@@ -116,7 +119,7 @@ export default {
 
       console.log(' b',  b)
       console.log(' h',  h)
-      return h;
+      return h;*/
     },
     /*userAuth() {
       return this.$store.state.instProfile

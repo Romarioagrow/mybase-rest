@@ -15,7 +15,6 @@ export function doRequest(url, data, config) {
 }
 
 export function hasAuth() {
-
     return doGetRequest(hasAuthRequest)
 }
 

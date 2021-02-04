@@ -36,9 +36,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .mvcMatchers("/api/user/auth/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
+                    .formLogin()
+                    .loginPage("/user/login")
+                    .loginProcessingUrl("/user/login")
+                    .defaultSuccessUrl("/", true)
+                    .permitAll()
                 .and()
-                    .csrf().disable();
+                    .logout().permitAll()
+                    .logoutUrl("/user/logout")
+                    .logoutSuccessUrl("/")
+                .and().csrf().disable();
     }
 
 

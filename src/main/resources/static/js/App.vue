@@ -22,7 +22,8 @@
       methods: {
         initApp() {
           console.log('initApp')
-          this.$store.dispatch('hasAuth')
+
+          //this.$store.dispatch('hasAuth')
         }
       },
       computed: {

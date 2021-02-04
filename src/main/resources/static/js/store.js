@@ -10,6 +10,8 @@ const clientApiService = require('services/ClientApiService.js');
 export default new Vuex.Store({
     state: {
 
+        hasServerAuthorisation: false,
+
         user: {
             currentProfile: null,
             instProfile: null,
@@ -38,8 +40,10 @@ export default new Vuex.Store({
 
     actions: {
 
-        authUser(user) {
-            console.log('authUser(user)', user)
+        authUser(userDto) {
+            console.log('authUser(user)', userDto)
+            this.state.user.currentProfile = userDto;
+            this.state.hasServerAuthorisation = true;
         },
 
 
@@ -48,7 +52,7 @@ export default new Vuex.Store({
             return this.state.currentProfile != null;
         },
 
-        hasAuth(context) {
+        /*hasAuth(context) {
             const hasAuth = clientApiService.hasAuth()
 
             let user = {
@@ -62,7 +66,7 @@ export default new Vuex.Store({
             else {
                 console.log('NO AUTH')
             }
-        },
+        },*/
 
 
         async doLogout(context) {
