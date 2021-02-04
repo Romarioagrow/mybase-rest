@@ -1,7 +1,8 @@
-package mybase.services;
+package mybase.mappers;
 
 import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
+import mybase.mappers.GoalsObjectMapperApi;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;

@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 @Table(name = "account_usr")
 //@MappedSuperclass
-public class AccountUser implements UserDetails {
+public class UserAccount implements UserDetails {
 
     @Id
     private String userID;

@@ -1,4 +1,4 @@
-package mybase.services;
+package mybase.mappers;
 
 import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;

@@ -1,6 +1,6 @@
 package mybase.services;
 
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
 import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
@@ -18,7 +18,7 @@ public interface GoalServiceApi {
     List<GoalEntity> getAllGoals();
 
 
-    List<GoalDto> loadAllGoals(AccountUser accountUser);
+    List<GoalDto> loadAllGoals(UserAccount accountUser);
 
 
     List<GoalType> loadAllGoalTypes();

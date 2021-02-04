@@ -1,8 +1,10 @@
 package mybase.services;
 
 import lombok.AllArgsConstructor;
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
+import mybase.domain.dto.UserAccountDto;
 import mybase.domain.types.UserRole;
+import mybase.mappers.UserAccountMapper;
 import mybase.repo.AccountUserRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,9 +21,10 @@ import java.util.Map;
 public class AccountUserService implements AccountUserApi {
     private final AccountUserRepo userRepo;
     private final PasswordEncoder passwordEncoder;
+    private final UserAccountMapper accountMapper;
 
     @Override
-    public AccountUser loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserAccount loadUserByUsername(String username) throws UsernameNotFoundException {
         return userRepo.findAccountUserByUsername(username);
     }
 
@@ -32,7 +35,7 @@ public class AccountUserService implements AccountUserApi {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
 
-        AccountUser user = new AccountUser();
+        UserAccount user = new UserAccount();
         user.setPassword(passwordEncoder.encode(userCredentials.get("password")));
         user.setUsername(userCredentials.get("username").trim());
         user.setEmail(userCredentials.get("email").trim());
@@ -46,7 +49,9 @@ public class AccountUserService implements AccountUserApi {
 
         userRepo.save(user);
 
-        return new ResponseEntity<>(null, HttpStatus.OK);
+        UserAccountDto accountDto = accountMapper.mapUserAccountEntityToDto(user);
+
+        return new ResponseEntity<>(accountDto, HttpStatus.OK);
     }
 
     private boolean userAlreadyExists(Map<String, String> userCredentials) {

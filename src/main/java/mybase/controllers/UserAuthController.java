@@ -17,17 +17,17 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 @AllArgsConstructor
-public class UserController {
+public class UserAuthController {
     private final AccountUserService userService;
 
-    @PostMapping("/user/registration")
+    @PostMapping("/new/registration")
     private ResponseEntity<?> registration(@RequestBody Map<String, String> userCredentials) {
         return userService.registerUser(userCredentials);
     }
 
     @GetMapping("/auth/check")
     public Boolean hasAuth() {
-        log.info("UserController, hasAuth()");
+        log.info("UserController, auth check");
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         Object principal = authentication.getPrincipal();
         return principal == null ? Boolean.TRUE : Boolean.FALSE;

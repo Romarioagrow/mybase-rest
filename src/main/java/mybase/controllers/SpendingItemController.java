@@ -2,7 +2,7 @@ package mybase.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
 import mybase.domain.GoogleAuthUser;
 import mybase.services.SpendingItemService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -30,7 +30,7 @@ public class SpendingItemController {
     }
 
     @PostMapping("/addNewSpendingItem")
-    private Map<String, Object> addNewSpendingItem(@AuthenticationPrincipal AccountUser user,
+    private Map<String, Object> addNewSpendingItem(@AuthenticationPrincipal UserAccount user,
                                                    @RequestBody Map<String, String> spendingData
     ){
         return itemService.addNewSpendingItem(user, spendingData);

@@ -1,7 +1,7 @@
 package mybase.controllers;
 
 import lombok.AllArgsConstructor;
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
 import mybase.domain.jpa.MainUser;
@@ -28,7 +28,7 @@ public class GoalsController {
 
 
     @GetMapping("/load/all")
-    public List<GoalDto> loadAllGoals(@AuthenticationPrincipal AccountUser accountUser) {
+    public List<GoalDto> loadAllGoals(@AuthenticationPrincipal UserAccount accountUser) {
         return goalsService.loadAllGoals(accountUser);
     }
 

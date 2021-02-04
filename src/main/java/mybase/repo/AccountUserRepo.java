@@ -1,10 +1,10 @@
 package mybase.repo;
 
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AccountUserRepo extends JpaRepository<AccountUser, String> {
+public interface AccountUserRepo extends JpaRepository<UserAccount, String> {
 
-    AccountUser findAccountUserByUsername(String username);
+    UserAccount findAccountUserByUsername(String username);
 
 }

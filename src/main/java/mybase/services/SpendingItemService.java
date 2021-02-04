@@ -2,7 +2,7 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import mybase.domain.AccountUser;
+import mybase.domain.UserAccount;
 import mybase.domain.jpa.SpendingItem;
 import mybase.repo.SpendingRepo;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class SpendingItemService {
         return payload;
     }
 
-    public Map<String, Object> addNewSpendingItem(AccountUser accountUser, Map<String, String> spendingData) {
+    public Map<String, Object> addNewSpendingItem(UserAccount accountUser, Map<String, String> spendingData) {
         double amount = Double.parseDouble(spendingData.get("amount"));
         String type = spendingData.get("type");
         String info = spendingData.get("info");
@@ -55,7 +55,7 @@ public class SpendingItemService {
         return loadAllUserSpending(userID);
     }
 
-    private boolean userAccountAuthenticated(AccountUser accountUser) {
+    private boolean userAccountAuthenticated(UserAccount accountUser) {
         return false;
     }
 

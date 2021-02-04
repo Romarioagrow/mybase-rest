@@ -27,6 +27,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(10);
     }
 
+    @Override
+    protected void configure(HttpSecurity http) throws Exception {
+
+        http
+                .antMatcher("/**")
+                    .authorizeRequests()
+                    .mvcMatchers("/api/user/auth/**").permitAll()
+                    .anyRequest().authenticated()
+                .and()
+                    .logout().logoutSuccessUrl("/").permitAll()
+                .and()
+                    .csrf().disable();
+    }
+
+
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -63,19 +78,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().csrf().disable();*/
 
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
 
-        http
-                .antMatcher("/**")
-                    .authorizeRequests()
-                    .mvcMatchers("/api/user/auth/**").permitAll()
-                    .anyRequest().authenticated()
-                .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                    .csrf().disable();
-    }
 
     /*@Override
     protected void configure(HttpSecurity http) throws Exception {
