@@ -33,7 +33,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .antMatcher("/**")
                     .authorizeRequests()
-                    .mvcMatchers("/api/user/auth/**", "/user/login").permitAll()
+                    .mvcMatchers("/api/user/auth/**", "/user/login", "/js/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
                     .formLogin()
