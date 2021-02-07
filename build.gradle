@@ -2,6 +2,7 @@ plugins {
     id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id "com.github.node-gradle.node" version "2.2.0"
 }
 
 group = 'mybase.base'
@@ -20,15 +21,20 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
-/*task buildFront(type: YarnTask) {
-    args = ['start']
+/*Packaging front*/
+task buildFront(type: YarnTask) {
+    args = ['heroku-postbuild']
 }
-
 yarn_install.dependsOn(yarn_cache_clean)
 buildFront.dependsOn(yarn_install)
-processResources.dependsOn(buildFront)*/
+processResources.dependsOn(buildFront)
+node {
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+}
 
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
