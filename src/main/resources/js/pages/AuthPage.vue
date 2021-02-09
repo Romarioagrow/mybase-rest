@@ -19,7 +19,7 @@
                                   color="purple"
                                   prepend-icon="mdi-phone"
                                   v-model="usernameLogin"
-                                  label="username"
+                                  label="Username"
                                   :error-messages="usernameErrors"
                                   required
                                   @input="$v.usernameLogin.$touch()"
@@ -31,7 +31,7 @@
                                   prepend-icon="mdi-key"
                                   type="password"
                                   v-model="password"
-                                  label="Пароль"
+                                  label="Password"
                                   :error-messages="passwordErrors"
                                   required
                                   @input="$v.password.$touch()"
@@ -40,8 +40,10 @@
                   </v-form>
 
                   <!-- :disabled="!username || !password" block @click="loginUser()"                 -->
-                  <v-btn color="success" @click="loginUser()">Войти
+                  <v-btn color="success" @click="loginUser()" block outlined>
+                    <span>Log in</span>
                   </v-btn>
+
                 </v-col>
 
                 <v-divider vertical/>
@@ -49,7 +51,7 @@
                 <v-col>
                   <v-card-text>
                     <v-row justify="center">
-                      Зашли впервые?
+                      <span>First time here?</span>
                     </v-row>
                   </v-card-text>
 
@@ -58,7 +60,7 @@
                     <v-dialog v-model="registrationDialog" persistent max-width="500">
                       <template v-slot:activator="{ on }">
                         <v-btn color="purple" outlined block dark v-on="on" @click="registrationError = false">
-                          Зарегистрируйтесь
+                          <span>Sign up</span>
                         </v-btn>
                       </template>
                       <v-card>
@@ -67,9 +69,9 @@
                           <v-icon>
                             mdi-account-plus
                           </v-icon>
-                          <span class="ml-3">Регистрация</span>
+                          <span class="ml-3">Registration</span>
                         </v-card-title>
-                        <v-card-text>Введите ваши контактные данные</v-card-text>
+                        <v-card-text>Sign up for your account</v-card-text>
 
                         <v-form>
                           <v-text-field id="username"
@@ -89,7 +91,7 @@
                                             prepend-icon="mdi-key"
                                             type="password"
                                             v-model="password"
-                                            label="Пароль"
+                                            label="Password"
                                             :error-messages="passwordErrors"
                                             required
                                             color="purple"
@@ -103,7 +105,7 @@
                                             name="passwordConfirm"
                                             type="password"
                                             v-model="registerPassConfirm"
-                                            label="Подтвердите пароль"
+                                            label="Confirm password"
                                             :error-messages="passwordConfirmErrors"
                                             color="purple"
                                             @input="$v.registerPassConfirm.$touch()"
@@ -120,7 +122,7 @@
                                             prepend-icon="mdi-account"
                                             type="text"
                                             v-model="lastName"
-                                            label="Фамилия"
+                                            label="Last Name"
                                             :error-messages="lastNameErrors"
                                             color="purple"
                                             @input="$v.lastName.$touch()"
@@ -133,7 +135,7 @@
                                             name="firstName"
                                             type="text"
                                             v-model="firstName"
-                                            label="Имя"
+                                            label="First Name"
                                             :error-messages="firstNameErrors"
                                             color="purple"
                                             @input="$v.firstName.$touch()"
@@ -146,7 +148,7 @@
                                             name="patronymic"
                                             type="text"
                                             v-model="patronymic"
-                                            label="Отчество"
+                                            label="Middle Name"
                                             :error-messages="patronymicErrors"
                                             color="purple"
                                             @input="$v.patronymic.$touch()"
@@ -167,8 +169,8 @@
 
                         <v-card-actions>
                           <div class="flex-grow-1"></div>
-                          <v-btn color="green darken-1" text @click="submitRegistration()">Регистрация</v-btn>
-                          <v-btn color="red darken-1" text @click="registrationDialog = false">Отмена</v-btn>
+                          <v-btn color="green darken-1" text @click="submitRegistration()">Sign up</v-btn>
+                          <v-btn color="red darken-1" text @click="registrationDialog = false">Cancel</v-btn>
                         </v-card-actions>
                       </v-card>
                     </v-dialog>
@@ -186,18 +188,18 @@
               <!--v-if="!userAuth"-->
               <v-row>
                 <v-col>
-                  <v-btn disabled color="blue" outlined @click="facebookAuth()" height="200" width="200">
-                    Авторизация Facebook
+                  <v-btn color="blue" outlined @click="facebookAuth()" height="200" width="200">
+                    Facebook Authorization
                   </v-btn>
                 </v-col>
                 <v-col>
-                  <v-btn disabled color="red" outlined @click="instAuth()" height="200" width="200">
-                    Авторизация Instagram
+                  <v-btn color="red" outlined @click="instAuth()" height="200" width="200">
+                    Instagram Authorization
                   </v-btn>
                 </v-col>
                 <v-col>
-                  <v-btn disabled color="primary" outlined @click="googleAuth()" height="200" width="200">
-                    Авторизация Google
+                  <v-btn color="purple" outlined @click="googleAuth()" height="200" width="200">
+                    Google Authorization
                   </v-btn>
                 </v-col>
               </v-row>
