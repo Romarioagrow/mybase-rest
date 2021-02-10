@@ -43,7 +43,7 @@ public class UserAuthController {
     }
 
     @PostMapping("/getUser")
-    public GoogleAuthUser getUser(@AuthenticationPrincipal GoogleAuthUser user) {
+    public UserAccount getUser(@AuthenticationPrincipal UserAccount user) {
         return user;
     }
 }
