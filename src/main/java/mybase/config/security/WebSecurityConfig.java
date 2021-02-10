@@ -9,11 +9,19 @@ import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.nio.charset.StandardCharsets;
 
 @Log
 @Configuration
@@ -29,6 +37,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
+/*
+        http.formLogin().successHandler(new AuthenticationSuccessHandler() {
+            @Override
+            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+                //do nothing
+            }
+        });*/
+
 
         http
                 .antMatcher("/**")
@@ -36,10 +52,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .mvcMatchers("/api/user/auth/**", "/user/login", "/js/**").permitAll()
                     .anyRequest().authenticated()
                 .and()
-                    .formLogin()
+                    .formLogin().successHandler((request, response, authentication) -> {
+
+                        log.info("successHandler");
+                        String text = "user text";
+
+            // JsonHelper.createJsonFrom( body ).getBytes( StandardCharsets.UTF_8 )
+                        response.setStatus(200);
+                        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
+                        //response.getOutputStream().write("");
+                        response.getWriter().write(text);
+
+                    })
                     .loginPage("/auth")
                     .loginProcessingUrl("/user/login")
-                    //.defaultSuccessUrl("/", true)
+
+                //.defaultSuccessUrl("/", true)
                     .permitAll()
                 .and()
                     .logout().permitAll()
