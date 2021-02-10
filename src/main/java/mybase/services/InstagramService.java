@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import me.postaddict.instagram.scraper.Instagram;
 import me.postaddict.instagram.scraper.model.Account;
-import mybase.config.WebMvcConfig;
+import mybase.config.mvc.WebMvcConfig;
 import mybase.domain.InstFollowers;
 import mybase.domain.InstProfile;
 import mybase.repo.InstFollowersRepo;

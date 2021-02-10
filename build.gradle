@@ -2,11 +2,13 @@ plugins {
     id 'org.springframework.boot' version '2.2.4.RELEASE'
     id 'io.spring.dependency-management' version '1.0.9.RELEASE'
     id 'java'
+    id "com.github.node-gradle.node" version "2.2.0"
 }
 
 group = 'mybase.base'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '13'
+sourceCompatibility = 13
+targetCompatibility = 13
 
 configurations {
     developmentOnly
@@ -20,15 +22,20 @@ configurations {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
-/*task buildFront(type: YarnTask) {
-    args = ['start']
+/*Packaging front*/
+task buildFront(type: YarnTask) {
+    args = ['heroku-postbuild']
 }
-
 yarn_install.dependsOn(yarn_cache_clean)
 buildFront.dependsOn(yarn_install)
-processResources.dependsOn(buildFront)*/
+processResources.dependsOn(buildFront)
+node {
+    distBaseUrl = 'https://nodejs.org/dist'
+    download = true
+}
 
 dependencies {
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.10.2'
@@ -46,7 +53,7 @@ dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.2.3.RELEASE'
     compileOnly 'org.projectlombok:lombok'
     developmentOnly 'org.springframework.boot:spring-boot-devtools'
-    compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
+    runtimeOnly 'org.postgresql:postgresql'
 
     annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'

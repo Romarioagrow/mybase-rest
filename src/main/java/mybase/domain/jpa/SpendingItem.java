@@ -1,4 +1,4 @@
-package mybase.domain;
+package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
