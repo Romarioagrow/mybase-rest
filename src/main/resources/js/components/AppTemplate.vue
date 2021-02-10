@@ -92,9 +92,14 @@ export default {
       this.$router.push(link)
     },
     async loadUser() {
-      let user = await axios.post('/api/user/getUser')
+      console.log('async loadUser()')
+
+      let user = await axios.post('/api/user/auth/getUser')
+      console.log('async user',user)
+
 
       if (user) {
+        console.log('if (user)', user)
         await this.$store.dispatch("loadUser", user.data)
         this.user = user.data
       }

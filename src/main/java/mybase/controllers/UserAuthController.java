@@ -37,13 +37,17 @@ public class UserAuthController {
         return userService.userIsAuthorised(user);
     }
 
-    @GetMapping("/userAuthorized")
+    @GetMapping("/auth/userAuthorized")
     public ResponseEntity<?> userAuthorized(@AuthenticationPrincipal GoogleAuthUser user) {
         return user == null ? new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) : new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @PostMapping("/getUser")
+    @PostMapping("/auth/getUser")
     public UserAccount getUser(@AuthenticationPrincipal UserAccount user) {
+        log.info("@AuthenticationPrincipal UserAccount user: " + user);
+
+        userService.userIsAuthorised(user);
+
         return user;
     }
 }

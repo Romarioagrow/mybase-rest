@@ -65,6 +65,7 @@ public class AccountUserService implements AccountUserApi {
         Object principal = authentication.getPrincipal();
 
         log.info("user: " + user);
+        log.info("authentication: " + authentication);
         log.info("principal: " + principal);
 
         //return principal == null ? Boolean.TRUE : Boolean.FALSE;
