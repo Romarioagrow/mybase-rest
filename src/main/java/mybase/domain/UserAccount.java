@@ -2,6 +2,7 @@ package mybase.domain;
 
 import lombok.Data;
 import mybase.domain.types.UserRole;
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,6 +25,7 @@ public class UserAccount implements UserDetails {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String email;

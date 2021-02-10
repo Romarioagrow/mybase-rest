@@ -68,7 +68,7 @@ export default {
   },
   data() {
     return {
-      user: null,
+      user: {},
       dialog: false,
       drawer: true,
       menuLinks: [
@@ -81,17 +81,20 @@ export default {
       ]
     }
   },
-  async created() {
-    await this.loadUser()
+  async beforeCreate() {
+
+    console.log('async beforeCreate()')
+
+    /*await this.loadUser()
     if (!this.userAuth) {
-      this.$router.push('/auth')
-    }
+      await this.$router.push('/auth')
+    }*/
   },
   methods: {
     goTo(link) {
       this.$router.push(link)
     },
-    async loadUser() {
+    /*async loadUser() {
       console.log('async loadUser()')
 
       let user = await axios.post('/api/user/auth/getUser')
@@ -103,7 +106,7 @@ export default {
         await this.$store.dispatch("loadUser", user.data)
         this.user = user.data
       }
-    },
+    },*/
   },
   computed: {
     userPic() {
@@ -112,7 +115,15 @@ export default {
     },
     userAuth() {
 
-      return this.$store.state.hasServerAuthorisation
+      return this.$store.getters.userAuth
+
+      //return this.$store.state.hasServerAuthorisation
+
+      /*return this.$store.dispatch('isUserAuth').then(value => {
+
+        console.log('value', value)
+        return value.data
+      })*/
 
 
       /*let h;

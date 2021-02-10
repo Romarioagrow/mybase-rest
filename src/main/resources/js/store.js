@@ -10,9 +10,10 @@ const clientApiService = require('services/ClientApiService.js');
 export default new Vuex.Store({
     state: {
 
-        hasServerAuthorisation: false,
 
-        user: {
+
+        userAccount: {
+            hasServerAuthorisation: false,
             currentProfile: null,
             instProfile: null,
             instFollowers: null
@@ -22,34 +23,62 @@ export default new Vuex.Store({
 
     mutations: {
         setCurrentProfile(currentState, currentProfile) {
-            currentState.currentProfile = currentProfile
+            currentState.userAccount.currentProfile = currentProfile
+            currentState.userAccount.hasServerAuthorisation = true
         },
+
+        /*setCurrentProfile(currentState, currentProfile) {
+            currentState.userAccount.currentProfile = currentProfile
+            currentState.userAccount.hasServerAuthorisation = true
+        },*/
 
 
         setInstFollowers(currentState, instFollowers) {
-            currentState.instFollowers = instFollowers
+            currentState.userAccount.instFollowers = instFollowers
         },
         setInstProfile(currentState, profile) {
-            currentState.instProfile = profile
+            currentState.userAccount.instProfile = profile
         },
-        logoutUser(currentState) {
-            currentState.instProfile = null
-            currentState.instFollowers = null
+
+        clearUser(currentState) {
+            currentState.userAccount.hasServerAuthorisation = false
+            currentState.userAccount.currentProfile = null
+            currentState.userAccount.instProfile = null
+            currentState.userAccount.instFollowers = null
         }
+    },
+
+    getters: {
+        userAuth: state =>
+            state.userAccount
+            && state.userAccount.currentProfile
+            && state.userAccount.hasServerAuthorisation
     },
 
     actions: {
 
-        authUser(userDto) {
+        setUserAuthorization(context, userResponseData) {
+            context.commit('setCurrentProfile', userResponseData)
+        },
+
+
+        clearUserAuthorization(context) {
+            context.commit('clearUser')
+        },
+
+
+        authUser(context, userDto) {
             console.log('authUser(user)', userDto)
-            this.state.user.currentProfile = userDto;
-            this.state.hasServerAuthorisation = true;
+            context.commit('setCurrentProfile', userDto)
+
+            /*this.state.userAccount.currentProfile = userDto;
+            this.state.userAccount.hasServerAuthorisation = true;*/
         },
 
 
         isUserAuth() {
-            console.log('this.state.currentProfile != null',this.state.currentProfile != null)
-            return this.state.currentProfile != null;
+            console.log('this.state.currentProfile != null', this.state.userAccount.currentProfile != null)
+            return this.state.userAccount.currentProfile != null;
         },
 
         /*hasAuth(context) {
@@ -70,7 +99,7 @@ export default new Vuex.Store({
 
 
         async doLogout(context) {
-            context.commit('logoutUser')
+            context.commit('clearUser')
             window.location.href = 'https://localhost:8080/logout'
         },
 

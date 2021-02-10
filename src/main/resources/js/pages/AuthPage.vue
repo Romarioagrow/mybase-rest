@@ -22,9 +22,9 @@
                                   label="Username"
                                   :error-messages="usernameErrors"
                                   required
-                                  @input="$v.usernameLogin.$touch()"
-                                  @blur="$v.usernameLogin.$touch()"
                     ></v-text-field>
+<!--@input="$v.usernameLogin.$touch()"
+                                  @blur="$v.usernameLogin.$touch()"                    -->
                     <v-text-field id="password"
                                   name="password"
                                   color="purple"
@@ -34,9 +34,9 @@
                                   label="Password"
                                   :error-messages="passwordErrors"
                                   required
-                                  @input="$v.password.$touch()"
-                                  @blur="$v.password.$touch()"
                     ></v-text-field>
+<!--                         @input="$v.password.$touch()"
+                                  @blur="$v.password.$touch()" -->
                   </v-form>
 
                   <!-- :disabled="!username || !password" block @click="loginUser()"                 -->
@@ -81,9 +81,9 @@
                                         v-model="username"
                                         :error-messages="usernameErrors"
                                         required
-                                        @input="$v.username.$touch()"
-                                        @blur="$v.username.$touch()"
                           ></v-text-field>
+<!--@input="$v.username.$touch()"
+                                        @blur="$v.username.$touch()"                          -->
                           <v-row>
                             <v-col>
                               <v-text-field id="password"
@@ -95,9 +95,9 @@
                                             :error-messages="passwordErrors"
                                             required
                                             color="purple"
-                                            @input="$v.password.$touch()"
-                                            @blur="$v.password.$touch()"
                               ></v-text-field>
+<!--                                                                          @input="$v.password.$touch()"
+                                            @blur="$v.password.$touch()"-->
                             </v-col>
 
                             <v-col>
@@ -108,11 +108,11 @@
                                             label="Confirm password"
                                             :error-messages="passwordConfirmErrors"
                                             color="purple"
-                                            @input="$v.registerPassConfirm.$touch()"
-                                            @blur="$v.registerPassConfirm.$touch()"
                               ></v-text-field>
                             </v-col>
 
+<!--       @input="$v.registerPassConfirm.$touch()"
+                                            @blur="$v.registerPassConfirm.$touch()"                            -->
                           </v-row>
 
                           <v-row>
@@ -125,9 +125,9 @@
                                             label="Last Name"
                                             :error-messages="lastNameErrors"
                                             color="purple"
-                                            @input="$v.lastName.$touch()"
-                                            @blur="$v.lastName.$touch()"
                               ></v-text-field>
+<!--        @input="$v.lastName.$touch()"
+                                            @blur="$v.lastName.$touch()"                              -->
                             </v-col>
 
                             <v-col>
@@ -138,9 +138,10 @@
                                             label="First Name"
                                             :error-messages="firstNameErrors"
                                             color="purple"
-                                            @input="$v.firstName.$touch()"
-                                            @blur="$v.firstName.$touch()"
+
                               ></v-text-field>
+<!--                         @input="$v.firstName.$touch()"
+                                            @blur="$v.firstName.$touch()"                          -->
                             </v-col>
 
                             <v-col>
@@ -151,9 +152,9 @@
                                             label="Middle Name"
                                             :error-messages="patronymicErrors"
                                             color="purple"
-                                            @input="$v.patronymic.$touch()"
-                                            @blur="$v.patronymic.$touch()"
                               ></v-text-field>
+<!--                                          @input="$v.patronymic.$touch()"
+                                            @blur="$v.patronymic.$touch()"                              -->
                             </v-col>
                           </v-row>
 
@@ -217,13 +218,13 @@
 
               <v-card-title>
                 <div class="regular-1">Google</div>
-                <v-img contain :src="user.user_pic"></v-img>
+<!--                <v-img contain :src="user.user_pic"></v-img>-->
               </v-card-title>
               <v-card-subtitle>
-                <div>{{ user.name }}</div>
+<!--                <div>{{ user.name }}</div>-->
               </v-card-subtitle>
               <v-card-actions>
-                <v-btn small block color="error" @click="logout()">
+                <v-btn disabled small block color="error" @click="logout()">
                   Logout
                 </v-btn>
               </v-card-actions>
@@ -243,7 +244,7 @@
                 <div>{{ instProfile.name }}</div>
               </v-card-subtitle>
               <v-card-actions>
-                <v-btn small block color="error" @click="logoutInstProfile()">
+                <v-btn disabled small block color="error" @click="logoutInstProfile()">
                   Logout
                 </v-btn>
               </v-card-actions>
@@ -267,7 +268,7 @@ export default {
   data() {
     return {
       registrationDialog: false,
-      user: null,
+      user: {},
       oldNameText: '',
       isConnected: false,
       name: '',
@@ -278,6 +279,17 @@ export default {
       password: '',
       usernameLogin: '',
       loginIncorrect: false,
+      patronymic: '',
+      patronymicErrors: [],
+      firstName: '',
+      firstNameErrors:[],
+      lastNameErrors:[],
+      lastName:'',
+      passwordConfirmErrors:[],
+      registerPassConfirm:[],
+      passwordErrors:[],
+      usernameErrors:[],
+
     }
   },
   created() {
@@ -288,13 +300,15 @@ export default {
   computed: {
     instProfile() {
       // return this.$store.state.instProfile
-      return ''
+      return {}
     },
     googleUser() {
-      return this.$store.state.currentUser
+      return {}
+      //return this.$store.state.currentUser
     },
     userAuth() {
-      return this.$store.state.currentUser
+      return {}
+      //return this.$store.state.currentUser
     }
   },
   methods: {
@@ -325,6 +339,7 @@ export default {
           //this.$store.dispatch('login')
         })
             .catch((error) => {
+              console.log('loginIncorrect', error)
               this.loginIncorrect = true
             })
       //}
@@ -450,7 +465,7 @@ export default {
     },
     logout() {
       this.$store.dispatch("doLogout")
-      this.user = null
+      this.user = {}
     },
     renameUser(user) {
       let newName = this.oldNameText
