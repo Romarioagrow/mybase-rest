@@ -82,64 +82,23 @@ export default {
     }
   },
   async beforeCreate() {
-
     console.log('async beforeCreate()')
-
-    /*await this.loadUser()
-    if (!this.userAuth) {
-      await this.$router.push('/auth')
-    }*/
   },
   methods: {
     goTo(link) {
       this.$router.push(link)
     },
-    /*async loadUser() {
-      console.log('async loadUser()')
-
-      let user = await axios.post('/api/user/auth/getUser')
-      console.log('async user',user)
-
-
-      if (user) {
-        console.log('if (user)', user)
-        await this.$store.dispatch("loadUser", user.data)
-        this.user = user.data
-      }
-    },*/
   },
   computed: {
+    userAuth() {
+      return this.$store.getters.userAuth
+    },
+
     userPic() {
       return ''
       //return this.$store.state.instProfile.profile_picture_url
     },
-    userAuth() {
 
-      return this.$store.getters.userAuth
-
-      //return this.$store.state.hasServerAuthorisation
-
-      /*return this.$store.dispatch('isUserAuth').then(value => {
-
-        console.log('value', value)
-        return value.data
-      })*/
-
-
-      /*let h;
-
-      let b = this.$store.dispatch('isUserAuth').then(value => {
-        console.log('valuevaluevalue',value)
-        h = value
-      })
-
-      console.log(' b',  b)
-      console.log(' h',  h)
-      return h;*/
-    },
-    /*userAuth() {
-      return this.$store.state.instProfile
-    },*/
     userName() {
       //return this.$store.state.instProfile.username
       return ''

@@ -4,30 +4,21 @@ import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import mybase.domain.FBAuthUser;
 import mybase.repo.FBAuthRepo;
-import mybase.repo.GoogleUserRepo;
-import org.springframework.boot.autoconfigure.security.oauth2.client.EnableOAuth2Sso;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.nio.charset.StandardCharsets;
 
 @Log
 @Configuration
 @EnableWebSecurity
-//@EnableOAuth2Sso
 @AllArgsConstructor
+//@EnableOAuth2Sso
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Bean
@@ -37,14 +28,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-/*
-        http.formLogin().successHandler(new AuthenticationSuccessHandler() {
-            @Override
-            public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-                //do nothing
-            }
-        });*/
-
 
         http
                 .antMatcher("/**")
@@ -53,21 +36,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                 .and()
                     .formLogin().successHandler((request, response, authentication) -> {
-
                         log.info("successHandler");
                         String text = "user text";
-
             // JsonHelper.createJsonFrom( body ).getBytes( StandardCharsets.UTF_8 )
                         response.setStatus(200);
                         response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-                        //response.getOutputStream().write("");
                         response.getWriter().write(text);
-
                     })
                     .loginPage("/auth")
                     .loginProcessingUrl("/user/login")
-
-                //.defaultSuccessUrl("/", true)
                     .permitAll()
                 .and()
                     .logout().permitAll()
@@ -75,59 +52,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .logoutSuccessUrl("/")
                 .and().csrf().disable();
     }
-
-
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/login**", "/js/**", "/error**").permitAll()
-                .anyRequest().authenticated()
-                //.anyRequest().permitAll()
-                .and().logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                .csrf().disable();
-    }*/
-
-
-    /*.http
-                .antMatcher("/**")
-                    .authorizeRequests()
-                    .antMatchers("/", "/login**", "/js/**", "/error**", "/user/registration").permitAll()
-                .and()
-                    .authorizeRequests()
-                    .antMatchers("/api/admin**").hasAuthority("ADMIN")
-                    .mvcMatchers("/api/user/**").authenticated()
-                    .anyRequest().permitAll()
-                .and()
-                    .formLogin()
-                    .loginPage("/user/login")
-                    .loginProcessingUrl("/user/login")
-                    .defaultSuccessUrl("/", true)
-                    .permitAll()
-                .and()
-                    .logout().permitAll()
-                    .logoutUrl("/user/logout")
-                    .logoutSuccessUrl("/")
-                .and().csrf().disable();*/
-
-
-
-
-    /*@Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http
-                .antMatcher("/**")
-                .authorizeRequests()
-                .antMatchers("/api/user/auth/**").permitAll()
-                .anyRequest().authenticated()
-                //.anyRequest().permitAll()
-                .and()
-                    .logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                    .csrf().disable();
-    }*/
 
     /*GOOGLE AUTH*/
     @Bean
