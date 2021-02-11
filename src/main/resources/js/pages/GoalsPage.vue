@@ -13,8 +13,104 @@
         </v-card-subtitle>
 
 
+        <v-card-actions>
+
+
+          <v-row>
+            <v-col>
+
+              <v-card max-width="500">
+                <v-card-title>
+                  <v-icon>
+                    mdi-target
+                  </v-icon>
+                  <span>&nbsp;My Goal objective is gain $1000</span>
+                </v-card-title>
+                <v-divider/>
+
+                <v-card-subtitle>
+
+                  <v-row>
+                    <v-chip
+                        class="ma-2"
+                        color="purple"
+                    >
+                      <span class="" style="color: white">Personal</span>
+                    </v-chip>
+                    <v-chip
+                        class="ma-2"
+                        color="red"
+                    >
+                      <span style="color: white">Crafting</span>
+                    </v-chip>
+                    <v-chip
+                        class="ma-2"
+                        color="green"
+                    >
+                      <span style="color: white">Business</span>
+                    </v-chip>
+                  </v-row>
+
+                </v-card-subtitle>
+
+                <v-divider/>
+                <v-card-subtitle>
+                  <v-row>
+                    <v-col>
+                      <span>Started</span><br>
+                      <v-chip
+                          outlined
+                          class="ma-2"
+                          color="primary"
+                      >
+                        <span>01.02.2021</span>
+                      </v-chip>
+                    </v-col>
+                    <v-col>
+                      <span>Shall finished</span><br>
+                      <v-chip
+                          outlined
+                          class="ma-2"
+                          color="success"
+                      >
+                        <span>01.03.2021</span>
+                      </v-chip>
+                    </v-col>
+                  </v-row>
+
+
+
+<!--                  <v-combobox
+                      v-model="dates"
+                      multiple
+                      chips
+                      small-chips
+                      label="Multiple picker in menu"
+                      prepend-icon="mdi-calendar"
+                      readonly
+                      v-bind="attrs"
+                      v-on="on"
+                  ></v-combobox>-->
+
+
+                </v-card-subtitle>
+
+
+              </v-card>
+
+            </v-col>
+          </v-row>
+
+
+        </v-card-actions>
+
+
         <!--ADD -->
         <v-card-actions >
+
+
+
+
           <v-row>
             <!-- CARD ADD NEW GOAL       -->
             <v-col>
@@ -146,6 +242,8 @@ export default {
 
   data() {
     return {
+
+      dates: [],
 
       new_goal_text: '',
       new_goal_label: '',
