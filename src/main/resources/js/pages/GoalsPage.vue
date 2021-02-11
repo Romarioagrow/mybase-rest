@@ -17,7 +17,7 @@
           <v-row>
             <v-col>
 
-<!--goal-add-new-card              -->
+              <!--goal-add-new-card              -->
               <v-card max-width="500">
                 <v-card-title>
                   <v-icon>
@@ -32,7 +32,7 @@
 
                   >
                   </v-text-field>
-<!--                  <span>&nbsp;My Goal objective is gain $1000</span>-->
+                  <!--                  <span>&nbsp;My Goal objective is gain $1000</span>-->
                 </v-card-title>
                 <v-divider/>
 
@@ -65,8 +65,8 @@
                           </v-item>
                         </v-item-group>
 
-<!--                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                     -->
+                        <!--                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                             -->
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </v-expansion-panels>
@@ -90,27 +90,6 @@
                       </v-chip>
                     </v-item>
                   </v-item-group>
-
-<!--                  <v-row style="padding-left: 2rem">
-                    <v-chip
-                        class="ma-2"
-                        color="purple"
-                    >
-                      <span class="" style="color: white">Personal</span>
-                    </v-chip>
-                    <v-chip
-                        class="ma-2"
-                        color="red"
-                    >
-                      <span style="color: white">Crafting</span>
-                    </v-chip>
-                    <v-chip
-                        class="ma-2"
-                        color="green"
-                    >
-                      <span style="color: white">Business</span>
-                    </v-chip>
-                  </v-row>-->
                 </v-card-actions>
                 <v-divider/>
 
@@ -120,24 +99,30 @@
                 <v-card-actions>
                   <v-row>
                     <v-col>
-                      <span>Started</span><br>
-                      <v-chip
-                          outlined
-                          class="ma-2"
-                          color="primary"
-                      >
-                        <span>01.02.2021</span>
-                      </v-chip>
+                      <span>Set start date</span><br>
+
+                        <v-date-picker
+                            width="220"
+                            v-model="picker"
+                            color="green lighten-1"
+                        ></v-date-picker>
+
+                      <!--                      <v-chip
+                                                outlined
+                                                class="ma-2"
+                                                color="primary"
+                                            >
+                                              <span>01.02.2021</span>
+                                            </v-chip>-->
                     </v-col>
                     <v-col>
-                      <span>Shall finished</span><br>
-                      <v-chip
-                          outlined
-                          class="ma-2"
-                          color="success"
-                      >
-                        <span>01.03.2021</span>
-                      </v-chip>
+                      <span>Plan finished date</span><br>
+                      <v-date-picker
+                          v-model="picker2"
+                          width="220"
+                          color="green lighten-1"
+                          header-color="primary"
+                      ></v-date-picker>
                     </v-col>
                   </v-row>
                   <!--                  <v-combobox
@@ -221,7 +206,7 @@
             </v-col>
 
             <v-col>
-<!--goal-new-card              -->
+              <!--goal-new-card              -->
               <v-card max-width="500">
                 <v-card-title>
                   <v-icon>
@@ -318,7 +303,7 @@
                           subheader
                           two-line
                       >
-<!--                        <v-subheader inset>Folders</v-subheader>-->
+                        <!--                        <v-subheader inset>Folders</v-subheader>-->
 
                         <v-list-item
                             v-for="key_point in key_points"
@@ -342,9 +327,9 @@
                           <v-list-item-action>
                             <v-checkbox
                             ></v-checkbox>
-<!--                            <v-btn icon>
-                              <v-icon color="grey lighten-1">mdi-information</v-icon>
-                            </v-btn>-->
+                            <!--                            <v-btn icon>
+                                                          <v-icon color="grey lighten-1">mdi-information</v-icon>
+                                                        </v-btn>-->
                           </v-list-item-action>
                         </v-list-item>
                       </v-list>
@@ -554,8 +539,7 @@ export default {
       if (!this.selected_goal_types.includes(goal_type)) {
 
         this.selected_goal_types.push(goal_type)
-      }
-      else {
+      } else {
         const index = this.selected_goal_types.indexOf(goal_type)
         this.selected_goal_types.splice(index, 1)
       }
