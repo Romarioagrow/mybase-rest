@@ -29,7 +29,7 @@
                       height="50"
                       placeholder="Your new goal"
                       color="purple"
-
+                      v-model="new_goal_name"
                   >
                   </v-text-field>
                   <!--                  <span>&nbsp;My Goal objective is gain $1000</span>-->
@@ -146,7 +146,6 @@
                           </v-expansion-panel-content>
                         </v-expansion-panel>
                       </v-expansion-panels>
-
                     </v-col>
                   </v-row>
                 </v-card-actions>
@@ -182,13 +181,22 @@
                 <v-divider/>
 
                 <v-card-subtitle>
-                  About it
+                  <span>About this Goal</span>
                 </v-card-subtitle>
                 <v-card-actions>
-                  <v-textarea outlined color="purple">
+                  <v-textarea
+                      outlined
+                      color="purple"
+                      v-model="about_goal_textarea">
                   </v-textarea>
                 </v-card-actions>
+                <v-divider/>
 
+                <v-card-actions>
+                  <v-btn block shaped color="purple" @click="save_new_goal()" style="color: white">
+                    Add Goal!
+                  </v-btn>
+                </v-card-actions>
               </v-card>
             </v-col>
 
@@ -474,6 +482,10 @@ export default {
 
   data() {
     return {
+      new_goal_name: '',
+
+      about_goal_textarea: '',
+
       add_keypoint_name: '',
       add_keypoint_description: '',
 
@@ -522,6 +534,23 @@ export default {
   },
 
   methods: {
+    save_new_goal() {
+      console.log('save_new_goal')
+
+      const newGoalDto = {
+        'new_goal_name': this.new_goal_name,
+        'selected_goal_types': this.selected_goal_types,
+        'start_date': this.set_start_date,
+        'finish_date': this.set_finish_date,
+        'key_points': this.key_points,
+        'about_goal_textarea': this.about_goal_textarea
+      }
+
+      console.log('newGoalDto', newGoalDto)
+
+    },
+
+
     add_key_point_to_goal() {
 
       const newKeyPoint = {
