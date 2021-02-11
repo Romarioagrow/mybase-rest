@@ -64,16 +64,15 @@
                             </v-chip>
                           </v-item>
                         </v-item-group>
-
-                        <!--                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-                                             -->
                       </v-expansion-panel-content>
                     </v-expansion-panel>
                   </v-expansion-panels>
                 </v-card-actions>
+
+<!--                -->
                 <v-card-actions>
                   <v-item-group multiple>
-                    <v-subheader>Tags</v-subheader>
+                    <v-subheader>Selected Types</v-subheader>
                     <v-item
                         v-for="n in selected_goal_types"
                         :key="n"
@@ -100,12 +99,12 @@
                   <v-row>
                     <v-col>
                       <span>Set start date</span><br>
-                        <v-date-picker
-                            width="220"
-                            v-model="set_start_date"
-                            color="green lighten-1"
-                            header-color="primary"
-                        ></v-date-picker>
+                      <v-date-picker
+                          width="220"
+                          v-model="set_start_date"
+                          color="green lighten-1"
+                          header-color="primary"
+                      ></v-date-picker>
                     </v-col>
                     <v-col>
                       <span>Plan finished date</span><br>
@@ -125,47 +124,55 @@
                 <v-card-actions>
                   <v-row style="width: 100%">
                     <v-col>
-                      <v-btn block text elevation="1">
-                        Add key points
-                      </v-btn>
+                      <v-expansion-panels popout flat>
+                        <v-expansion-panel
+                        >
+                          <v-expansion-panel-header>Add key point</v-expansion-panel-header>
+                          <v-expansion-panel-content>
+                            <v-row>
+                              <v-col cols="9">
+                                <v-text-field v-model="add_keypoint_name " label="Point name"></v-text-field>
+                                <v-text-field v-model="add_keypoint_description" label="Point description"></v-text-field>
+                              </v-col>
+                              <v-col>
+                                <v-btn outlined style="margin-top: 50%" @click="add_key_point_to_goal()">
+<!--                                  <v-icon>
+                                    mdi-plus
+                                  </v-icon>-->
+                                  <span>ADD</span>
+                                </v-btn>
+                              </v-col>
+                            </v-row>
+                          </v-expansion-panel-content>
+                        </v-expansion-panel>
+                      </v-expansion-panels>
+
                     </v-col>
                   </v-row>
                 </v-card-actions>
+
+<!--                -->
                 <v-card-actions>
                   <v-row>
                     <v-col>
-
-                      <v-list
-                          subheader
-                          two-line
-                      >
+                      <v-list subheader two-line>
                         <!--                        <v-subheader inset>Folders</v-subheader>-->
-
                         <v-list-item
                             v-for="key_point in key_points"
-                            :key="key_point.title"
+                            :key="key_point.keypoint_name"
                         >
                           <v-list-item-avatar>
-                            <v-icon
-                                class="grey lighten-1"
-                                dark
+                            <v-icon class="grey lighten-1" dark
                             >
                               mdi-bullseye
                             </v-icon>
                           </v-list-item-avatar>
-
                           <v-list-item-content>
-                            <v-list-item-title v-text="key_point.title"></v-list-item-title>
-
-                            <v-list-item-subtitle v-text="key_point.subtitle"></v-list-item-subtitle>
+                            <v-list-item-title v-text="key_point.keypoint_name"></v-list-item-title>
+                            <v-list-item-subtitle v-text="key_point.keypoint_description"></v-list-item-subtitle>
                           </v-list-item-content>
-
                           <v-list-item-action>
-                            <v-checkbox
-                            ></v-checkbox>
-                            <!--                            <v-btn icon>
-                                                          <v-icon color="grey lighten-1">mdi-information</v-icon>
-                                                        </v-btn>-->
+                            <v-checkbox/>
                           </v-list-item-action>
                         </v-list-item>
                       </v-list>
@@ -286,7 +293,7 @@
                         <!--                        <v-subheader inset>Folders</v-subheader>-->
 
                         <v-list-item
-                            v-for="key_point in key_points"
+                            v-for="key_point in key_pointsHARD"
                             :key="key_point.title"
                         >
                           <v-list-item-avatar>
@@ -467,10 +474,17 @@ export default {
 
   data() {
     return {
-      set_start_date: '' ,
+      add_keypoint_name: '',
+      add_keypoint_description: '',
+
+      set_start_date: '',
       set_finish_date: '',
 
       key_points: [
+
+      ],
+
+      key_pointsHARD: [
         {
           'title': 'kek',
           'subtitle': 'keks',
@@ -508,6 +522,22 @@ export default {
   },
 
   methods: {
+    add_key_point_to_goal() {
+
+      const newKeyPoint = {
+        'keypoint_name': this.add_keypoint_name,
+        'keypoint_description': this.add_keypoint_description,
+      }
+
+      this.key_points.push(newKeyPoint)
+
+      this.add_keypoint_name = ''
+      this.add_keypoint_description = ''
+
+      //add_keypoint_name
+      //add_keypoint_description
+    },
+
     delete_selected_goal_type(goal_type) {
 
       const index = this.selected_goal_types.indexOf(goal_type)
