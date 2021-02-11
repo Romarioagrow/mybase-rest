@@ -45,22 +45,22 @@
 
                     >
                       <v-expansion-panel-header>
-                        Item
+                        Select Goal Types
                       </v-expansion-panel-header>
                       <v-expansion-panel-content>
                         <v-item-group multiple>
-                          <v-subheader>Tags</v-subheader>
+                          <v-subheader>Types</v-subheader>
                           <v-item
-                              v-for="n in 8"
+                              v-for="n in goal_types"
                               :key="n"
                               v-slot="{ active, toggle }"
                           >
                             <v-chip
                                 active-class="purple--text"
                                 :input-value="active"
-                                @click="toggle"
+                                @click="goal_type_toggle_action(n)"
                             >
-                              Tag {{ n }}
+                              {{ n }}
                             </v-chip>
                           </v-item>
                         </v-item-group>
@@ -75,7 +75,7 @@
                   <v-item-group multiple>
                     <v-subheader>Tags</v-subheader>
                     <v-item
-                        v-for="n in 8"
+                        v-for="n in selected_goal_types"
                         :key="n"
                         v-slot="{ active, toggle }"
                     >
@@ -84,7 +84,7 @@
                           :input-value="active"
                           @click="toggle"
                       >
-                        Tag {{ n }}
+                        {{ n }}
                       </v-chip>
                     </v-item>
                   </v-item-group>
@@ -394,7 +394,7 @@
                     >
                       <v-select
                           v-model="value"
-                          :items="items"
+                          :items="goal_types"
                           chips
                           label="Goal Types"
                           multiple
@@ -525,7 +525,8 @@ export default {
       new_goal_label: '',
       all_goals: [],
 
-      items: [],
+      goal_types: [],
+      selected_goal_types: [],
       value: [],
 
       date: new Date().toISOString().substr(0, 10),
@@ -538,12 +539,26 @@ export default {
 
   methods: {
 
+    goal_type_toggle_action(goal_type) {
+      console.log('goal_type', goal_type)
+      console.log('selected_goal_types', this.selected_goal_types)
+
+      if (!this.selected_goal_types.includes(goal_type)) {
+
+        this.selected_goal_types.push(goal_type)
+      }
+      else {
+        const index = this.selected_goal_types.indexOf(goal_type)
+        this.selected_goal_types.splice(index, 1)
+      }
+    },
+
     loadAllGoalTypes() {
       const sendURL = '/api/goals/load/types';
 
       axios.get(sendURL).then(response => {
         console.log('response', response)
-        this.items = response.data
+        this.goal_types = response.data
       })
 
     },
