@@ -1,6 +1,6 @@
 <template>
   <v-content>
-    <v-container fluid >
+    <v-container fluid>
 
       <!--      -->
       <v-card height='100%' style="position: relative">
@@ -29,8 +29,10 @@
                 <v-divider/>
 
                 <v-card-subtitle>
-
-                  <v-row>
+                  Types
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-row style="padding-left: 2rem">
                     <v-chip
                         class="ma-2"
                         color="purple"
@@ -50,11 +52,13 @@
                       <span style="color: white">Business</span>
                     </v-chip>
                   </v-row>
-
-                </v-card-subtitle>
-
+                </v-card-actions>
                 <v-divider/>
+
                 <v-card-subtitle>
+                  Timing
+                </v-card-subtitle>
+                <v-card-actions>
                   <v-row>
                     <v-col>
                       <span>Started</span><br>
@@ -77,38 +81,92 @@
                       </v-chip>
                     </v-col>
                   </v-row>
+                  <!--                  <v-combobox
+                                        v-model="dates"
+                                        multiple
+                                        chips
+                                        small-chips
+                                        label="Multiple picker in menu"
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    ></v-combobox>-->
+                </v-card-actions>
+                <v-divider/>
 
-
-
-<!--                  <v-combobox
-                      v-model="dates"
-                      multiple
-                      chips
-                      small-chips
-                      label="Multiple picker in menu"
-                      prepend-icon="mdi-calendar"
-                      readonly
-                      v-bind="attrs"
-                      v-on="on"
-                  ></v-combobox>-->
-
-
+                <v-card-subtitle>
+                  Key points
                 </v-card-subtitle>
+                <v-card-actions>
+                  <v-row style="width: 100%">
+                    <v-col>
+                      <v-btn block text elevation="1">
+                        Add key points
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-row>
+                    <v-col>
 
+                      <v-list
+                          subheader
+                          two-line
+                      >
+<!--                        <v-subheader inset>Folders</v-subheader>-->
+
+                        <v-list-item
+                            v-for="key_point in key_points"
+                            :key="key_point.title"
+                        >
+                          <v-list-item-avatar>
+                            <v-icon
+                                class="grey lighten-1"
+                                dark
+                            >
+                              mdi-bullseye
+                            </v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title v-text="key_point.title"></v-list-item-title>
+
+                            <v-list-item-subtitle v-text="key_point.subtitle"></v-list-item-subtitle>
+                          </v-list-item-content>
+
+                          <v-list-item-action>
+                            <v-checkbox
+                            ></v-checkbox>
+<!--                            <v-btn icon>
+                              <v-icon color="grey lighten-1">mdi-information</v-icon>
+                            </v-btn>-->
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-list>
+                    </v-col>
+                  </v-row>
+                </v-card-actions>
+                <v-divider/>
+
+                <v-card-subtitle>
+                  About it
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-textarea outlined color="purple">
+                  </v-textarea>
+                </v-card-actions>
 
               </v-card>
-
             </v-col>
           </v-row>
-
 
         </v-card-actions>
 
 
         <!--ADD -->
-        <v-card-actions >
-
-
+        <v-card-actions>
 
 
           <v-row>
@@ -130,23 +188,23 @@
                 <!-- select   GOAL   TYPE       -->
                 <v-card-actions>
                   <v-row>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                  >
-                    <v-select
-                        v-model="value"
-                        :items="items"
-                        chips
-                        label="Goal Types"
-                        multiple
-                        outlined
-                    ></v-select>
-                  </v-col>
-                  <v-col
-                      cols="12"
-                      sm="6"
-                  />
+                    <v-col
+                        cols="12"
+                        sm="6"
+                    >
+                      <v-select
+                          v-model="value"
+                          :items="items"
+                          chips
+                          label="Goal Types"
+                          multiple
+                          outlined
+                      ></v-select>
+                    </v-col>
+                    <v-col
+                        cols="12"
+                        sm="6"
+                    />
                   </v-row>
                 </v-card-actions>
 
@@ -197,7 +255,7 @@
             </v-col>
           </v-row>
         </v-card-actions>
-        
+
         <v-card-subtitle>
           all my goals
         </v-card-subtitle>
@@ -208,14 +266,14 @@
               <v-flex md4 v-for="goal in this.all_goals" :key="goal.goalID">
                 <v-card class="card-container">
                   <v-card-text>
-                    {{goal.goalText}}
+                    {{ goal.goalText }}
                   </v-card-text>
                 </v-card>
-<!--                <v-card width="200" v-for="goal in all_goals">
-                  <v-card-text>
-                    {{goal.goalText}}
-                  </v-card-text>
-                </v-card>-->
+                <!--                <v-card width="200" v-for="goal in all_goals">
+                                  <v-card-text>
+                                    {{goal.goalText}}
+                                  </v-card-text>
+                                </v-card>-->
               </v-flex>
             </v-layout>
           </v-flex>
@@ -242,6 +300,24 @@ export default {
 
   data() {
     return {
+      key_points: [
+        {
+          'title': 'kek',
+          'subtitle': 'keks',
+        },
+        {
+          'title': 'koko',
+          'subtitle': 'keks111',
+        },
+        {
+          'title': 'moooort',
+          'subtitle': 'keks222',
+        },
+        {
+          'title': 'mdaaa',
+          'subtitle': 'keks333',
+        },
+      ],
 
       dates: [],
 
