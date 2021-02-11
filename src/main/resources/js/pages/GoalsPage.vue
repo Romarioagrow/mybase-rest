@@ -58,7 +58,7 @@
                             <v-chip
                                 active-class="purple--text"
                                 :input-value="active"
-                                @click="goal_type_toggle_action(n)"
+                                @click="toggle, goal_type_toggle_action(n)"
                             >
                               {{ n }}
                             </v-chip>
@@ -80,9 +80,11 @@
                         v-slot="{ active, toggle }"
                     >
                       <v-chip
+                          close
                           active-class="purple--text"
                           :input-value="active"
                           @click="toggle"
+                          @click:close="delete_selected_goal_type(n)"
                       >
                         {{ n }}
                       </v-chip>
@@ -538,6 +540,12 @@ export default {
   },
 
   methods: {
+    delete_selected_goal_type(goal_type) {
+
+      const index = this.selected_goal_types.indexOf(goal_type)
+      this.selected_goal_types.splice(index, 1)
+
+    },
 
     goal_type_toggle_action(goal_type) {
       console.log('goal_type', goal_type)
