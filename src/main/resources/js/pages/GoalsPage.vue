@@ -14,11 +14,212 @@
 
 
         <v-card-actions>
-
-
           <v-row>
             <v-col>
 
+<!--goal-add-new-card              -->
+              <v-card max-width="500">
+                <v-card-title>
+                  <v-icon>
+                    mdi-target
+                  </v-icon>
+                  <span>&nbsp;</span>
+
+                  <v-text-field
+                      height="50"
+                      placeholder="Your new goal"
+                      color="purple"
+
+                  >
+                  </v-text-field>
+<!--                  <span>&nbsp;My Goal objective is gain $1000</span>-->
+                </v-card-title>
+                <v-divider/>
+
+                <v-card-subtitle>
+                  Set Types of The Goal
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-expansion-panels tile>
+                    <v-expansion-panel
+
+                    >
+                      <v-expansion-panel-header>
+                        Item
+                      </v-expansion-panel-header>
+                      <v-expansion-panel-content>
+                        <v-item-group multiple>
+                          <v-subheader>Tags</v-subheader>
+                          <v-item
+                              v-for="n in 8"
+                              :key="n"
+                              v-slot="{ active, toggle }"
+                          >
+                            <v-chip
+                                active-class="purple--text"
+                                :input-value="active"
+                                @click="toggle"
+                            >
+                              Tag {{ n }}
+                            </v-chip>
+                          </v-item>
+                        </v-item-group>
+
+<!--                        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                     -->
+                      </v-expansion-panel-content>
+                    </v-expansion-panel>
+                  </v-expansion-panels>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-item-group multiple>
+                    <v-subheader>Tags</v-subheader>
+                    <v-item
+                        v-for="n in 8"
+                        :key="n"
+                        v-slot="{ active, toggle }"
+                    >
+                      <v-chip
+                          active-class="purple--text"
+                          :input-value="active"
+                          @click="toggle"
+                      >
+                        Tag {{ n }}
+                      </v-chip>
+                    </v-item>
+                  </v-item-group>
+
+<!--                  <v-row style="padding-left: 2rem">
+                    <v-chip
+                        class="ma-2"
+                        color="purple"
+                    >
+                      <span class="" style="color: white">Personal</span>
+                    </v-chip>
+                    <v-chip
+                        class="ma-2"
+                        color="red"
+                    >
+                      <span style="color: white">Crafting</span>
+                    </v-chip>
+                    <v-chip
+                        class="ma-2"
+                        color="green"
+                    >
+                      <span style="color: white">Business</span>
+                    </v-chip>
+                  </v-row>-->
+                </v-card-actions>
+                <v-divider/>
+
+                <v-card-subtitle>
+                  Timing
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-row>
+                    <v-col>
+                      <span>Started</span><br>
+                      <v-chip
+                          outlined
+                          class="ma-2"
+                          color="primary"
+                      >
+                        <span>01.02.2021</span>
+                      </v-chip>
+                    </v-col>
+                    <v-col>
+                      <span>Shall finished</span><br>
+                      <v-chip
+                          outlined
+                          class="ma-2"
+                          color="success"
+                      >
+                        <span>01.03.2021</span>
+                      </v-chip>
+                    </v-col>
+                  </v-row>
+                  <!--                  <v-combobox
+                                        v-model="dates"
+                                        multiple
+                                        chips
+                                        small-chips
+                                        label="Multiple picker in menu"
+                                        prepend-icon="mdi-calendar"
+                                        readonly
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    ></v-combobox>-->
+                </v-card-actions>
+                <v-divider/>
+
+                <v-card-subtitle>
+                  Key points
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-row style="width: 100%">
+                    <v-col>
+                      <v-btn block text elevation="1">
+                        Add key points
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </v-card-actions>
+                <v-card-actions>
+                  <v-row>
+                    <v-col>
+
+                      <v-list
+                          subheader
+                          two-line
+                      >
+                        <!--                        <v-subheader inset>Folders</v-subheader>-->
+
+                        <v-list-item
+                            v-for="key_point in key_points"
+                            :key="key_point.title"
+                        >
+                          <v-list-item-avatar>
+                            <v-icon
+                                class="grey lighten-1"
+                                dark
+                            >
+                              mdi-bullseye
+                            </v-icon>
+                          </v-list-item-avatar>
+
+                          <v-list-item-content>
+                            <v-list-item-title v-text="key_point.title"></v-list-item-title>
+
+                            <v-list-item-subtitle v-text="key_point.subtitle"></v-list-item-subtitle>
+                          </v-list-item-content>
+
+                          <v-list-item-action>
+                            <v-checkbox
+                            ></v-checkbox>
+                            <!--                            <v-btn icon>
+                                                          <v-icon color="grey lighten-1">mdi-information</v-icon>
+                                                        </v-btn>-->
+                          </v-list-item-action>
+                        </v-list-item>
+                      </v-list>
+                    </v-col>
+                  </v-row>
+                </v-card-actions>
+                <v-divider/>
+
+                <v-card-subtitle>
+                  About it
+                </v-card-subtitle>
+                <v-card-actions>
+                  <v-textarea outlined color="purple">
+                  </v-textarea>
+                </v-card-actions>
+
+              </v-card>
+            </v-col>
+
+            <v-col>
+<!--goal-new-card              -->
               <v-card max-width="500">
                 <v-card-title>
                   <v-icon>
@@ -157,7 +358,6 @@
                   <v-textarea outlined color="purple">
                   </v-textarea>
                 </v-card-actions>
-
               </v-card>
             </v-col>
           </v-row>
