@@ -100,42 +100,22 @@
                   <v-row>
                     <v-col>
                       <span>Set start date</span><br>
-
                         <v-date-picker
                             width="220"
-                            v-model="picker"
+                            v-model="set_start_date"
                             color="green lighten-1"
+                            header-color="primary"
                         ></v-date-picker>
-
-                      <!--                      <v-chip
-                                                outlined
-                                                class="ma-2"
-                                                color="primary"
-                                            >
-                                              <span>01.02.2021</span>
-                                            </v-chip>-->
                     </v-col>
                     <v-col>
                       <span>Plan finished date</span><br>
                       <v-date-picker
-                          v-model="picker2"
+                          v-model="set_finish_date"
                           width="220"
                           color="green lighten-1"
-                          header-color="primary"
                       ></v-date-picker>
                     </v-col>
                   </v-row>
-                  <!--                  <v-combobox
-                                        v-model="dates"
-                                        multiple
-                                        chips
-                                        small-chips
-                                        label="Multiple picker in menu"
-                                        prepend-icon="mdi-calendar"
-                                        readonly
-                                        v-bind="attrs"
-                                        v-on="on"
-                                    ></v-combobox>-->
                 </v-card-actions>
                 <v-divider/>
 
@@ -487,6 +467,9 @@ export default {
 
   data() {
     return {
+      set_start_date: '' ,
+      set_finish_date: '',
+
       key_points: [
         {
           'title': 'kek',
