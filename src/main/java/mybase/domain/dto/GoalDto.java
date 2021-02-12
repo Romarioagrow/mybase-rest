@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @EqualsAndHashCode(callSuper = true)
@@ -18,7 +19,7 @@ public class GoalDto extends BaseDto {
 
     private String goalText;
 
-    private LocalDateTime goalSetTime;
+    private LocalDate goalSetTime;
 
     private Boolean isCompleted;
 

@@ -16,16 +16,13 @@ import java.util.List;
 @RequestMapping("/api/goals")
 @AllArgsConstructor
 public class GoalsController {
-
     private final GoalsService goalsService;
 
-
     @PostMapping("/add/new")
-    public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto, @AuthenticationPrincipal MainUser mainUser) {
+    public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto, @AuthenticationPrincipal UserAccount userAccount/*MainUser mainUser*/) {
 
-        return goalsService.addNewGoal(newGoalDto, mainUser);//new GoalDto();
+        return goalsService.addNewGoal(newGoalDto, userAccount);
     }
-
 
     @GetMapping("/load/all")
     public List<GoalDto> loadAllGoals(@AuthenticationPrincipal UserAccount accountUser) {
@@ -36,9 +33,5 @@ public class GoalsController {
     public List<GoalType> loadAllGoalTypes() {
         return goalsService.loadAllGoalTypes();
     }
-
-
-    ///api/goals/load/all
-
 
 }
