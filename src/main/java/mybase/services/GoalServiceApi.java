@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public interface GoalServiceApi {
 
-    GoalDto addNewGoal(NewGoalDto newGoalDto, MainUser mainUser);
+    GoalDto addNewGoal(NewGoalDto newGoalDto, UserAccount userAccount/*MainUser mainUser*/);
 
     List<GoalEntity> getAllGoals();
 

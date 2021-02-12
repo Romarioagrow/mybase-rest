@@ -16,8 +16,8 @@ public class GoalsObjectMapper implements GoalsObjectMapperApi {
 
         GoalDto goalDto = new GoalDto();
         goalDto.setGoalID(goalDto.getGoalID());
-        goalDto.setGoalText(goalEntity.getGoalText());
-        goalDto.setGoalSetTime(goalEntity.getGoalSetTime());
+        goalDto.setGoalText(goalEntity.getGoalName());
+        goalDto.setGoalSetTime(goalEntity.getGoalSetDate());
         goalDto.setIsCompleted(goalEntity.getIsCompleted());
 
         return goalDto;
