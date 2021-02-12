@@ -538,15 +538,23 @@ export default {
       console.log('save_new_goal')
 
       const newGoalDto = {
-        'new_goal_name': this.new_goal_name,
-        'selected_goal_types': this.selected_goal_types,
-        'start_date': this.set_start_date,
-        'finish_date': this.set_finish_date,
-        'key_points': this.key_points,
-        'about_goal_textarea': this.about_goal_textarea
+        'goalName': this.new_goal_name,
+        'goalTypes': this.selected_goal_types,
+        'startDate': this.set_start_date,
+        'finishDate': this.set_finish_date,
+        'keyPoints': this.key_points,
+        'aboutGoal': this.about_goal_textarea
       }
 
       console.log('newGoalDto', newGoalDto)
+
+      const postURL = '/api/goals/add/new'
+
+      axios.post(postURL, newGoalDto).then(value => {
+        console.log('/api/goals/add/new value', value)
+      }).catch(error => {
+        console.log('error', error)
+      })
 
     },
 
@@ -554,6 +562,7 @@ export default {
     add_key_point_to_goal() {
 
       const newKeyPoint = {
+        'goalID': '',
         'keypoint_name': this.add_keypoint_name,
         'keypoint_description': this.add_keypoint_description,
       }

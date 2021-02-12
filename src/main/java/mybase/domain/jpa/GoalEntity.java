@@ -2,15 +2,19 @@ package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
+
 @Data
 @Entity
+@ToString
 @Table(name = "goal_entities")
 @RequiredArgsConstructor
 public class GoalEntity {
@@ -19,15 +23,14 @@ public class GoalEntity {
     @GeneratedValue
     private Long goalID;
 
-    @Lob
-    private String goalText;
+    private String goalName;
 
-    private LocalDateTime goalSetTime;
+    @Lob
+    private String aboutGoal;
+
+    private LocalDate goalSetDate, goalFinishDate;
 
     private Boolean isCompleted = false;
-
-    @OneToMany
-    private List<TaskEntity> taskEntityList;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private MainUser mainUser;
@@ -35,5 +38,10 @@ public class GoalEntity {
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<GoalType> goalTypes;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private List<GoalKeyPoint> goalKeyPoint;
+
+    @OneToMany
+    private List<TaskEntity> taskEntityList;
 
 }

@@ -29,12 +29,20 @@ public class GoalsService implements GoalServiceApi {
 
 
     @Override
-    public GoalDto addNewGoal(NewGoalDto newGoalDto, MainUser mainUser) {
-        String goalText;
-        List<GoalEntity> updateUserGoals;
+    public GoalDto addNewGoal(NewGoalDto newGoalDto, UserAccount userAccount/* MainUser mainUser*/) {
+        //String goalText;
+        //List<GoalEntity> updateUserGoals;
         GoalEntity newGoalEntity = new GoalEntity();
+        newGoalEntity.setGoalName(newGoalDto.getGoalName());
+        //newGoalEntity.setGoalTypes(newGoalDto.getSelectedGoalTypes());
+        newGoalEntity.setGoalSetDate(newGoalDto.getFinishDate());
+        newGoalEntity.setGoalFinishDate(newGoalDto.getFinishDate());
+        newGoalEntity.setGoalKeyPoint(newGoalDto.getKeyPoints());
+        newGoalEntity.setAboutGoal(newGoalDto.getAboutGoal());
 
-        goalText = newGoalDto.getGoalText();
+        log.info("newGoalEntity: " + newGoalEntity.toString());
+
+        /*goalText = newGoalDto.getGoalText();
         newGoalEntity.setGoalText(goalText);
         newGoalEntity.setGoalSetTime(LocalDateTime.now());
 
@@ -44,7 +52,7 @@ public class GoalsService implements GoalServiceApi {
             updateUserGoals.add(newGoalEntity);
             mainUser.setGoalEntities(updateUserGoals);
             persistUser(mainUser);
-        }
+        }*/
 
         persistNewGoal(newGoalEntity);
 
