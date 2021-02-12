@@ -167,8 +167,8 @@
                             </v-icon>
                           </v-list-item-avatar>
                           <v-list-item-content>
-                            <v-list-item-title v-text="key_point.keypoint_name"></v-list-item-title>
-                            <v-list-item-subtitle v-text="key_point.keypoint_description"></v-list-item-subtitle>
+                            <v-list-item-title v-text="key_point.keypointName"></v-list-item-title>
+                            <v-list-item-subtitle v-text="key_point.keypointDescription"></v-list-item-subtitle>
                           </v-list-item-content>
                           <v-list-item-action>
                             <v-checkbox/>
@@ -562,9 +562,9 @@ export default {
     add_key_point_to_goal() {
 
       const newKeyPoint = {
-        'goalID': '',
-        'keypoint_name': this.add_keypoint_name,
-        'keypoint_description': this.add_keypoint_description,
+        'keypointID': '',
+        'keypointName': this.add_keypoint_name,
+        'keypointDescription': this.add_keypoint_description,
       }
 
       this.key_points.push(newKeyPoint)

@@ -7,38 +7,48 @@ import mybase.domain.UserAccount;
 import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
+import mybase.domain.jpa.GoalKeypoint;
 import mybase.domain.jpa.MainUser;
 import mybase.domain.types.GoalType;
 import mybase.mappers.GoalsObjectMapper;
 import mybase.repo.AccountUserRepo;
+import mybase.repo.GoalKeypointRepo;
 import mybase.repo.GoalRepo;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
 @Service
 @AllArgsConstructor
 public class GoalsService implements GoalServiceApi {
-
     private final GoalRepo goalRepo;
     private final AccountUserRepo userRepo;
     private final GoalsObjectMapper goalsObjectMapper;
-
-
+    private final GoalKeypointRepo keypointRepo;
 
     @Override
     public GoalDto addNewGoal(NewGoalDto newGoalDto, UserAccount userAccount/* MainUser mainUser*/) {
-        //String goalText;
-        //List<GoalEntity> updateUserGoals;
         GoalEntity newGoalEntity = new GoalEntity();
         newGoalEntity.setGoalName(newGoalDto.getGoalName());
-        //newGoalEntity.setGoalTypes(newGoalDto.getSelectedGoalTypes());
         newGoalEntity.setGoalSetDate(newGoalDto.getFinishDate());
         newGoalEntity.setGoalFinishDate(newGoalDto.getFinishDate());
-        newGoalEntity.setGoalKeyPoint(newGoalDto.getKeyPoints());
         newGoalEntity.setAboutGoal(newGoalDto.getAboutGoal());
+
+        //newGoalEntity.setGoalTypes(newGoalDto.getSelectedGoalTypes());
+
+        List<GoalKeypoint> goalKeypoints = new ArrayList<>();
+
+        newGoalDto.getKeyPoints().forEach(goalKeypointDto -> {
+            GoalKeypoint newGoalKeyPoint = new GoalKeypoint(
+                    goalKeypointDto.getKeypointName(),
+                    goalKeypointDto.getKeypointDescription());
+            goalKeypoints.add(newGoalKeyPoint);
+        });
+        keypointRepo.saveAll(goalKeypoints);
+        newGoalEntity.setGoalKeyPoint(goalKeypoints);
+
 
         log.info("newGoalEntity: " + newGoalEntity.toString());
 
@@ -80,15 +90,8 @@ public class GoalsService implements GoalServiceApi {
 
     @Override
     public List<GoalDto> loadAllGoals(UserAccount accountUser) {
-
         log.info("accountUser", accountUser);
-
-
         return goalsObjectMapper.mapGoalEntitiesToDto(goalRepo.findAll());
-
-               // ;
-
-
     }
 
     @Override

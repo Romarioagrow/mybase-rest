@@ -7,7 +7,6 @@ import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -39,7 +38,7 @@ public class GoalEntity {
     private Set<GoalType> goalTypes;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private List<GoalKeyPoint> goalKeyPoint;
+    private List<GoalKeypoint> goalKeyPoint;
 
     @OneToMany
     private List<TaskEntity> taskEntityList;

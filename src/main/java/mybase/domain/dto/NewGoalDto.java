@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
-import mybase.domain.jpa.GoalKeyPoint;
-import mybase.domain.types.GoalType;
+import mybase.domain.jpa.GoalKeypoint;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Set;
 
@@ -31,6 +29,6 @@ public class NewGoalDto extends BaseDto {
     private Set<String> goalTypes;
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate startDate, finishDate;
-    private ArrayList<GoalKeyPoint> keyPoints;
+    private ArrayList<GoalKeypointDto> keyPoints;
 
 }
