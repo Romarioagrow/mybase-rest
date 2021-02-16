@@ -15,13 +15,12 @@
               <v-col>
                   <v-alert
                       v-if="has_login_response_alert"
-                      v-model:="login_response_alert"
+                      v-model="login_response_alert.message"
                       dense
-                      type="info"
+                      :type="get_login_response_type"
                       outlined
                   >
-
-                    KOOOOOS
+                    {{login_response_alert.message}}
                   </v-alert>
 
               </v-col>
@@ -291,7 +290,11 @@ export default {
   data() {
     return {
 
-      login_response_alert: ['login_response_alert'] ,
+      login_response_alert: {
+        has_response: false,
+        type: 'info',
+        message: ''
+      },
       registrationDialog: false,
       user: {},
       oldNameText: '',
@@ -323,8 +326,12 @@ export default {
     //console.log(this.$store.state.currentUser)
   },
   computed: {
+    get_login_response_type() {
+      return this.login_response_alert.type
+    },
+
     has_login_response_alert() {
-      return this.login_response_alert
+      return this.login_response_alert.has_response
     },
     instProfile() {
       // return this.$store.state.instProfile
@@ -342,8 +349,9 @@ export default {
   methods: {
     loginUser() {
       console.log('loginUser()')
+      this.clearLoginResponse()
 
-      this.loginIncorrect = false
+     // this.loginIncorrect = false
 
       //this.$v.$touch()
       //if (true/*this.loginValid*/) {
@@ -369,7 +377,9 @@ export default {
         })
             .catch((error) => {
               console.log('loginIncorrect', error)
-              this.loginIncorrect = true
+              this.setLoginResponse()
+
+              //this.loginIncorrect = true
             })
       //}
 
@@ -509,11 +519,27 @@ export default {
         responseMessage = response.data
       }
       else {
-        responseMessage = 'Ошибка отправки'
+        responseMessage = 'Login error'
       }
 
-      this.login_response_alert = responseMessage
+      /*this.login_response_alert = {
+        'type' : 'error',
+        'message' : 'Login failed'
+      }//= responseMessage*/
 
+      this.login_response_alert.has_response = true
+      this.login_response_alert.type = 'error'
+      this.login_response_alert.message = responseMessage
+
+      /*login_response_alert: {
+        has_response: false,
+        type: 'info',
+        message: ''*/
+    },
+    clearLoginResponse() {
+      this.login_response_alert.has_response = false
+      this.login_response_alert.type = 'info'
+      this.login_response_alert.message = ''
     }
   },
 }

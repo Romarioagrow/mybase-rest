@@ -1,5 +1,6 @@
 package mybase.tools;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class LoginAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
+    private final ObjectMapper objectMapper = new ObjectMapper();
 
     @Override
     public void onAuthenticationFailure(HttpServletRequest request,
@@ -28,23 +30,14 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
                                         AuthenticationException exception)
             throws IOException, ServletException
     {
-
-
-
         log.info("onAuthenticationFailure");
-
 
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         Map<String, Object> data = new HashMap<>();
-        data.put(
-                "timestamp",
-                Calendar.getInstance().getTime());
-        data.put(
-                "exception",
-                exception.getMessage());
+        data.put("timestamp", Calendar.getInstance().getTime());
+        data.put("exception", exception.getMessage());
 
-        /*response.getOutputStream()
-                .println(objectMapper.writeValueAsString(data));*/
-
+        response.getOutputStream()
+                .println(objectMapper.writeValueAsString(data));
     }
 }
