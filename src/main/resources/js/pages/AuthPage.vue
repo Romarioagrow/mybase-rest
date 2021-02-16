@@ -4,9 +4,32 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-card-title>
-              User Authorization
-            </v-card-title>
+
+            <v-row>
+              <v-col cols="3">
+                <v-card-title>
+                  User Authorization
+                </v-card-title>
+              </v-col>
+
+              <v-col>
+                  <v-alert
+                      v-if="has_login_response_alert"
+                      v-model:="login_response_alert"
+                      dense
+                      type="info"
+                      outlined
+                  >
+
+                    KOOOOOS
+                  </v-alert>
+
+              </v-col>
+
+            </v-row>
+
+
+
 
 
             <!--            -->
@@ -267,6 +290,8 @@ export default {
   },
   data() {
     return {
+
+      login_response_alert: ['login_response_alert'] ,
       registrationDialog: false,
       user: {},
       oldNameText: '',
@@ -298,6 +323,9 @@ export default {
     //console.log(this.$store.state.currentUser)
   },
   computed: {
+    has_login_response_alert() {
+      return this.login_response_alert
+    },
     instProfile() {
       // return this.$store.state.instProfile
       return {}
@@ -336,6 +364,7 @@ export default {
         axios.post(loginURL, auth, config).then(response => {
           console.log('authResponse', response)
           this.$store.dispatch('authUser', response.data)
+          this.setLoginResponse(response)
           //this.$store.dispatch('login')
         })
             .catch((error) => {
@@ -470,6 +499,21 @@ export default {
     renameUser(user) {
       let newName = this.oldNameText
       console.log(newName)
+    },
+    setLoginResponse(response) {
+      console.log('setLoginResponse', response)
+
+      let responseMessage
+
+      if (response) {
+        responseMessage = response.data
+      }
+      else {
+        responseMessage = 'Ошибка отправки'
+      }
+
+      this.login_response_alert = responseMessage
+
     }
   },
 }

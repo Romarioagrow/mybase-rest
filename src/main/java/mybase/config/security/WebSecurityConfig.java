@@ -2,6 +2,7 @@ package mybase.config.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import mybase.tools.LoginAuthenticationFailureHandler;
 import mybase.domain.FBAuthUser;
 import mybase.repo.FBAuthRepo;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
@@ -26,6 +27,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return new BCryptPasswordEncoder(10);
     }
 
+    @Bean
+    public LoginAuthenticationFailureHandler authenticationFailureHandler() {
+        return new LoginAuthenticationFailureHandler();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
 
@@ -45,6 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     })
                     .loginPage("/auth")
                     .loginProcessingUrl("/user/login")
+                .failureHandler(authenticationFailureHandler())
                     .permitAll()
                 .and()
                     .logout().permitAll()

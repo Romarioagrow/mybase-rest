@@ -19,6 +19,16 @@ public class HttpController {
     private final HttpService httpService;
 
 
+    @GetMapping("/auth?error")
+    private String getAuthError() {
+
+
+        log.info("auth?error");
+
+        return "index";
+    }
+
+
     @GetMapping("/")
     private String urlLogger(HttpServletRequest request, @AuthenticationPrincipal UserAccount userAccount) {
 
