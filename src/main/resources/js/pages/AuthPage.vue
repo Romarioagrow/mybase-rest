@@ -15,21 +15,15 @@
               <v-col>
                   <v-alert
                       v-if="has_login_response_alert"
-                      v-model="login_response_alert.message"
-                      dense
                       :type="get_login_response_type"
+                      dense
                       outlined
                   >
                     {{login_response_alert.message}}
                   </v-alert>
 
               </v-col>
-
             </v-row>
-
-
-
-
 
             <!--            -->
             <v-card-actions>
@@ -292,7 +286,7 @@ export default {
 
       login_response_alert: {
         has_response: false,
-        type: 'info',
+        type: '',
         message: ''
       },
       registrationDialog: false,
@@ -372,12 +366,12 @@ export default {
         axios.post(loginURL, auth, config).then(response => {
           console.log('authResponse', response)
           this.$store.dispatch('authUser', response.data)
-          this.setLoginResponse(response)
+          this.handleSuccessfulLoginResponse(response)
           //this.$store.dispatch('login')
         })
             .catch((error) => {
-              console.log('loginIncorrect', error)
-              this.setLoginResponse()
+              console.log('catch login error', error)
+              this.handleErrorLoginResponse(error)
 
               //this.loginIncorrect = true
             })
@@ -510,36 +504,65 @@ export default {
       let newName = this.oldNameText
       console.log(newName)
     },
-    setLoginResponse(response) {
-      console.log('setLoginResponse', response)
-
+    handleSuccessfulLoginResponse(response) {
+      console.log('handleSuccessfulLoginResponse', response)
       let responseMessage
 
       if (response) {
+        console.log('handleSuccessfulLoginResponse response', response)
+
         responseMessage = response.data
+        console.log('responseMessage', responseMessage)
+        this.setLoginResponseData('success', responseMessage, true)
       }
       else {
-        responseMessage = 'Login error'
+        responseMessage = 'Login error no response'
+        this.setLoginResponseData('error', responseMessage, true)
+      }
+    },
+    handleErrorLoginResponse(error) {
+      console.log('handleErrorLoginResponse')
+
+      if (error.response) {
+        let errorMessage // error.response.data.errorMessage
+        const errorData = error.response.data
+        const errorStatus = error.response.status
+        const errorHeaders = error.response.headers
+
+        console.log('errorMessage', errorData);
+        console.log('errorStatus', errorStatus);
+        console.log('errorHeaders', errorHeaders);
+
+        switch (errorStatus) {
+          case 401: {
+            errorMessage = 'Login Incorrect!'
+            break
+            //const message = response.data
+            //this.setLoginResponseData(type, responseMessage, true)
+          }
+          case 500: {
+            errorMessage = 'Server Error!'
+            //const message = response.data
+            break
+          }
+          default: {
+            errorMessage = 'Default Error!'
+          }
+        }
+        this.setLoginResponseData('error', errorMessage, true)
       }
 
-      /*this.login_response_alert = {
-        'type' : 'error',
-        'message' : 'Login failed'
-      }//= responseMessage*/
-
-      this.login_response_alert.has_response = true
-      this.login_response_alert.type = 'error'
-      this.login_response_alert.message = responseMessage
-
-      /*login_response_alert: {
-        has_response: false,
-        type: 'info',
-        message: ''*/
     },
     clearLoginResponse() {
-      this.login_response_alert.has_response = false
+      this.setLoginResponseData('', '', false)
+      /*this.login_response_alert.has_response = false
       this.login_response_alert.type = 'info'
-      this.login_response_alert.message = ''
+      this.login_response_alert.message = ''*/
+    },
+    setLoginResponseData(type, message, hasResponse) {
+      this.login_response_alert.has_response = hasResponse
+      this.login_response_alert.type = type
+      this.login_response_alert.message = message
     }
   },
 }

@@ -36,7 +36,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .antMatcher("/**")
                     .authorizeRequests()
@@ -44,20 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                 .and()
                     .formLogin().successHandler((request, response, authentication) -> {
-
                         loginResponseProcessor.processSuccessfulResponse(response);
-
-
-                        /*log.info("successHandler");
-                        String text = "user text";
-            // JsonHelper.createJsonFrom( body ).getBytes( StandardCharsets.UTF_8 )
-                        response.setStatus(200);
-                        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-                        response.getWriter().write(text);*/
                     })
                     .loginPage("/auth")
                     .loginProcessingUrl("/user/login")
-                .failureHandler(authenticationFailureHandler())
+                    .failureHandler(authenticationFailureHandler())
                     .permitAll()
                 .and()
                     .logout().permitAll()
