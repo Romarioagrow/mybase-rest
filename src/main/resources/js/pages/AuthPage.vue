@@ -30,7 +30,10 @@
               <v-row>
                 <v-col>
 
-                  <user-login-form></user-login-form>
+                  <user-login-form
+                      :setLoginResponseData="setLoginResponseData"
+                      :clearLoginResponse="clearLoginResponse"
+                  ></user-login-form>
 
 <!--                  <v-form>
                     <v-text-field id="username"
@@ -421,6 +424,7 @@ export default {
       this.login_response_alert.message = ''*/
     },
     setLoginResponseData(type, message, hasResponse) {
+      console.log('setLoginResponseData')
       this.login_response_alert.has_response = hasResponse
       this.login_response_alert.type = type
       this.login_response_alert.message = message

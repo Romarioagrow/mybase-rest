@@ -37,6 +37,7 @@ import axios from "axios";
 
 export default {
   name: "UserLoginForm",
+  props: ["clearLoginResponse", "setLoginResponseData"],
   data() {
     return {
       userLogin: '',
