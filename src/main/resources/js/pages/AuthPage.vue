@@ -25,45 +25,14 @@
               </v-col>
             </v-row>
 
-            <!--            -->
+            <!--LOGIN AND REGISTER-->
             <v-card-actions>
               <v-row>
                 <v-col>
-
                   <user-login-form
                       :setLoginResponseData="setLoginResponseData"
                       :clearLoginResponse="clearLoginResponse"
                   ></user-login-form>
-
-<!--                  <v-form>
-                    <v-text-field id="username"
-                                  name="username"
-                                  color="purple"
-                                  prepend-icon="mdi-phone"
-                                  v-model="userLogin"
-                                  label="Username"
-                                  :error-messages="usernameErrors"
-                                  required
-                    ></v-text-field>
-                    &lt;!&ndash;@input="$v.usernameLogin.$touch()"
-                                                      @blur="$v.usernameLogin.$touch()"                    &ndash;&gt;
-                    <v-text-field id="password"
-                                  name="password"
-                                  color="purple"
-                                  prepend-icon="mdi-key"
-                                  type="password"
-                                  v-model="userPassword"
-                                  label="Password"
-                                  :error-messages="passwordErrors"
-                                  required
-                    ></v-text-field>
-                    &lt;!&ndash;                         @input="$v.password.$touch()"
-                                                      @blur="$v.password.$touch()" &ndash;&gt;
-                  </v-form>
-                  &lt;!&ndash; :disabled="!username || !password" block @click="loginUser()"                 &ndash;&gt;
-                  <v-btn color="success" @click="loginUser()" block outlined>
-                    <span>Log in</span>
-                  </v-btn>-->
                 </v-col>
                 <v-divider vertical/>
 
@@ -78,8 +47,9 @@
               <!--v-if="!userAuth"-->
               <v-row>
                 <v-col>
-                  <v-btn color="blue" outlined @click="facebookAuth()" height="200" width="200">
-                    Facebook Authorization
+                  <v-btn color="blue" outlined @click="facebookAuth()" height="200" width="200"
+                  >
+                    <div>Facebook Authorization</div>
                   </v-btn>
                 </v-col>
                 <v-col>
@@ -102,43 +72,38 @@
       <v-row>
         <!--GOOGLE-->
         <v-col v-if="googleUser" cols="3">
-          <v-card width="300">
-            <div>
-
-              <v-card-title>
-                <div class="regular-1">Google</div>
-                <!--                <v-img contain :src="user.user_pic"></v-img>-->
-              </v-card-title>
-              <v-card-subtitle>
-                <!--                <div>{{ user.name }}</div>-->
-              </v-card-subtitle>
-              <v-card-actions>
-                <v-btn disabled small block color="error" @click="logout()">
-                  Logout
-                </v-btn>
-              </v-card-actions>
-              <v-divider/>
-            </div>
+          <v-card width="300" disabled>
+            <v-card-title>
+              <div class="regular-1">Google</div>
+              <!--                <v-img contain :src="user.user_pic"></v-img>-->
+            </v-card-title>
+            <v-card-subtitle>
+              <!--                <div>{{ user.name }}</div>-->
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn disabled small block color="error" @click="logout()">
+                Logout
+              </v-btn>
+            </v-card-actions>
+            <v-divider/>
           </v-card>
         </v-col>
 
         <v-col v-if="instProfile" cols="3">
-          <v-card width="300">
-            <div>
-              <v-card-title>
-                <div class="regular-1">Instagram Graph API</div>
-                <v-img contain :src="instProfile.profile_picture_url"></v-img>
-              </v-card-title>
-              <v-card-subtitle>
-                <div>{{ instProfile.name }}</div>
-              </v-card-subtitle>
-              <v-card-actions>
-                <v-btn disabled small block color="error" @click="logoutInstProfile()">
-                  Logout
-                </v-btn>
-              </v-card-actions>
-              <v-divider/>
-            </div>
+          <v-card width="300" disabled>
+            <v-card-title>
+              <div class="regular-1">Instagram Graph API</div>
+              <v-img contain :src="instProfile.profile_picture_url"></v-img>
+            </v-card-title>
+            <v-card-subtitle>
+              <div>{{ instProfile.name }}</div>
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn disabled small block color="error" @click="logoutInstProfile()">
+                Logout
+              </v-btn>
+            </v-card-actions>
+            <v-divider/>
           </v-card>
         </v-col>
       </v-row>
