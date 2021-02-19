@@ -29,7 +29,10 @@
             <v-card-actions>
               <v-row>
                 <v-col>
-                  <v-form>
+
+                  <user-login-form></user-login-form>
+
+<!--                  <v-form>
                     <v-text-field id="username"
                                   name="username"
                                   color="purple"
@@ -39,8 +42,8 @@
                                   :error-messages="usernameErrors"
                                   required
                     ></v-text-field>
-                    <!--@input="$v.usernameLogin.$touch()"
-                                                      @blur="$v.usernameLogin.$touch()"                    -->
+                    &lt;!&ndash;@input="$v.usernameLogin.$touch()"
+                                                      @blur="$v.usernameLogin.$touch()"                    &ndash;&gt;
                     <v-text-field id="password"
                                   name="password"
                                   color="purple"
@@ -51,13 +54,13 @@
                                   :error-messages="passwordErrors"
                                   required
                     ></v-text-field>
-                    <!--                         @input="$v.password.$touch()"
-                                                      @blur="$v.password.$touch()" -->
+                    &lt;!&ndash;                         @input="$v.password.$touch()"
+                                                      @blur="$v.password.$touch()" &ndash;&gt;
                   </v-form>
-                  <!-- :disabled="!username || !password" block @click="loginUser()"                 -->
+                  &lt;!&ndash; :disabled="!username || !password" block @click="loginUser()"                 &ndash;&gt;
                   <v-btn color="success" @click="loginUser()" block outlined>
                     <span>Log in</span>
-                  </v-btn>
+                  </v-btn>-->
                 </v-col>
                 <v-divider vertical/>
 
@@ -144,9 +147,11 @@
 import facebookLogin from 'facebook-login-vuejs';
 import axios from "axios";
 import UserRegistrationForm from "components/UserRegistrationForm.vue";
+import UserLoginForm from "components/UserLoginForm.vue";
 
 export default {
   components: {
+    UserLoginForm,
     UserRegistrationForm,
     facebookLogin
   },
@@ -163,11 +168,11 @@ export default {
       name: '',
       personalID: '',
       picture: '',
-      userPassword: '',
-      userLogin: '',
+//      userPassword: '',
+//      userLogin: '',
       loginIncorrect: false,
-      passwordErrors:[],
-      usernameErrors:[],
+//      passwordErrors:[],
+//      usernameErrors:[],
 
     }
   },
@@ -198,14 +203,14 @@ export default {
     }
   },
   methods: {
-    loginUser() {
+    /*loginUser() {
       console.log('loginUser()')
       this.clearLoginResponse()
 
       // this.loginIncorrect = false
 
       //this.$v.$touch()
-      //if (true/*this.loginValid*/) {
+      //if (true/!*this.loginValid*!/) {
 
       let auth = new FormData();
       auth.set('username', this.userLogin);
@@ -234,7 +239,7 @@ export default {
           })
       //}
 
-    },
+    },*/
 
     /* submitRegistration() {
        const sendURL = '/api/user/auth/registration'
@@ -361,7 +366,7 @@ export default {
       let newName = this.oldNameText
       console.log(newName)
     },
-    handleSuccessfulLoginResponse(response) {
+    /*handleSuccessfulLoginResponse(response) {
       console.log('handleSuccessfulLoginResponse', response)
       let responseMessage
 
@@ -375,8 +380,8 @@ export default {
         responseMessage = 'Login error no response'
         this.setLoginResponseData('error', responseMessage, true)
       }
-    },
-    handleErrorLoginResponse(error) {
+    },*/
+    /*handleErrorLoginResponse(error) {
       console.log('handleErrorLoginResponse')
 
       if (error.response) {
@@ -408,7 +413,7 @@ export default {
         this.setLoginResponseData('error', errorMessage, true)
       }
 
-    },
+    },*/
     clearLoginResponse() {
       this.setLoginResponseData('', '', false)
       /*this.login_response_alert.has_response = false
