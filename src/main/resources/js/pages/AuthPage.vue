@@ -4,10 +4,26 @@
       <v-row>
         <v-col>
           <v-card>
-            <v-card-title>
-              User Authorization
-            </v-card-title>
 
+            <v-row>
+              <v-col cols="3">
+                <v-card-title>
+                  User Authorization
+                </v-card-title>
+              </v-col>
+
+              <v-col>
+                  <v-alert
+                      v-if="has_login_response_alert"
+                      :type="get_login_response_type"
+                      dense
+                      outlined
+                  >
+                    {{login_response_alert.message}}
+                  </v-alert>
+
+              </v-col>
+            </v-row>
 
             <!--            -->
             <v-card-actions>
@@ -267,6 +283,12 @@ export default {
   },
   data() {
     return {
+
+      login_response_alert: {
+        has_response: false,
+        type: '',
+        message: ''
+      },
       registrationDialog: false,
       user: {},
       oldNameText: '',
@@ -298,6 +320,13 @@ export default {
     //console.log(this.$store.state.currentUser)
   },
   computed: {
+    get_login_response_type() {
+      return this.login_response_alert.type
+    },
+
+    has_login_response_alert() {
+      return this.login_response_alert.has_response
+    },
     instProfile() {
       // return this.$store.state.instProfile
       return {}
@@ -314,8 +343,9 @@ export default {
   methods: {
     loginUser() {
       console.log('loginUser()')
+      this.clearLoginResponse()
 
-      this.loginIncorrect = false
+     // this.loginIncorrect = false
 
       //this.$v.$touch()
       //if (true/*this.loginValid*/) {
@@ -336,11 +366,14 @@ export default {
         axios.post(loginURL, auth, config).then(response => {
           console.log('authResponse', response)
           this.$store.dispatch('authUser', response.data)
+          this.handleSuccessfulLoginResponse(response)
           //this.$store.dispatch('login')
         })
             .catch((error) => {
-              console.log('loginIncorrect', error)
-              this.loginIncorrect = true
+              console.log('catch login error', error)
+              this.handleErrorLoginResponse(error)
+
+              //this.loginIncorrect = true
             })
       //}
 
@@ -470,6 +503,66 @@ export default {
     renameUser(user) {
       let newName = this.oldNameText
       console.log(newName)
+    },
+    handleSuccessfulLoginResponse(response) {
+      console.log('handleSuccessfulLoginResponse', response)
+      let responseMessage
+
+      if (response) {
+        console.log('handleSuccessfulLoginResponse response', response)
+
+        responseMessage = response.data
+        console.log('responseMessage', responseMessage)
+        this.setLoginResponseData('success', responseMessage, true)
+      }
+      else {
+        responseMessage = 'Login error no response'
+        this.setLoginResponseData('error', responseMessage, true)
+      }
+    },
+    handleErrorLoginResponse(error) {
+      console.log('handleErrorLoginResponse')
+
+      if (error.response) {
+        let errorMessage // error.response.data.errorMessage
+        const errorData = error.response.data
+        const errorStatus = error.response.status
+        const errorHeaders = error.response.headers
+
+        console.log('errorMessage', errorData);
+        console.log('errorStatus', errorStatus);
+        console.log('errorHeaders', errorHeaders);
+
+        switch (errorStatus) {
+          case 401: {
+            errorMessage = 'Login Incorrect!'
+            break
+            //const message = response.data
+            //this.setLoginResponseData(type, responseMessage, true)
+          }
+          case 500: {
+            errorMessage = 'Server Error!'
+            //const message = response.data
+            break
+          }
+          default: {
+            errorMessage = 'Default Error!'
+          }
+        }
+        this.setLoginResponseData('error', errorMessage, true)
+      }
+
+    },
+    clearLoginResponse() {
+      this.setLoginResponseData('', '', false)
+      /*this.login_response_alert.has_response = false
+      this.login_response_alert.type = 'info'
+      this.login_response_alert.message = ''*/
+    },
+    setLoginResponseData(type, message, hasResponse) {
+      this.login_response_alert.has_response = hasResponse
+      this.login_response_alert.type = type
+      this.login_response_alert.message = message
     }
   },
 }

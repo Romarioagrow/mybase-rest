@@ -48,10 +48,6 @@ public class AccountUserService implements AccountUserApi {
         user.setRoles(Collections.singleton(UserRole.USER));
         user.setIsEnabled(true);
 
-        /*user.setFirstName(userDetails.get("firstName").trim());
-        user.setLastName(userDetails.get("lastName").trim());
-        user.setPatronymic(userDetails.get("patronymic").trim());*/
-
         userRepo.save(user);
 
         UserAccountDto accountDto = accountMapper.mapUserAccountEntityToDto(user);
@@ -68,7 +64,6 @@ public class AccountUserService implements AccountUserApi {
         log.info("authentication: " + authentication);
         log.info("principal: " + principal);
 
-        //return principal == null ? Boolean.TRUE : Boolean.FALSE;
         return user == null ? Boolean.FALSE : Boolean.TRUE;
     }
 

@@ -18,7 +18,6 @@ public class HttpController {
     private final MediaApiService mediaApiService;
     private final HttpService httpService;
 
-
     @GetMapping("/")
     private String urlLogger(HttpServletRequest request, @AuthenticationPrincipal UserAccount userAccount) {
 

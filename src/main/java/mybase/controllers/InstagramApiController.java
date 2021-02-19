@@ -25,12 +25,18 @@ public class InstagramApiController {
     private final InstagramService profileService;
     private final InstProfileRepo instRepo;
 
+
+
+
     /*GRAPH*/
     @PostMapping("/graph/loadInstFollowersListsDB")
     private InstFollowers loadInstFollowersListsDB(@RequestBody Map<String, String> dataToServer) {
         try {
             String username = dataToServer.get("username");
             InstProfile instProfile = instRepo.findByUsername(username);
+
+
+            
 
             log.info("username: " + username);
             log.info("instProfile: " + instProfile.toString());
