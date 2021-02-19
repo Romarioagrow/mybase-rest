@@ -2,12 +2,13 @@ package mybase.config.security;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
+import mybase.tools.LoginAuthenticationFailureHandler;
 import mybase.domain.FBAuthUser;
 import mybase.repo.FBAuthRepo;
+import mybase.tools.LoginResponseProcessor;
 import org.springframework.boot.autoconfigure.security.oauth2.resource.PrincipalExtractor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -21,14 +22,20 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 //@EnableOAuth2Sso
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private final LoginResponseProcessor loginResponseProcessor;
+
     @Bean
     public PasswordEncoder getPasswordEncoder() {
         return new BCryptPasswordEncoder(10);
     }
 
+    @Bean
+    public LoginAuthenticationFailureHandler authenticationFailureHandler() {
+        return new LoginAuthenticationFailureHandler();
+    }
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http
                 .antMatcher("/**")
                     .authorizeRequests()
@@ -36,15 +43,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .anyRequest().authenticated()
                 .and()
                     .formLogin().successHandler((request, response, authentication) -> {
-                        log.info("successHandler");
-                        String text = "user text";
-            // JsonHelper.createJsonFrom( body ).getBytes( StandardCharsets.UTF_8 )
-                        response.setStatus(200);
-                        response.addHeader(HttpHeaders.CONTENT_TYPE, "application/json; charset=UTF-8");
-                        response.getWriter().write(text);
+                        loginResponseProcessor.processSuccessfulResponse(response);
                     })
                     .loginPage("/auth")
                     .loginProcessingUrl("/user/login")
+                    .failureHandler(authenticationFailureHandler())
                     .permitAll()
                 .and()
                     .logout().permitAll()

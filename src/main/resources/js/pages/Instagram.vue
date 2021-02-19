@@ -228,7 +228,8 @@
                 return update ? this.calculateLastUpdate(update) : 'X'
             },
             instProfile() {
-                return this.$store.state.instProfile
+              return {}
+              //return this.$store.state.instProfile
             }
         },
         methods: {
