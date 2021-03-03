@@ -45,7 +45,7 @@ public class AccountUserService implements AccountUserApi {
         *
         * TODO:
         * AccountUser -> GeneralUser Auto creation
-        *
+        * Business-logic registration errors handler
         *
         * */
 

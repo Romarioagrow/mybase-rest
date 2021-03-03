@@ -9,6 +9,8 @@ import mybase.domain.jpa.UserAccount;
 import mybase.domain.types.GoalType;
 import mybase.services.GoalsService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,7 +24,7 @@ public class GoalsController {
     private final GoalsService goalsService;
 
     @PostMapping("/add/new")
-    //@Transactional(propagation = Propagation.REQUIRED)
+    @Transactional(propagation = Propagation.REQUIRED)
     public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto,
                               @AuthenticationPrincipal UserAccount userAccount
     ) {

@@ -43,7 +43,16 @@ public class UserAuthController {
     }
 
     @PostMapping("/auth/getUser")
+    //@Transactional(propagation = Propagation.REQUIRED)
     public UserAccount getUser(@AuthenticationPrincipal UserAccount user) {
+        /// Hibernate.initialize(user);
+
+        /*
+        * TODO:
+        *
+        *
+        * */
+
         log.info("@AuthenticationPrincipal UserAccount user: " + user);
 
         userService.userIsAuthorised(user);

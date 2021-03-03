@@ -19,22 +19,6 @@ import java.util.Set;
 @NoArgsConstructor
 public class UserAccount implements UserDetails {
 
-   /* public UserAccount() {
-        createGeneralUser();
-//        this.generalUser = new GeneralUser();
-    }
-
-    private void createGeneralUser() {
-        GeneralUser generalUser = new GeneralUser();
-
-        setGeneralUser(generalUser);
-        //this.generalUser = new GeneralUser();
-
-    }*/
-
-    /*@Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")*/
     @Id
     @GeneratedValue
     @Column(name = "usr_account_id")
@@ -62,7 +46,7 @@ public class UserAccount implements UserDetails {
     *  GeneralUser Lazy
     *
     * */
-    @OneToOne(targetEntity = GeneralUser.class, fetch = FetchType.EAGER)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "generalUserId")
     private GeneralUser generalUser;
 
