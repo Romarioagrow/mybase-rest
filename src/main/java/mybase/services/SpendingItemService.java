@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class SpendingItemService {
     private final SpendingRepo spendingRepo;
-    public Map<String, Object> loadAllUserSpending(String userID) {
+
+    public Map<String, Object> loadAllUserSpending(Long userID) {
         Map<String, Object> payload = new LinkedHashMap<>();
 
         /*Все Спендинги*/
@@ -39,13 +40,13 @@ public class SpendingItemService {
         String currency = spendingData.get("currency");
         LocalDate date = LocalDate.parse(spendingData.get("date"));
 
-        String userID;
+        Long userID;
 
         if (userAccountAuthenticated(accountUser)) {
-            userID = accountUser.getUserID();
+            userID = accountUser.getUserAccountID();
         }
         else {
-            userID = "hardcodeID0";
+            userID = 1000L;
         }
 
         SpendingItem spending = new SpendingItem(userID, amount, type, info, currency);
@@ -59,7 +60,7 @@ public class SpendingItemService {
         return false;
     }
 
-    public Map<String, Object> deleteSpendingItem(String userID, Integer spendingID) {
+    public Map<String, Object> deleteSpendingItem(Long userID, Integer spendingID) {
         SpendingItem deleteItem = spendingRepo.findItemById(spendingID);
         spendingRepo.delete(deleteItem);
         return loadAllUserSpending(userID);

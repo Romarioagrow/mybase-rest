@@ -7,6 +7,7 @@ import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -25,22 +26,24 @@ public class GoalEntity {
     private String goalName;
 
     @Lob
-    private String aboutGoal;
+    private String goalText;
 
     private LocalDate goalSetDate, goalFinishDate;
 
     private Boolean isCompleted = false;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    private MainUser mainUser;
+    private LocalDateTime goalSetTime;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    private GeneralUser generalUser;
+
+    @ElementCollection(fetch = FetchType.LAZY)
     private Set<GoalType> goalTypes;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.LAZY)
     private List<GoalKeypoint> goalKeyPoint;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY)
     private List<TaskEntity> taskEntityList;
 
 }

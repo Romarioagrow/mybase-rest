@@ -29,9 +29,9 @@ repositories {
 task buildFront(type: YarnTask) {
     args = ['heroku-postbuild']
 }
-yarn_install.dependsOn(yarn_cache_clean)
+/*yarn_install.dependsOn(yarn_cache_clean)
 buildFront.dependsOn(yarn_install)
-processResources.dependsOn(buildFront)
+processResources.dependsOn(buildFront)*/
 node {
     distBaseUrl = 'https://nodejs.org/dist'
     download = true

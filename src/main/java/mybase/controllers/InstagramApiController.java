@@ -26,8 +26,6 @@ public class InstagramApiController {
     private final InstProfileRepo instRepo;
 
 
-
-
     /*GRAPH*/
     @PostMapping("/graph/loadInstFollowersListsDB")
     private InstFollowers loadInstFollowersListsDB(@RequestBody Map<String, String> dataToServer) {

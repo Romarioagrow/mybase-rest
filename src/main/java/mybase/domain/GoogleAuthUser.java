@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 public class GoogleAuthUser {
     @Id
     @Column(name = "user_id")
-    private String userID;
+    private Long userID;
 
     private String name, user_pic, email, gender, locale;
 

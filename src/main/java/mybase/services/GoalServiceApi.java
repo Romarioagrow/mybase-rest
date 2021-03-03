@@ -1,14 +1,14 @@
 package mybase.services;
 
 import mybase.domain.UserAccount;
-import mybase.domain.jpa.GoalEntity;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
-import mybase.domain.jpa.MainUser;
+import mybase.domain.jpa.GoalEntity;
 import mybase.domain.types.GoalType;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public interface GoalServiceApi {
@@ -18,8 +18,8 @@ public interface GoalServiceApi {
     List<GoalEntity> getAllGoals();
 
 
-    List<GoalDto> loadAllGoals(UserAccount accountUser);
+    List<GoalDto> loadGoalsByUser(UserAccount accountUser);
 
 
-    List<GoalType> loadAllGoalTypes();
+    Set<GoalType> loadAllGoalTypes();
 }

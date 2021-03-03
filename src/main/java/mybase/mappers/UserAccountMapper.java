@@ -12,7 +12,7 @@ public class UserAccountMapper implements UserAccountMapperApi {
     public UserAccountDto mapUserAccountEntityToDto(UserAccount userAccount) {
 
         UserAccountDto userAccountDto = new UserAccountDto();
-        userAccountDto.setUserID(userAccount.getUserID());
+        userAccountDto.setUserID(userAccount.getUserAccountID());
         userAccountDto.setEmail(userAccount.getEmail());
         userAccountDto.setRegistrationDate(userAccount.getRegistrationDate());
         userAccountDto.setIsEnabled(userAccount.getIsEnabled());
