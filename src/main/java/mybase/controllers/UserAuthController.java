@@ -3,7 +3,7 @@ package mybase.controllers;
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
 import mybase.domain.GoogleAuthUser;
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.services.AccountUserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

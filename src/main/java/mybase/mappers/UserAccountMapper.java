@@ -1,6 +1,6 @@
 package mybase.mappers;
 
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.domain.dto.UserAccountDto;
 import org.springframework.stereotype.Service;
 

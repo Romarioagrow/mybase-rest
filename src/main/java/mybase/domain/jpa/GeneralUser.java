@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -26,7 +25,7 @@ public class GeneralUser /*extends UserAccount*/ {
     /*@OneToOne
     private */
 
-    @OneToMany
-    private List<GoalEntity> goalEntities = new ArrayList<>();
+    @OneToMany(targetEntity = GoalEntity.class, fetch = FetchType.LAZY)
+    private List<GoalEntity> goalEntities;// = new ArrayList<>();
 
 }

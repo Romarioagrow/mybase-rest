@@ -1,7 +1,7 @@
-package mybase.domain;
+package mybase.domain.jpa;
 
 import lombok.Data;
-import mybase.domain.jpa.GeneralUser;
+import lombok.NoArgsConstructor;
 import mybase.domain.types.UserRole;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.security.core.GrantedAuthority;
@@ -16,7 +16,21 @@ import java.util.Set;
 @Entity
 @Table(name = "account_usr")
 //@MappedSuperclass
+@NoArgsConstructor
 public class UserAccount implements UserDetails {
+
+   /* public UserAccount() {
+        createGeneralUser();
+//        this.generalUser = new GeneralUser();
+    }
+
+    private void createGeneralUser() {
+        GeneralUser generalUser = new GeneralUser();
+
+        setGeneralUser(generalUser);
+        //this.generalUser = new GeneralUser();
+
+    }*/
 
     /*@Id
     @GeneratedValue(generator = "uuid")
@@ -43,7 +57,12 @@ public class UserAccount implements UserDetails {
     private Set<UserRole> roles;
 
 
-    @OneToOne(targetEntity = GeneralUser.class, fetch = FetchType.LAZY)
+    /*
+    * TODO:
+    *  GeneralUser Lazy
+    *
+    * */
+    @OneToOne(targetEntity = GeneralUser.class, fetch = FetchType.EAGER)
     @JoinColumn(name = "generalUserId")
     private GeneralUser generalUser;
 

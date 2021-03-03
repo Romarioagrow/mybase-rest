@@ -3,7 +3,7 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.domain.dto.GoalDto;
 import mybase.domain.dto.NewGoalDto;
 import mybase.domain.jpa.GoalEntity;
