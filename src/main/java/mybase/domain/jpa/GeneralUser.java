@@ -2,13 +2,16 @@ package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @Data
 @Entity
 @NoArgsConstructor
+@ToString
 @Table(name = "general_usr")
 //@EqualsAndHashCode(callSuper = true)
 public class GeneralUser /*extends UserAccount*/ {
@@ -24,7 +27,7 @@ public class GeneralUser /*extends UserAccount*/ {
     /*@OneToOne
     private */
 
- /*   @OneToMany(targetEntity = GoalEntity.class, fetch = FetchType.LAZY)
-    private List<GoalEntity> goalEntities;// = new ArrayList<>();*/
+    @OneToMany(targetEntity = GoalEntity.class, fetch = FetchType.LAZY)
+    private List<GoalEntity> goalEntities;// = new ArrayList<>();
 
 }
