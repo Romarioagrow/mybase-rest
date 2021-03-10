@@ -12,11 +12,13 @@ import mybase.domain.jpa.GeneralUser;
 import mybase.domain.types.GoalType;
 import mybase.mappers.GoalsObjectMapper;
 import mybase.repo.AccountUserRepo;
+import mybase.repo.GeneralUserRepo;
 import mybase.repo.GoalKeypointRepo;
 import mybase.repo.GoalRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,21 +30,23 @@ import java.util.Set;
 public class GoalsService implements GoalServiceApi {
 
     private final GoalRepo goalRepo;
-    private final AccountUserRepo userRepo;
+    private final AccountUserRepo accountUserRepo;
+    private final GeneralUserRepo generalUserRepo;
     private final GoalsObjectMapper goalsObjectMapper;
     private final GoalKeypointRepo keypointRepo;
 
     @Override
-    //@Transactional
-    public GoalDto addNewGoal(NewGoalDto newGoalDto, UserAccount userAccount/* MainUser mainUser*/) {
+    @Transactional
+    public GoalDto addNewUserGoal(NewGoalDto newGoalDto, UserAccount userAccount)
+            throws UserPrincipalNotFoundException {
 
         /*
-        *
-        * TODO:
-        *  1. To Factory
-        *
-        *
-        * */
+         *
+         * TODO:
+         *  1. To Factory
+         *
+         *
+         * */
 
         GoalEntity newGoalEntity = new GoalEntity();
         newGoalEntity.setGoalName(newGoalDto.getGoalName());
@@ -63,21 +67,34 @@ public class GoalsService implements GoalServiceApi {
         keypointRepo.saveAll(goalKeypoints);
         newGoalEntity.setGoalKeyPoint(goalKeypoints);
 
-        log.info("newGoalEntity: " + newGoalEntity.toString());
-
         String goalText = newGoalDto.getGoalText();
         newGoalEntity.setGoalText(goalText);
         newGoalEntity.setGoalSetTime(LocalDateTime.now());
 
-        /*if (hasUser(userAccount)) {
-            newGoalEntity.setMainUser(userAccount);
-            updateUserGoals = userAccount.getGoalEntities();
-            updateUserGoals.add(newGoalEntity);
-            userAccount.setGoalEntities(updateUserGoals);
-            persistUser(userAccount);
-        }*/
+
+        GeneralUser generalUser = userAccount.getGeneralUser();
+
+        if (!hasUser(generalUser)) {
+            throw new UserPrincipalNotFoundException(null);
+        }
+
+        Long userId = generalUser.getGeneralUserId();
+        newGoalEntity.setGeneralUserId(userId);
 
         persistNewGoal(newGoalEntity);
+        log.info("newGoalEntity created: {} ", newGoalEntity.toString());
+        //  if (hasUser(generalUser)) {
+        //newGoalEntity.setGeneralUser(generalUser);
+
+        /*
+
+  PSQLException: ERROR: duplicate key value violates unique constraint "general_usr_goal_entities_pkey"
+  Подробности: Key (general_user_general_usr_id, goal_entities_goalid)=(5, 41) already exists.
+        Set<GoalEntity> userGoalEntities = generalUser.getGoalEntities();
+        userGoalEntities.add(newGoalEntity);
+        generalUser.setGoalEntities(userGoalEntities);
+        persistGeneralUser(generalUser);
+        */
 
         return goalsObjectMapper.mapGoalEntityToDto(newGoalEntity);
     }
@@ -86,7 +103,8 @@ public class GoalsService implements GoalServiceApi {
         return mainUser != null;
     }
 
-    private void persistUser(GeneralUser mainUser) {
+    private void persistGeneralUser(GeneralUser generalUser) {
+        generalUserRepo.saveAndFlush(generalUser);
         //userRepo.save(mainUser);
     }
 

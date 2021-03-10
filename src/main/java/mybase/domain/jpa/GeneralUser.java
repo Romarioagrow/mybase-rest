@@ -2,17 +2,15 @@ package mybase.domain.jpa;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.List;
 
 
 @Data
 @Entity
 @NoArgsConstructor
-@ToString
 @Table(name = "general_usr")
+//@ToString(exclude = "goalEntities")
 //@EqualsAndHashCode(callSuper = true)
 public class GeneralUser /*extends UserAccount*/ {
 
@@ -20,14 +18,19 @@ public class GeneralUser /*extends UserAccount*/ {
     @GeneratedValue(generator ="uuid", strategy = GenerationType.IDENTITY)
     @GenericGenerator(name = "uuid", strategy = "uuid2")*/
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "general_usr_id")
     private Long generalUserId;
 
     /*@OneToOne
     private */
 
-    @OneToMany(targetEntity = GoalEntity.class, fetch = FetchType.LAZY)
-    private List<GoalEntity> goalEntities;// = new ArrayList<>();
+    /*@OneToMany(cascade = CascadeType.ALL, targetEntity = GoalEntity.class, fetch = FetchType.EAGER)
+    private Set<GoalEntity> goalEntities;// = new ArrayList<>();*/
 
+    /*public void addNewGoal(GoalEntity newGoalEntity) {
+
+
+
+    }*/
 }

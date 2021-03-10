@@ -11,6 +11,7 @@ import mybase.services.GoalsService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.util.List;
 import java.util.Set;
 
@@ -25,10 +26,10 @@ public class GoalsController {
     //@Transactional(propagation = Propagation.REQUIRED)
     public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto,
                               @AuthenticationPrincipal UserAccount userAccount
-    ) {
+    ) throws UserPrincipalNotFoundException {
         GeneralUser generalUser = userAccount.getGeneralUser();
         log.info("generalUser: {}", generalUser);
-        return goalsService.addNewGoal(newGoalDto, userAccount);
+        return goalsService.addNewUserGoal(newGoalDto, userAccount);
     }
 
     @GetMapping("/load/all")

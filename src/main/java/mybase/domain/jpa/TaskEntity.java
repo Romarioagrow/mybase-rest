@@ -2,10 +2,7 @@ package mybase.domain.jpa;
 
 import lombok.Data;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -13,7 +10,7 @@ import javax.persistence.Table;
 public class TaskEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long taskID;
 
 }

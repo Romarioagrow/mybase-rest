@@ -1,8 +1,7 @@
 package mybase.domain.jpa;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
-import lombok.ToString;
+import lombok.NoArgsConstructor;
 import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
@@ -14,13 +13,12 @@ import java.util.Set;
 
 @Data
 @Entity
-@ToString
 @Table(name = "goal_entities")
-@RequiredArgsConstructor
+@NoArgsConstructor//@RequiredArgsConstructor
 public class GoalEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long goalID;
 
     private String goalName;
@@ -34,16 +32,20 @@ public class GoalEntity {
 
     private LocalDateTime goalSetTime;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private GeneralUser generalUser;
+    /*@ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "general_usr_id")
+    private GeneralUser generalUser;*/
+    private Long generalUserId;
 
-    @ElementCollection(fetch = FetchType.LAZY)
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<GoalType> goalTypes;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
+   // @LazyCollection(LazyCollectionOption.FALSE)
     private List<GoalKeypoint> goalKeyPoint;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
+   // @LazyCollection(LazyCollectionOption.FALSE)
     private List<TaskEntity> taskEntityList;
 
 }
