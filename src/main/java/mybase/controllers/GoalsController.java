@@ -23,7 +23,6 @@ public class GoalsController {
     private final GoalsService goalsService;
 
     @PostMapping("/add/new")
-    //@Transactional(propagation = Propagation.REQUIRED)
     public GoalDto addNewGoal(@RequestBody NewGoalDto newGoalDto,
                               @AuthenticationPrincipal UserAccount userAccount
     ) throws UserPrincipalNotFoundException {

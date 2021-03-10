@@ -91,7 +91,7 @@ public class GoalsService implements GoalServiceApi {
 
     private void persistGeneralUser(GeneralUser generalUser) {
         generalUserRepo.saveAndFlush(generalUser);
-        //userRepo.save(mainUser);
+        ///userRepo.save(mainUser);
     }
 
     private void persistNewGoal(GoalEntity newGoalEntity) {
