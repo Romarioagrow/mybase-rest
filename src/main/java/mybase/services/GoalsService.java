@@ -95,11 +95,8 @@ public class GoalsService implements GoalServiceApi {
     }
 
     private void persistNewGoal(GoalEntity newGoalEntity) {
-
         goalRepo.save(newGoalEntity);
-
         log.info("newGoalEntity created: {} ", newGoalEntity.toString());
-
     }
 
     @Override
@@ -120,7 +117,6 @@ public class GoalsService implements GoalServiceApi {
         }
 
         Long userId = generalUser.getGeneralUserId();
-
         List<GoalEntity> goalEntities = goalRepo.findGoalEntitiesByGeneralUserId(userId);
 
         return goalsObjectMapper.mapGoalEntitiesToDto(goalEntities);

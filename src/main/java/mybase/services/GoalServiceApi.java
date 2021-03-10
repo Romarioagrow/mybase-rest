@@ -18,9 +18,7 @@ public interface GoalServiceApi {
 
     List<GoalEntity> getAllGoals();
 
-
     List<GoalDto> loadGoalsByUser(UserAccount accountUser);
-
 
     Set<GoalType> loadAllGoalTypes();
 }

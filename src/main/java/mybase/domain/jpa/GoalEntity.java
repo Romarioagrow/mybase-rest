@@ -11,13 +11,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
-
 @Data
-//@Getter
-//@Setter
 @Entity
 @Table(name = "goal_entities")
-@NoArgsConstructor//@RequiredArgsConstructor
+@NoArgsConstructor
 public class GoalEntity implements Serializable {
 
     @Id
@@ -35,20 +32,15 @@ public class GoalEntity implements Serializable {
 
     private LocalDateTime goalSetTime;
 
-    /*@ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "general_usr_id")
-    private GeneralUser generalUser;*/
     private Long generalUserId;
 
     @ElementCollection(fetch = FetchType.EAGER)
     private Set<GoalType> goalTypes;
 
     @OneToMany(fetch = FetchType.EAGER)
-    // @LazyCollection(LazyCollectionOption.FALSE)
     private List<GoalKeypoint> goalKeyPoint;
 
     @OneToMany(fetch = FetchType.EAGER)
-    // @LazyCollection(LazyCollectionOption.FALSE)
     private Set<TaskEntity> taskEntityList;
 
     /*@Override

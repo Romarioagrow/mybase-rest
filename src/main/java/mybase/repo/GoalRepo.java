@@ -10,9 +10,6 @@ import java.util.List;
 
 @Repository
 public interface GoalRepo extends JpaRepository<GoalEntity, Long> {
-
-
-
    /* @Query("SELECT g FROM GoalEntity g WHERE g.mainUser.userID = (:userID) AND JOIN FETCH g.taskEntityList WHERE g.id = (:id)")
     List<GoalEntity> findGoalsByUserIdAndFetchEagerly(@Param("id") String id);
     */
