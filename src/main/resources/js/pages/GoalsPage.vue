@@ -445,7 +445,7 @@
         <v-card-actions>
           <v-flex d-flex>
             <v-layout wrap>
-              <v-flex md4 v-for="goal in this.all_goals" :key="goal.goalID">
+              <v-flex md4 v-for="goal in this.all_user_goals" :key="goal.goalID">
                 <v-card class="card-container">
                   <v-card-text>
                     {{ goal.goalText }}
@@ -519,7 +519,7 @@ export default {
 
       new_goal_text: '',
       new_goal_label: '',
-      all_goals: [],
+      all_user_goals: [],
 
       goal_types: [],
       selected_goal_types: [],
@@ -550,8 +550,11 @@ export default {
 
       const postURL = '/api/goals/add/new'
 
-      axios.post(postURL, newGoalDto).then(value => {
-        console.log('/api/goals/add/new value', value)
+      axios.post(postURL, newGoalDto).then(response => {
+        console.log('/api/goals/add/new value', response)
+        const newAddGoalFromServer = response.data
+        this.all_user_goals.push(newAddGoalFromServer)
+        this.new_goal_name = ''
       }).catch(error => {
         console.log('error', error)
       })
@@ -612,7 +615,7 @@ export default {
 
       axios.get(sendURL).then(response => {
         console.log('response', response)
-        this.all_goals = response.data;
+        this.all_user_goals = response.data;
       })
 
     },
@@ -630,7 +633,7 @@ export default {
 
       axios.post(sendURL, newGoalData).then(response => {
         console.log('response', response);
-        this.all_goals.push(response.data)
+        this.all_user_goals.push(response.data)
       })
 
 

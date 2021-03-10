@@ -13,200 +13,43 @@
               </v-col>
 
               <v-col>
-                  <v-alert
-                      v-if="has_login_response_alert"
-                      :type="get_login_response_type"
-                      dense
-                      outlined
-                  >
-                    {{login_response_alert.message}}
-                  </v-alert>
+                <v-alert
+                    v-if="has_login_response_alert"
+                    :type="get_login_response_type"
+                    dense
+                    outlined
+                >
+                  {{ login_response_alert.message }}
+                </v-alert>
 
               </v-col>
             </v-row>
 
-            <!--            -->
+            <!--LOGIN AND REGISTER-->
             <v-card-actions>
               <v-row>
                 <v-col>
-                  <v-form>
-                    <v-text-field id="username"
-                                  name="username"
-                                  color="purple"
-                                  prepend-icon="mdi-phone"
-                                  v-model="usernameLogin"
-                                  label="Username"
-                                  :error-messages="usernameErrors"
-                                  required
-                    ></v-text-field>
-<!--@input="$v.usernameLogin.$touch()"
-                                  @blur="$v.usernameLogin.$touch()"                    -->
-                    <v-text-field id="password"
-                                  name="password"
-                                  color="purple"
-                                  prepend-icon="mdi-key"
-                                  type="password"
-                                  v-model="password"
-                                  label="Password"
-                                  :error-messages="passwordErrors"
-                                  required
-                    ></v-text-field>
-<!--                         @input="$v.password.$touch()"
-                                  @blur="$v.password.$touch()" -->
-                  </v-form>
-
-                  <!-- :disabled="!username || !password" block @click="loginUser()"                 -->
-                  <v-btn color="success" @click="loginUser()" block outlined>
-                    <span>Log in</span>
-                  </v-btn>
-
+                  <user-login-form
+                      :setLoginResponseData="setLoginResponseData"
+                      :clearLoginResponse="clearLoginResponse"
+                  ></user-login-form>
                 </v-col>
-
                 <v-divider vertical/>
 
                 <v-col>
-                  <v-card-text>
-                    <v-row justify="center">
-                      <span>First time here?</span>
-                    </v-row>
-                  </v-card-text>
-
-                  <!--                  -->
-                  <v-card-actions>
-                    <v-dialog v-model="registrationDialog" persistent max-width="500">
-                      <template v-slot:activator="{ on }">
-                        <v-btn color="purple" outlined block dark v-on="on" @click="registrationError = false">
-                          <span>Sign up</span>
-                        </v-btn>
-                      </template>
-                      <v-card>
-
-                        <v-card-title class="headline">
-                          <v-icon>
-                            mdi-account-plus
-                          </v-icon>
-                          <span class="ml-3">Registration</span>
-                        </v-card-title>
-                        <v-card-text>Sign up for your account</v-card-text>
-
-                        <v-form>
-                          <v-text-field id="username"
-                                        color="purple"
-                                        label="Username"
-                                        prepend-icon="mdi-user"
-                                        v-model="username"
-                                        :error-messages="usernameErrors"
-                                        required
-                          ></v-text-field>
-<!--@input="$v.username.$touch()"
-                                        @blur="$v.username.$touch()"                          -->
-                          <v-row>
-                            <v-col>
-                              <v-text-field id="password"
-                                            name="password"
-                                            prepend-icon="mdi-key"
-                                            type="password"
-                                            v-model="password"
-                                            label="Password"
-                                            :error-messages="passwordErrors"
-                                            required
-                                            color="purple"
-                              ></v-text-field>
-<!--                                                                          @input="$v.password.$touch()"
-                                            @blur="$v.password.$touch()"-->
-                            </v-col>
-
-                            <v-col>
-                              <v-text-field id="passwordConfirm"
-                                            name="passwordConfirm"
-                                            type="password"
-                                            v-model="registerPassConfirm"
-                                            label="Confirm password"
-                                            :error-messages="passwordConfirmErrors"
-                                            color="purple"
-                              ></v-text-field>
-                            </v-col>
-
-<!--       @input="$v.registerPassConfirm.$touch()"
-                                            @blur="$v.registerPassConfirm.$touch()"                            -->
-                          </v-row>
-
-                          <v-row>
-                            <v-col>
-                              <v-text-field id="lastName"
-                                            name="lastName"
-                                            prepend-icon="mdi-account"
-                                            type="text"
-                                            v-model="lastName"
-                                            label="Last Name"
-                                            :error-messages="lastNameErrors"
-                                            color="purple"
-                              ></v-text-field>
-<!--        @input="$v.lastName.$touch()"
-                                            @blur="$v.lastName.$touch()"                              -->
-                            </v-col>
-
-                            <v-col>
-                              <v-text-field id="firstName"
-                                            name="firstName"
-                                            type="text"
-                                            v-model="firstName"
-                                            label="First Name"
-                                            :error-messages="firstNameErrors"
-                                            color="purple"
-
-                              ></v-text-field>
-<!--                         @input="$v.firstName.$touch()"
-                                            @blur="$v.firstName.$touch()"                          -->
-                            </v-col>
-
-                            <v-col>
-                              <v-text-field id="patronymic"
-                                            name="patronymic"
-                                            type="text"
-                                            v-model="patronymic"
-                                            label="Middle Name"
-                                            :error-messages="patronymicErrors"
-                                            color="purple"
-                              ></v-text-field>
-<!--                                          @input="$v.patronymic.$touch()"
-                                            @blur="$v.patronymic.$touch()"                              -->
-                            </v-col>
-                          </v-row>
-
-                          <v-text-field id="email"
-                                        name="email"
-                                        prepend-icon="mdi-email"
-                                        type="email"
-                                        v-model="email"
-                                        color="purple"
-                                        label="E-mail"
-                          ></v-text-field>
-                        </v-form>
-
-                        <v-card-actions>
-                          <div class="flex-grow-1"></div>
-                          <v-btn color="green darken-1" text @click="submitRegistration()">Sign up</v-btn>
-                          <v-btn color="red darken-1" text @click="registrationDialog = false">Cancel</v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-dialog>
-                  </v-card-actions>
+                  <user-registration-form></user-registration-form>
                 </v-col>
-
               </v-row>
-
             </v-card-actions>
-
-
             <v-divider/>
 
             <v-card-actions>
               <!--v-if="!userAuth"-->
               <v-row>
                 <v-col>
-                  <v-btn color="blue" outlined @click="facebookAuth()" height="200" width="200">
-                    Facebook Authorization
+                  <v-btn color="blue" outlined @click="facebookAuth()" height="200" width="200"
+                  >
+                    <div>Facebook Authorization</div>
                   </v-btn>
                 </v-col>
                 <v-col>
@@ -229,43 +72,38 @@
       <v-row>
         <!--GOOGLE-->
         <v-col v-if="googleUser" cols="3">
-          <v-card width="300">
-            <div>
-
-              <v-card-title>
-                <div class="regular-1">Google</div>
-<!--                <v-img contain :src="user.user_pic"></v-img>-->
-              </v-card-title>
-              <v-card-subtitle>
-<!--                <div>{{ user.name }}</div>-->
-              </v-card-subtitle>
-              <v-card-actions>
-                <v-btn disabled small block color="error" @click="logout()">
-                  Logout
-                </v-btn>
-              </v-card-actions>
-              <v-divider/>
-            </div>
+          <v-card width="300" disabled>
+            <v-card-title>
+              <div class="regular-1">Google</div>
+              <!--                <v-img contain :src="user.user_pic"></v-img>-->
+            </v-card-title>
+            <v-card-subtitle>
+              <!--                <div>{{ user.name }}</div>-->
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn disabled small block color="error" @click="logout()">
+                Logout
+              </v-btn>
+            </v-card-actions>
+            <v-divider/>
           </v-card>
         </v-col>
 
         <v-col v-if="instProfile" cols="3">
-          <v-card width="300">
-            <div>
-              <v-card-title>
-                <div class="regular-1">Instagram Graph API</div>
-                <v-img contain :src="instProfile.profile_picture_url"></v-img>
-              </v-card-title>
-              <v-card-subtitle>
-                <div>{{ instProfile.name }}</div>
-              </v-card-subtitle>
-              <v-card-actions>
-                <v-btn disabled small block color="error" @click="logoutInstProfile()">
-                  Logout
-                </v-btn>
-              </v-card-actions>
-              <v-divider/>
-            </div>
+          <v-card width="300" disabled>
+            <v-card-title>
+              <div class="regular-1">Instagram Graph API</div>
+              <v-img contain :src="instProfile.profile_picture_url"></v-img>
+            </v-card-title>
+            <v-card-subtitle>
+              <div>{{ instProfile.name }}</div>
+            </v-card-subtitle>
+            <v-card-actions>
+              <v-btn disabled small block color="error" @click="logoutInstProfile()">
+                Logout
+              </v-btn>
+            </v-card-actions>
+            <v-divider/>
           </v-card>
         </v-col>
       </v-row>
@@ -276,41 +114,33 @@
 <script>
 import facebookLogin from 'facebook-login-vuejs';
 import axios from "axios";
+import UserRegistrationForm from "components/UserRegistrationForm.vue";
+import UserLoginForm from "components/UserLoginForm.vue";
 
 export default {
   components: {
+    UserLoginForm,
+    UserRegistrationForm,
     facebookLogin
   },
   data() {
     return {
-
       login_response_alert: {
         has_response: false,
         type: '',
         message: ''
       },
-      registrationDialog: false,
       user: {},
       oldNameText: '',
       isConnected: false,
       name: '',
-      email: '',
       personalID: '',
       picture: '',
-      username: '',
-      password: '',
-      usernameLogin: '',
+//      userPassword: '',
+//      userLogin: '',
       loginIncorrect: false,
-      patronymic: '',
-      patronymicErrors: [],
-      firstName: '',
-      firstNameErrors:[],
-      lastNameErrors:[],
-      lastName:'',
-      passwordConfirmErrors:[],
-      registerPassConfirm:[],
-      passwordErrors:[],
-      usernameErrors:[],
+//      passwordErrors:[],
+//      usernameErrors:[],
 
     }
   },
@@ -341,61 +171,61 @@ export default {
     }
   },
   methods: {
-    loginUser() {
+    /*loginUser() {
       console.log('loginUser()')
       this.clearLoginResponse()
 
-     // this.loginIncorrect = false
+      // this.loginIncorrect = false
 
       //this.$v.$touch()
-      //if (true/*this.loginValid*/) {
+      //if (true/!*this.loginValid*!/) {
 
-        let auth = new FormData();
-        auth.set('username', this.usernameLogin);
-        auth.set('password', this.password);
-        console.log('auth', auth)
+      let auth = new FormData();
+      auth.set('username', this.userLogin);
+      auth.set('password', this.userPassword);
+      console.log('auth', auth)
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          }
+      const config = {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
         }
-
-        const loginURL = '/user/login'
-
-        axios.post(loginURL, auth, config).then(response => {
-          console.log('authResponse', response)
-          this.$store.dispatch('authUser', response.data)
-          this.handleSuccessfulLoginResponse(response)
-          //this.$store.dispatch('login')
-        })
-            .catch((error) => {
-              console.log('catch login error', error)
-              this.handleErrorLoginResponse(error)
-
-              //this.loginIncorrect = true
-            })
-      //}
-
-    },
-
-    submitRegistration() {
-      const sendURL = '/api/user/auth/registration'
-
-      console.log('submitRegistration()')
-
-      let userCredits = {
-        username: this.username,
-        password: this.password,
-        email: this.email
       }
 
-      axios.post(sendURL, userCredits).then(response => {
-        console.log('response', response);
-        this.user = response.data
-      })
+      const loginURL = '/user/login'
 
-    },
+      axios.post(loginURL, auth, config).then(response => {
+        console.log('authResponse', response)
+        this.$store.dispatch('authUser', response.data)
+        this.handleSuccessfulLoginResponse(response)
+        //this.$store.dispatch('login')
+      })
+          .catch((error) => {
+            console.log('catch login error', error)
+            this.handleErrorLoginResponse(error)
+
+            //this.loginIncorrect = true
+          })
+      //}
+
+    },*/
+
+    /* submitRegistration() {
+       const sendURL = '/api/user/auth/registration'
+
+       console.log('submitRegistration()')
+
+       let userCredits = {
+         username: this.username,
+         password: this.password,
+         email: this.email
+       }
+
+       axios.post(sendURL, userCredits).then(response => {
+         console.log('response', response);
+         this.user = response.data
+       })
+
+     },*/
 
     logoutInstProfile() {
       this.$store.dispatch('doLogout')
@@ -504,7 +334,7 @@ export default {
       let newName = this.oldNameText
       console.log(newName)
     },
-    handleSuccessfulLoginResponse(response) {
+    /*handleSuccessfulLoginResponse(response) {
       console.log('handleSuccessfulLoginResponse', response)
       let responseMessage
 
@@ -514,13 +344,12 @@ export default {
         responseMessage = response.data
         console.log('responseMessage', responseMessage)
         this.setLoginResponseData('success', responseMessage, true)
-      }
-      else {
+      } else {
         responseMessage = 'Login error no response'
         this.setLoginResponseData('error', responseMessage, true)
       }
-    },
-    handleErrorLoginResponse(error) {
+    },*/
+    /*handleErrorLoginResponse(error) {
       console.log('handleErrorLoginResponse')
 
       if (error.response) {
@@ -552,7 +381,7 @@ export default {
         this.setLoginResponseData('error', errorMessage, true)
       }
 
-    },
+    },*/
     clearLoginResponse() {
       this.setLoginResponseData('', '', false)
       /*this.login_response_alert.has_response = false
@@ -560,6 +389,7 @@ export default {
       this.login_response_alert.message = ''*/
     },
     setLoginResponseData(type, message, hasResponse) {
+      console.log('setLoginResponseData')
       this.login_response_alert.has_response = hasResponse
       this.login_response_alert.type = type
       this.login_response_alert.message = message

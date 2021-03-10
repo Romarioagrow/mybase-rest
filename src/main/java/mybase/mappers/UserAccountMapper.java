@@ -1,6 +1,6 @@
 package mybase.mappers;
 
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.domain.dto.UserAccountDto;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +12,7 @@ public class UserAccountMapper implements UserAccountMapperApi {
     public UserAccountDto mapUserAccountEntityToDto(UserAccount userAccount) {
 
         UserAccountDto userAccountDto = new UserAccountDto();
-        userAccountDto.setUserID(userAccount.getUserID());
+        userAccountDto.setUserID(userAccount.getUserAccountID());
         userAccountDto.setEmail(userAccount.getEmail());
         userAccountDto.setRegistrationDate(userAccount.getRegistrationDate());
         userAccountDto.setIsEnabled(userAccount.getIsEnabled());

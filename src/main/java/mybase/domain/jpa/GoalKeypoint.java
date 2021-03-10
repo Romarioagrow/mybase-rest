@@ -8,13 +8,14 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.io.Serializable;
 import java.util.UUID;
 
 @Data
 @Entity
 @Table(name = "goal_key_points")
 @NoArgsConstructor
-public class GoalKeypoint {
+public class GoalKeypoint implements Serializable {
 
     @Id
     @Column(name = "keypoint_uuid")

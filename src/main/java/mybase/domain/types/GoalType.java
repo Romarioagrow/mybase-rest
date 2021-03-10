@@ -1,7 +1,8 @@
 package mybase.domain.types;
 
-import java.util.Arrays;
-import java.util.List;
+import com.google.common.collect.Sets;
+
+import java.util.Set;
 
 public enum GoalType {
 
@@ -27,7 +28,7 @@ public enum GoalType {
         this.name = name;
     }
 
-    public static List<GoalType> getAllTypes() {
-        return Arrays.asList(GoalType.values());
+    public static Set<GoalType> getAllTypes() {
+        return Sets.newHashSet(GoalType.values());
     }
 }

@@ -1,6 +1,6 @@
 package mybase.services;
 
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;

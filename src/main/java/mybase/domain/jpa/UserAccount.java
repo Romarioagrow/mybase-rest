@@ -1,9 +1,9 @@
-package mybase.domain;
+package mybase.domain.jpa;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import mybase.domain.types.UserRole;
 import org.codehaus.jackson.annotate.JsonIgnore;
-import org.hibernate.annotations.GenericGenerator;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,12 +16,13 @@ import java.util.Set;
 @Entity
 @Table(name = "account_usr")
 //@MappedSuperclass
+@NoArgsConstructor
 public class UserAccount implements UserDetails {
 
     @Id
-    @GeneratedValue(generator = "uuid")
-    @GenericGenerator(name = "uuid", strategy = "uuid2")
-    private String userID;
+    @GeneratedValue
+    @Column(name = "usr_account_id")
+    private Long userAccountID;
 
     private String username;
 
@@ -38,6 +39,16 @@ public class UserAccount implements UserDetails {
     @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private Set<UserRole> roles;
+
+
+    /*
+    * TODO:
+    *  GeneralUser Lazy
+    *
+    * */
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "generalUserId")
+    private GeneralUser generalUser;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

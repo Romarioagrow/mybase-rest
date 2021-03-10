@@ -32,12 +32,20 @@ public class LoginAuthenticationFailureHandler implements AuthenticationFailureH
     {
         log.info("onAuthenticationFailure");
 
+        /*
+        *TODO:
+        * Login business errors
+        * if error return 5..
+        * ...
+        *
+        * */
+
         response.setStatus(HttpStatus.UNAUTHORIZED.value());
         Map<String, Object> data = new HashMap<>();
         data.put("timestamp", Calendar.getInstance().getTime());
         data.put("exception", exception.getMessage());
 
-        response.getOutputStream()
-                .println(objectMapper.writeValueAsString(data));
+        /*response.getOutputStream()
+                .println(objectMapper.writeValueAsString(data));*/
     }
 }

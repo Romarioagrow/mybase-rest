@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface SpendingRepo extends JpaRepository<SpendingItem, Integer> {
 
-    List<SpendingItem> findAllByUserID(String userID);
+    List<SpendingItem> findAllByUserID(Long userID);
 
     SpendingItem findItemById(Integer spendingID);
 }

@@ -2,7 +2,7 @@ package mybase.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.domain.GoogleAuthUser;
 import mybase.services.SpendingItemService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,7 +17,7 @@ import java.util.Map;
 public class SpendingItemController {
     private final SpendingItemService itemService;
 
-    private static final String hardcodedUserID = "hardcodeID0";
+    private static final Long hardcodedUserID = 228L; ///Clr
 
     @GetMapping("/loadSpendingItems")
     private Map<String, Object> loadSpendingItems(@AuthenticationPrincipal GoogleAuthUser user) {

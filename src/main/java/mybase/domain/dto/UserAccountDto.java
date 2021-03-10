@@ -1,6 +1,5 @@
 package mybase.domain.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -14,7 +13,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 public class UserAccountDto extends BaseDto{
 
-    private String userID;
+    private Long userID;
 
     private String username;
 

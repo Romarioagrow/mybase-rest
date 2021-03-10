@@ -20,11 +20,13 @@ public class SpendingItem implements Serializable {
 
     private Double amount;
 
-    private String info, type, currency, userID;
+    private String info, type, currency;
+
+    private Long userID;
 
     private LocalDate date;
 
-    public SpendingItem(String userID, Double amount, String type, String info, String currency) {
+    public SpendingItem(Long userID, Double amount, String type, String info, String currency) {
         this.userID = userID;
         this.amount = amount;
         this.info = info;

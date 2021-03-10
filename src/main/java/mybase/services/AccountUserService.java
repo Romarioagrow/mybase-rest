@@ -2,11 +2,13 @@ package mybase.services;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.GeneralUser;
+import mybase.domain.jpa.UserAccount;
 import mybase.domain.dto.UserAccountDto;
 import mybase.domain.types.UserRole;
 import mybase.mappers.UserAccountMapper;
 import mybase.repo.AccountUserRepo;
+import mybase.repo.GeneralUserRepo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -23,34 +26,49 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public class AccountUserService implements AccountUserApi {
-    private final AccountUserRepo userRepo;
+    private final AccountUserRepo accountUserRepo;
+    private final GeneralUserRepo generalUserRepo;
     private final PasswordEncoder passwordEncoder;
     private final UserAccountMapper accountMapper;
 
     @Override
     public UserAccount loadUserByUsername(String username) throws UsernameNotFoundException {
         log.info("username: " + username);
-        return userRepo.findAccountUserByUsername(username);
+        return accountUserRepo.findAccountUserByUsername(username);
     }
 
     @Override
+    @Transactional
     public ResponseEntity<?> registerUser(Map<String, String> userCredentials) {
+
+        /*
+        *
+        * TODO:
+        * AccountUser -> GeneralUser Auto creation
+        * Business-logic registration errors handler
+        *
+        * */
+
 
         if (userAlreadyExists(userCredentials)) {
             return new ResponseEntity<>(null, HttpStatus.CONFLICT);
         }
 
-        UserAccount user = new UserAccount();
-        user.setPassword(passwordEncoder.encode(userCredentials.get("password")));
-        user.setUsername(userCredentials.get("username").trim());
-        user.setEmail(userCredentials.get("email").trim());
-        user.setRegistrationDate(LocalDateTime.now());
-        user.setRoles(Collections.singleton(UserRole.USER));
-        user.setIsEnabled(true);
+        UserAccount userAccount = new UserAccount();
+        userAccount.setPassword(passwordEncoder.encode(userCredentials.get("password")));
+        userAccount.setUsername(userCredentials.get("username").trim());
+        userAccount.setEmail(userCredentials.get("email").trim());
+        userAccount.setRegistrationDate(LocalDateTime.now());
+        userAccount.setRoles(Collections.singleton(UserRole.USER));
+        userAccount.setIsEnabled(true);
 
-        userRepo.save(user);
+        GeneralUser generalUser = new GeneralUser();
+        generalUserRepo.save(generalUser);
 
-        UserAccountDto accountDto = accountMapper.mapUserAccountEntityToDto(user);
+        userAccount.setGeneralUser(generalUser);
+        accountUserRepo.save(userAccount);
+
+        UserAccountDto accountDto = accountMapper.mapUserAccountEntityToDto(userAccount);
 
         return new ResponseEntity<>(accountDto, HttpStatus.OK);
     }
@@ -71,6 +89,6 @@ public class AccountUserService implements AccountUserApi {
 
         String username = userCredentials.get("username");
 
-        return userRepo.findAccountUserByUsername(username) != null;
+        return accountUserRepo.findAccountUserByUsername(username) != null;
     }
 }

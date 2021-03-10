@@ -2,7 +2,7 @@ package mybase.controllers;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.java.Log;
-import mybase.domain.UserAccount;
+import mybase.domain.jpa.UserAccount;
 import mybase.services.HttpService;
 import mybase.services.MediaApiService;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
