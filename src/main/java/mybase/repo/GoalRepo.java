@@ -17,7 +17,9 @@ public interface GoalRepo extends JpaRepository<GoalEntity, Long> {
     List<GoalEntity> findGoalsByUserIdAndFetchEagerly(@Param("id") String id);
     */
 
-    @Query("SELECT g FROM GoalEntity g WHERE g.generalUser IS NOT NULL AND g.generalUser.generalUserId = (:userID)")
+    @Query("SELECT g FROM GoalEntity g WHERE g.generalUserId IS NOT NULL AND g.generalUserId = (:userID)")
     List<GoalEntity> findGoalsByUserIdAndFetchEagerly(@Param("userID") Long userID);
+
+    List<GoalEntity> findGoalEntitiesByGeneralUserId(Long userID);
 
 }

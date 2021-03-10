@@ -25,7 +25,7 @@ public class GeneralUser /*extends UserAccount*/ {
     /*@OneToOne
     private */
 
-    /*@OneToMany(cascade = CascadeType.ALL, targetEntity = GoalEntity.class, fetch = FetchType.EAGER)
+   /* @OneToMany(cascade = CascadeType.ALL, targetEntity = GoalEntity.class, fetch = FetchType.EAGER)
     private Set<GoalEntity> goalEntities;// = new ArrayList<>();*/
 
     /*public void addNewGoal(GoalEntity newGoalEntity) {

@@ -18,6 +18,7 @@ import mybase.repo.GoalRepo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityNotFoundException;
 import java.nio.file.attribute.UserPrincipalNotFoundException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -71,7 +72,6 @@ public class GoalsService implements GoalServiceApi {
         newGoalEntity.setGoalText(goalText);
         newGoalEntity.setGoalSetTime(LocalDateTime.now());
 
-
         GeneralUser generalUser = userAccount.getGeneralUser();
 
         if (!hasUser(generalUser)) {
@@ -82,20 +82,6 @@ public class GoalsService implements GoalServiceApi {
         newGoalEntity.setGeneralUserId(userId);
 
         persistNewGoal(newGoalEntity);
-        log.info("newGoalEntity created: {} ", newGoalEntity.toString());
-        //  if (hasUser(generalUser)) {
-        //newGoalEntity.setGeneralUser(generalUser);
-
-        /*
-
-  PSQLException: ERROR: duplicate key value violates unique constraint "general_usr_goal_entities_pkey"
-  Подробности: Key (general_user_general_usr_id, goal_entities_goalid)=(5, 41) already exists.
-        Set<GoalEntity> userGoalEntities = generalUser.getGoalEntities();
-        userGoalEntities.add(newGoalEntity);
-        generalUser.setGoalEntities(userGoalEntities);
-        persistGeneralUser(generalUser);
-        */
-
         return goalsObjectMapper.mapGoalEntityToDto(newGoalEntity);
     }
 
@@ -112,6 +98,8 @@ public class GoalsService implements GoalServiceApi {
 
         goalRepo.save(newGoalEntity);
 
+        log.info("newGoalEntity created: {} ", newGoalEntity.toString());
+
     }
 
     @Override
@@ -124,7 +112,16 @@ public class GoalsService implements GoalServiceApi {
     public List<GoalDto> loadGoalsByUser(UserAccount userAccount) {
         log.info("userAccount", userAccount);
 
-        List<GoalEntity> goalEntities = goalRepo.findGoalsByUserIdAndFetchEagerly(userAccount.getUserAccountID());
+        GeneralUser generalUser = userAccount.getGeneralUser();
+
+        if (generalUser == null) {
+            log.error("No General User!");
+            throw new EntityNotFoundException();
+        }
+
+        Long userId = generalUser.getGeneralUserId();
+
+        List<GoalEntity> goalEntities = goalRepo.findGoalEntitiesByGeneralUserId(userId);
 
         return goalsObjectMapper.mapGoalEntitiesToDto(goalEntities);
     }

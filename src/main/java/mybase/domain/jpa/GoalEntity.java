@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 import mybase.domain.types.GoalType;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,10 +13,12 @@ import java.util.Set;
 
 
 @Data
+//@Getter
+//@Setter
 @Entity
 @Table(name = "goal_entities")
 @NoArgsConstructor//@RequiredArgsConstructor
-public class GoalEntity {
+public class GoalEntity implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -41,11 +44,27 @@ public class GoalEntity {
     private Set<GoalType> goalTypes;
 
     @OneToMany(fetch = FetchType.EAGER)
-   // @LazyCollection(LazyCollectionOption.FALSE)
+    // @LazyCollection(LazyCollectionOption.FALSE)
     private List<GoalKeypoint> goalKeyPoint;
 
     @OneToMany(fetch = FetchType.EAGER)
-   // @LazyCollection(LazyCollectionOption.FALSE)
-    private List<TaskEntity> taskEntityList;
+    // @LazyCollection(LazyCollectionOption.FALSE)
+    private Set<TaskEntity> taskEntityList;
 
+    /*@Override
+    public int hashCode() {
+        return Objects.hash(goalID, goalName, generalUser);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this)
+            return true;
+        if (!(o instanceof GoalEntity))
+            return false;
+        GoalEntity other = (GoalEntity) o;
+        boolean goalIdEquals = (this.goalID == null && other.goalID == null)
+                || (this.goalID != null && this.goalID.equals(other.goalID));
+        return this.generalUser == other.generalUser && goalIdEquals;
+    }*/
 }
