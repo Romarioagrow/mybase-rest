@@ -10,7 +10,14 @@ module.exports = merge(common, {
         compress: true,
         port: 8000,
         allowedHosts: [
-            'localhost:9000'
+            'localhost',
+            '127.0.0.1'
         ],
+        proxy: {
+            '/api': {
+                target: 'http://localhost:9000',
+                changeOrigin: true
+            }
+        }
     },
 });

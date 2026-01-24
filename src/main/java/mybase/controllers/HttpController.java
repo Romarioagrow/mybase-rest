@@ -27,6 +27,6 @@ public class HttpController {
 
         ///mediaApiService.urlLogger(request);
 
-        return "index";
+        return "forward:/index.html";
     }
 }

@@ -4,6 +4,11 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin');
 module.exports = {
 
     entry: path.join(__dirname, 'src', 'main', 'resources', 'js', 'main.js'),
+    output: {
+        filename: 'main.js',
+        path: path.resolve(__dirname, 'src', 'main', 'resources', 'static', 'js'),
+        publicPath: '/js/',
+    },
 
     module: {
         rules: [
@@ -55,5 +60,9 @@ module.exports = {
             path.join(__dirname, 'src', 'main', 'resources', 'js'),
             path.join(__dirname, 'node_modules'),
         ],
+        extensions: ['.js', '.vue', '.json'],
+        alias: {
+            vue$: 'vue/dist/vue.esm.js',
+        },
     }
 }
