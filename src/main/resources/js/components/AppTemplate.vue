@@ -86,6 +86,7 @@ export default {
       drawer: true,
       menuLinks: [
         {icon: 'mdi-airplay', text: 'Main page', link: '/'},
+        {icon: 'mdi-fingerprint', text: 'MyBase', link: '/mybase'},
         {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/auth'},
         {icon: 'mdi-instagram', text: 'Instagram', link: '/instagram'},
         {icon: 'mdi-currency-usd', text: 'Spending', link: '/spending'},
