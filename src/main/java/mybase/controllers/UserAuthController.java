@@ -39,7 +39,7 @@ public class UserAuthController {
 
     @GetMapping("/auth/userAuthorized")
     public ResponseEntity<?> userAuthorized(@AuthenticationPrincipal GoogleAuthUser user) {
-        return user == null ? new ResponseEntity<>(null, HttpStatus.UNAUTHORIZED) : new ResponseEntity<>(user, HttpStatus.OK);
+        return user == null ? ResponseEntity.status(HttpStatus.UNAUTHORIZED).build() : ResponseEntity.ok(user);
     }
 
     @PostMapping("/auth/getUser")

@@ -51,7 +51,7 @@ public class AccountUserService implements AccountUserApi {
 
 
         if (userAlreadyExists(userCredentials)) {
-            return new ResponseEntity<>(null, HttpStatus.CONFLICT);
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
         UserAccount userAccount = new UserAccount();
@@ -70,7 +70,7 @@ public class AccountUserService implements AccountUserApi {
 
         UserAccountDto accountDto = accountMapper.mapUserAccountEntityToDto(userAccount);
 
-        return new ResponseEntity<>(accountDto, HttpStatus.OK);
+        return ResponseEntity.ok(accountDto);
     }
 
     @Override
