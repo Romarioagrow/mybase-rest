@@ -9,6 +9,7 @@ import Spending from "pages/Spending.vue";
 import TheLogs from "pages/TheLogs.vue";
 import GoalsPage from "pages/GoalsPage.vue";
 import MyBase from "pages/MyBase.vue";
+import OAuth2Redirect from "pages/OAuth2Redirect.vue";
 
 Vue.use(VueRouter);
 const routes = [
@@ -21,6 +22,7 @@ const routes = [
     {path: '/thelogs', component: TheLogs},
     {path: '/goals', component: GoalsPage},
     {path: '/mybase', component: MyBase},
+    {path: '/oauth2/redirect', component: OAuth2Redirect},
 ];
 
 export default new VueRouter({

@@ -1,30 +1,78 @@
 <template>
   <div class="magic-form">
-    <v-form>
-      <v-text-field id="username"
-                    name="username"
-                    color="#F6D365"
-                    prepend-icon="mdi-account"
-                    v-model="userLogin"
-                    label="Username"
-                    :error-messages="usernameErrors"
-                    required
-      ></v-text-field>
-      <v-text-field id="password"
-                    name="password"
-                    color="#F6D365"
-                    prepend-icon="mdi-key"
-                    type="password"
-                    v-model="userPassword"
-                    label="Password"
-                    :error-messages="passwordErrors"
-                    required
-      ></v-text-field>
+    <v-form @submit.prevent="loginUser">
+      <v-text-field
+          id="username"
+          name="username"
+          color="#F6D365"
+          v-model="userLogin"
+          label="Username or Email"
+          :error-messages="usernameErrors"
+          :disabled="isLoading"
+          required
+          outlined
+          dense
+          class="magic-input"
+      >
+        <template v-slot:prepend-inner>
+          <v-icon color="rgba(230, 225, 255, 0.5)">mdi-account-outline</v-icon>
+        </template>
+      </v-text-field>
+
+      <v-text-field
+          id="password"
+          name="password"
+          color="#F6D365"
+          :type="showPassword ? 'text' : 'password'"
+          v-model="userPassword"
+          label="Password"
+          :error-messages="passwordErrors"
+          :disabled="isLoading"
+          required
+          outlined
+          dense
+          class="magic-input"
+      >
+        <template v-slot:prepend-inner>
+          <v-icon color="rgba(230, 225, 255, 0.5)">mdi-lock-outline</v-icon>
+        </template>
+        <template v-slot:append>
+          <v-icon
+              color="rgba(230, 225, 255, 0.5)"
+              @click="showPassword = !showPassword"
+              style="cursor: pointer;"
+          >
+            {{ showPassword ? 'mdi-eye-off' : 'mdi-eye' }}
+          </v-icon>
+        </template>
+      </v-text-field>
+
+      <div class="magic-options">
+        <v-checkbox
+            v-model="rememberMe"
+            label="Remember me"
+            color="#F6D365"
+            hide-details
+            dense
+            class="magic-checkbox"
+        ></v-checkbox>
+        <a href="#" class="magic-forgot" @click.prevent="forgotPassword">
+          Forgot password?
+        </a>
+      </div>
+
+      <v-btn
+          class="magic-primary"
+          :loading="isLoading"
+          :disabled="isLoading || !isFormValid"
+          @click="loginUser()"
+          block
+          large
+      >
+        <v-icon left v-if="!isLoading">mdi-login</v-icon>
+        Sign in
+      </v-btn>
     </v-form>
-    <v-btn class="magic-primary" @click="loginUser()" block>
-      Log in
-    </v-btn>
-    <div class="magic-form-hint">Need an account? Create one on the right.</div>
   </div>
 </template>
 
@@ -38,93 +86,90 @@ export default {
     return {
       userLogin: '',
       userPassword: '',
-      passwordErrors:[],
-      usernameErrors:[],
+      passwordErrors: [],
+      usernameErrors: [],
+      showPassword: false,
+      rememberMe: false,
+      isLoading: false,
+    }
+  },
+  computed: {
+    isFormValid() {
+      return this.userLogin.length > 0 && this.userPassword.length > 0;
     }
   },
   methods: {
-    loginUser() {
-      console.log('loginUser()')
-      this.clearLoginResponse()
+    forgotPassword() {
+      this.setLoginResponseData('info', 'Password reset feature coming soon', true);
+    },
+    async loginUser() {
+      if (!this.isFormValid) return;
 
-      // this.loginIncorrect = false
-
-      //this.$v.$touch()
-      //if (true/*this.loginValid*/) {
+      console.log('loginUser()');
+      this.clearLoginResponse();
+      this.isLoading = true;
+      this.usernameErrors = [];
+      this.passwordErrors = [];
 
       let auth = new FormData();
       auth.set('username', this.userLogin);
       auth.set('password', this.userPassword);
-      console.log('auth', auth)
 
       const config = {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
         }
+      };
+
+      const loginURL = '/user/login';
+
+      try {
+        const response = await axios.post(loginURL, auth, config);
+        console.log('authResponse', response);
+        this.$store.dispatch('authUser', response.data);
+        this.handleSuccessfulLoginResponse(response);
+      } catch (error) {
+        console.log('catch login error', error);
+        this.handleErrorLoginResponse(error);
+      } finally {
+        this.isLoading = false;
       }
-
-      const loginURL = '/user/login'
-
-      axios.post(loginURL, auth, config).then(response => {
-        console.log('authResponse', response)
-        this.$store.dispatch('authUser', response.data)
-        this.handleSuccessfulLoginResponse(response)
-        //this.$store.dispatch('login')
-      })
-          .catch((error) => {
-            console.log('catch login error', error)
-            this.handleErrorLoginResponse(error)
-
-            //this.loginIncorrect = true
-          })
-      //}
-
     },
     handleSuccessfulLoginResponse(response) {
-      console.log('handleSuccessfulLoginResponse', response)
-      let responseMessage
-
+      console.log('handleSuccessfulLoginResponse', response);
       if (response) {
-        console.log('handleSuccessfulLoginResponse response', response)
-
-        responseMessage = response.data
-        console.log('responseMessage', responseMessage)
-        this.setLoginResponseData('success', responseMessage, true)
+        this.setLoginResponseData('success', 'Login successful! Redirecting...', true);
+        setTimeout(() => {
+          this.$router.push('/');
+        }, 1000);
       } else {
-        responseMessage = 'Login error no response'
-        this.setLoginResponseData('error', responseMessage, true)
+        this.setLoginResponseData('error', 'Login error: no response', true);
       }
     },
     handleErrorLoginResponse(error) {
-      console.log('handleErrorLoginResponse')
+      console.log('handleErrorLoginResponse');
 
       if (error.response) {
-        let errorMessage // error.response.data.errorMessage
-        const errorData = error.response.data
-        const errorStatus = error.response.status
-        const errorHeaders = error.response.headers
-
-        console.log('errorMessage', errorData);
-        console.log('errorStatus', errorStatus);
-        console.log('errorHeaders', errorHeaders);
+        const errorStatus = error.response.status;
+        let errorMessage;
 
         switch (errorStatus) {
-          case 401: {
-            errorMessage = 'Login Incorrect!'
-            break
-            //const message = response.data
-            //this.setLoginResponseData(type, responseMessage, true)
-          }
-          case 500: {
-            errorMessage = 'Server Error!'
-            //const message = response.data
-            break
-          }
-          default: {
-            errorMessage = 'Default Error!'
-          }
+          case 401:
+            errorMessage = 'Invalid username or password';
+            this.passwordErrors = ['Please check your credentials'];
+            break;
+          case 403:
+            errorMessage = 'Account is disabled';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later';
+            break;
+          default:
+            errorMessage = 'An error occurred. Please try again';
         }
-        this.setLoginResponseData('error', errorMessage, true)
+        this.setLoginResponseData('error', errorMessage, true);
+      } else {
+        this.setLoginResponseData('error', 'Network error. Check your connection', true);
       }
     },
   }
@@ -139,24 +184,71 @@ export default {
   color: rgba(230, 225, 255, 0.9);
 }
 
-.magic-form ::v-deep .v-input input {
-  color: #f7f4ff !important;
-}
-
-.magic-form ::v-deep .v-label,
-.magic-form ::v-deep .v-icon,
-.magic-form ::v-deep .v-messages__message {
-  color: rgba(230, 225, 255, 0.75) !important;
+.magic-input {
+  margin-bottom: 8px;
 }
 
 .magic-form ::v-deep .v-input__slot {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 12px;
-  padding: 4px 10px;
+  background: rgba(255, 255, 255, 0.04) !important;
+  border-radius: 14px !important;
+  min-height: 52px !important;
+}
+
+.magic-form ::v-deep .v-text-field--outlined fieldset {
+  border-color: rgba(255, 255, 255, 0.1);
+  transition: border-color 0.25s ease;
+}
+
+.magic-form ::v-deep .v-text-field--outlined:hover fieldset {
+  border-color: rgba(246, 211, 101, 0.3);
+}
+
+.magic-form ::v-deep .v-text-field--outlined.v-input--is-focused fieldset {
+  border-color: #f6d365;
+  border-width: 2px;
 }
 
 .magic-form ::v-deep .v-input input {
+  color: #f7f4ff !important;
   padding: 8px 4px !important;
+}
+
+.magic-form ::v-deep .v-label {
+  color: rgba(230, 225, 255, 0.6) !important;
+}
+
+.magic-form ::v-deep .v-messages__message {
+  color: #ff6b6b !important;
+}
+
+.magic-options {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.magic-checkbox ::v-deep .v-label {
+  color: rgba(230, 225, 255, 0.65) !important;
+  font-size: 0.9rem;
+}
+
+.magic-checkbox ::v-deep .v-input--selection-controls__input {
+  margin-right: 8px;
+}
+
+.magic-forgot {
+  color: #f6d365;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.magic-forgot:hover {
+  color: #fda085;
+  text-decoration: underline;
 }
 
 .magic-primary {
@@ -164,12 +256,24 @@ export default {
   color: #1b1833 !important;
   border-radius: 14px;
   font-weight: 600;
+  font-size: 1rem;
   text-transform: none;
+  letter-spacing: 0.02em;
+  min-height: 52px;
+  box-shadow: 0 4px 16px rgba(246, 211, 101, 0.25);
+  transition: all 0.25s ease;
 }
 
-.magic-form-hint {
-  margin-top: 10px;
-  font-size: 0.8rem;
-  color: rgba(230, 225, 255, 0.65);
+.magic-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(246, 211, 101, 0.35);
+}
+
+.magic-primary:disabled {
+  opacity: 0.6;
+}
+
+.magic-primary ::v-deep .v-btn__loader {
+  color: #1b1833;
 }
 </style>

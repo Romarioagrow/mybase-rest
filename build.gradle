@@ -58,6 +58,11 @@ dependencies {
     // Apache Commons
     implementation 'org.apache.commons:commons-lang3:3.14.0'
 
+    // JWT (JSON Web Token)
+    implementation 'io.jsonwebtoken:jjwt-api:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.6'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.6'
+
     // Database
     runtimeOnly 'org.postgresql:postgresql'
 

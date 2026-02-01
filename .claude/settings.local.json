@@ -6,7 +6,8 @@
       "Bash(where:*)",
       "Bash(cmd /c \"dir /b /s \"\"C:\\\\Program Files\\\\Java\"\" 2>nul | findstr /i bin\")",
       "Bash(findstr:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(psql:*)"
     ]
   }
 }

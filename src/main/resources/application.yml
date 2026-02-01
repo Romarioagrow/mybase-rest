@@ -1,0 +1,79 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost/my_base_rest}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:1608}
+
+  jpa:
+    generate-ddl: true
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    open-in-view: false
+
+  main:
+    allow-bean-definition-overriding: true
+
+  # OAuth2 Configuration
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+          facebook:
+            client-id: ${FACEBOOK_APP_ID:your-facebook-app-id}
+            client-secret: ${FACEBOOK_APP_SECRET:your-facebook-app-secret}
+            scope:
+              - email
+              - public_profile
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+          instagram:
+            client-id: ${INSTAGRAM_APP_ID:your-instagram-app-id}
+            client-secret: ${INSTAGRAM_APP_SECRET:your-instagram-app-secret}
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+            scope:
+              - user_profile
+              - user_media
+            client-name: Instagram
+
+        provider:
+          instagram:
+            authorization-uri: https://api.instagram.com/oauth/authorize
+            token-uri: https://api.instagram.com/oauth/access_token
+            user-info-uri: https://graph.instagram.com/me?fields=id,username,account_type
+            user-name-attribute: id
+
+server:
+  port: 9000
+
+# JWT Configuration
+app:
+  jwt:
+    secret: ${JWT_SECRET:mybase-super-secret-jwt-key-minimum-256-bits-for-hs256-algorithm}
+    expiration: ${JWT_EXPIRATION:86400000}
+    refresh-expiration: ${JWT_REFRESH_EXPIRATION:604800000}
+
+  oauth2:
+    # After OAuth2 authentication, redirect to this URL with token
+    authorized-redirect-uri: ${FRONTEND_URL:http://localhost:9000}/oauth2/redirect
+
+  cors:
+    allowed-origins:
+      - http://localhost:3000
+      - http://localhost:9000
+
+logging:
+  level:
+    org.springframework.security: DEBUG
+    mybase: DEBUG

@@ -112,11 +112,24 @@ export default {
     },
 
     userPic() {
+      // First check OAuth avatar
+      const authUser = this.$store.state.auth && this.$store.state.auth.user
+      if (authUser && authUser.avatarUrl) {
+        return authUser.avatarUrl
+      }
+      // Fallback to Instagram profile picture
       const inst = this.$store.state.userAccount && this.$store.state.userAccount.instProfile
       return inst && inst.profile_picture_url ? inst.profile_picture_url : ''
     },
 
     userName() {
+      // First check OAuth user
+      const authUser = this.$store.state.auth && this.$store.state.auth.user
+      if (authUser) {
+        const name = authUser.name || authUser.username || authUser.email || ''
+        return String(name).toUpperCase()
+      }
+      // Fallback to legacy profile
       const profile = this.$store.state.userAccount && this.$store.state.userAccount.currentProfile
       if (!profile) return ''
       const name = profile.username || profile.email || ''

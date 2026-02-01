@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 public class GeneralUser {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "general_usr_id")
     private Long generalUserId;
 

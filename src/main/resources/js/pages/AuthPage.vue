@@ -22,65 +22,85 @@
         <v-col cols="12" md="7">
           <v-card class="magic-auth-card" elevation="12">
             <v-card-title class="magic-auth-card-title">
-              User Access
-              <v-spacer/>
-              <v-alert
-                  v-if="has_login_response_alert"
-                  :type="get_login_response_type"
-                  dense
-                  outlined
-                  class="magic-auth-alert"
-              >
-                {{ login_response_alert.message }}
-              </v-alert>
+              <span>{{ showLogin ? 'Welcome Back' : 'Join Us' }}</span>
             </v-card-title>
 
             <v-card-text>
-              <v-row>
-                <v-col cols="12">
-                  <div class="magic-toggle">
-                    <v-btn class="magic-toggle-btn" :outlined="!showLogin" @click="showLogin = true">
-                      Sign in
-                    </v-btn>
-                    <v-btn class="magic-toggle-btn" :outlined="showLogin" @click="showLogin = false">
-                      Create account
-                    </v-btn>
+              <!-- Alert notification -->
+              <transition name="slide-fade">
+                <v-alert
+                    v-if="has_login_response_alert"
+                    :type="get_login_response_type"
+                    dense
+                    dismissible
+                    class="magic-auth-alert mb-4"
+                    @input="clearLoginResponse"
+                >
+                  {{ login_response_alert.message }}
+                </v-alert>
+              </transition>
+
+              <!-- Tab-style toggle -->
+              <div class="magic-tabs">
+                <button
+                    class="magic-tab"
+                    :class="{ active: showLogin }"
+                    @click="switchTab(true)"
+                >
+                  <v-icon small class="mr-2">mdi-login</v-icon>
+                  Sign in
+                </button>
+                <button
+                    class="magic-tab"
+                    :class="{ active: !showLogin }"
+                    @click="switchTab(false)"
+                >
+                  <v-icon small class="mr-2">mdi-account-plus</v-icon>
+                  Create account
+                </button>
+                <div class="magic-tab-indicator" :class="{ right: !showLogin }"></div>
+              </div>
+
+              <!-- Form container with transition -->
+              <div class="magic-form-container">
+                <transition :name="slideDirection" mode="out-in">
+                  <div v-if="showLogin" key="login" class="magic-form-wrapper">
+                    <user-login-form
+                        :setLoginResponseData="setLoginResponseData"
+                        :clearLoginResponse="clearLoginResponse"
+                    ></user-login-form>
                   </div>
-                </v-col>
-                <v-col cols="12" v-if="showLogin">
-                  <div class="magic-form-title">Sign in</div>
-                  <user-login-form
-                      :setLoginResponseData="setLoginResponseData"
-                      :clearLoginResponse="clearLoginResponse"
-                  ></user-login-form>
-                </v-col>
-                <v-col cols="12" v-else>
-                  <div class="magic-form-title">Create account</div>
-                  <user-registration-form></user-registration-form>
-                </v-col>
-              </v-row>
+                  <div v-else key="register" class="magic-form-wrapper">
+                    <user-registration-form
+                        :setLoginResponseData="setLoginResponseData"
+                    ></user-registration-form>
+                  </div>
+                </transition>
+              </div>
             </v-card-text>
           </v-card>
 
+          <!-- Social login card -->
           <v-card class="magic-social-card" elevation="10">
-            <div class="magic-social-title">Social gateways</div>
-            <v-row>
-              <v-col cols="12" md="4">
+            <div class="magic-social-title">
+              <span class="magic-social-line"></span>
+              <span>or continue with</span>
+              <span class="magic-social-line"></span>
+            </div>
+            <v-row class="mt-2">
+              <v-col cols="4">
                 <v-btn class="magic-social-btn facebook" block @click="facebookAuth()">
-                  <v-icon left>mdi-facebook</v-icon>
-                  Facebook
+                  <v-icon>mdi-facebook</v-icon>
                 </v-btn>
               </v-col>
-              <v-col cols="12" md="4">
+              <v-col cols="4">
                 <v-btn class="magic-social-btn instagram" block @click="instAuth()">
-                  <v-icon left>mdi-instagram</v-icon>
-                  Instagram
+                  <v-icon>mdi-instagram</v-icon>
                 </v-btn>
               </v-col>
-              <v-col cols="12" md="4">
+              <v-col cols="4">
                 <v-btn class="magic-social-btn google" block @click="googleAuth()">
-                  <v-icon left>mdi-google</v-icon>
-                  Google
+                  <v-icon>mdi-google</v-icon>
                 </v-btn>
               </v-col>
             </v-row>
@@ -146,6 +166,7 @@ export default {
   data() {
     return {
       showLogin: true,
+      slideDirection: 'slide-left',
       login_response_alert: {
         has_response: false,
         type: '',
@@ -157,12 +178,7 @@ export default {
       name: '',
       personalID: '',
       picture: '',
-//      userPassword: '',
-//      userLogin: '',
       loginIncorrect: false,
-//      passwordErrors:[],
-//      usernameErrors:[],
-
     }
   },
   created() {
@@ -192,160 +208,26 @@ export default {
     }
   },
   methods: {
-    /*loginUser() {
-      console.log('loginUser()')
-      this.clearLoginResponse()
-
-      // this.loginIncorrect = false
-
-      //this.$v.$touch()
-      //if (true/!*this.loginValid*!/) {
-
-      let auth = new FormData();
-      auth.set('username', this.userLogin);
-      auth.set('password', this.userPassword);
-      console.log('auth', auth)
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      }
-
-      const loginURL = '/user/login'
-
-      axios.post(loginURL, auth, config).then(response => {
-        console.log('authResponse', response)
-        this.$store.dispatch('authUser', response.data)
-        this.handleSuccessfulLoginResponse(response)
-        //this.$store.dispatch('login')
-      })
-          .catch((error) => {
-            console.log('catch login error', error)
-            this.handleErrorLoginResponse(error)
-
-            //this.loginIncorrect = true
-          })
-      //}
-
-    },*/
-
-    /* submitRegistration() {
-       const sendURL = '/api/user/auth/registration'
-
-       console.log('submitRegistration()')
-
-       let userCredits = {
-         username: this.username,
-         password: this.password,
-         email: this.email
-       }
-
-       axios.post(sendURL, userCredits).then(response => {
-         console.log('response', response);
-         this.user = response.data
-       })
-
-     },*/
-
+    switchTab(isLogin) {
+      if (this.showLogin === isLogin) return;
+      this.slideDirection = isLogin ? 'slide-right' : 'slide-left';
+      this.showLogin = isLogin;
+      this.clearLoginResponse();
+    },
+   
     logoutInstProfile() {
       this.$store.dispatch('doLogout')
     },
     facebookAuth() {
-
-      FB.login((response) => {
-        if (response.authResponse) {
-          console.log('Facebook login successful');
-
-          FB.api('/me/accounts', (response) => {
-            console.log(response)
-            console.log('Facebook name: ' + response.data[0].name);
-            let access_tokenFacebook = response.data[0].access_token
-          });
-
-          FB.getLoginStatus((response) => {
-
-            if (response.status === 'connected') {
-              let uid = response.authResponse.userID;
-              let accessToken = response.authResponse.accessToken;
-              console.log('connected')
-              console.log('accessToken:' + accessToken)
-              console.log('uid:' + uid)
-
-              /*В БЭК!*/
-              /*getFB_AccountData*/
-              FB.api('/me/accounts', (response) => {
-                console.log(response)
-                let faceBookName = response.data[0].name
-                let access_token = response.data[0].access_token
-                let facebookID = response.data[0].id
-
-                console.log('faceBookName: ' + faceBookName);
-                console.log('facebookID: ' + facebookID);
-                console.log('access_token: ' + access_token);
-
-                /*get instID*/
-                let getInstagramID = '/' + facebookID + '?fields=instagram_business_account'
-                FB.api(getInstagramID, (response) => {
-                  let instagramID = response.instagram_business_account.id
-                  console.log('instagramID: ' + instagramID)
-
-                  /*get Object INST_USER*/
-                  let apiURL = instagramID + '?fields=biography,id,ig_id,followers_count,follows_count,media_count,name,profile_picture_url,username,website'
-                  FB.api(apiURL, (instUser) => {
-                    //console.log(instUser)
-                    this.$store.dispatch('loadInstUserProfile', instUser)
-                    window.location.href = 'https://localhost:8080/login'///To Storage
-                  })
-
-                  /*let apiURLNewFollowers = instagramID + '/insights?pretty=0&since=1580515200&until=1583020800&metric=follower_count&period=day'
-                  FB.api(apiURLNewFollowers, (response) => {
-                      let followersObject = response.data[0].values
-                      let nextPage = response.paging.next
-                      console.log(followersObject)
-                      console.log(nextPage)
-                      let newFollowersData = new Map()
-                      followersObject.forEach((arrayItem) => {
-                          if (arrayItem.value!== 0) {
-                              console.log(arrayItem.end_time + ': ' + arrayItem.value)
-                              newFollowersData.set(arrayItem.end_time, arrayItem.value)
-                          }
-                      });
-                      console.log(newFollowersData)
-                      this.$store.dispatch('newFollowersData', newFollowersData)
-                  })*/
-                })
-              });
-            } else if (response.status === 'not_authorized') {
-              console.log('not_authorized')
-            } else {
-              console.log('no fb data (else)')
-            }
-          });
-        } else {
-          console.log('User cancelled login or did not fully authorize.');
-        }
-      });
-    },
-
-
-    getUserData() {
-      FB.api('/me', 'GET', {fields: 'id,name,email,picture'},
-          user => {
-            this.personalID = user.id;
-            this.email = user.email;
-            this.name = user.name;
-            this.picture = user.picture.data.url;
-          }
-      )
+      // Use Spring Security OAuth2 for Facebook authentication
+      this.$store.dispatch('doFacebookAuth')
     },
 
     googleAuth() {
       this.$store.dispatch("doGoogleAuth")
     },
     instAuth() {
-      let url = 'https://api.instagram.com/oauth/authorize?app_id=226365095211205&redirect_uri=https://localhost:8080/&scope=user_profile,user_media&response_type=code'
-      window.location.href = url
+      this.$store.dispatch("doInstagramAuth")
     },
     logout() {
       this.$store.dispatch("doLogout")
@@ -355,54 +237,7 @@ export default {
       let newName = this.oldNameText
       console.log(newName)
     },
-    /*handleSuccessfulLoginResponse(response) {
-      console.log('handleSuccessfulLoginResponse', response)
-      let responseMessage
-
-      if (response) {
-        console.log('handleSuccessfulLoginResponse response', response)
-
-        responseMessage = response.data
-        console.log('responseMessage', responseMessage)
-        this.setLoginResponseData('success', responseMessage, true)
-      } else {
-        responseMessage = 'Login error no response'
-        this.setLoginResponseData('error', responseMessage, true)
-      }
-    },*/
-    /*handleErrorLoginResponse(error) {
-      console.log('handleErrorLoginResponse')
-
-      if (error.response) {
-        let errorMessage // error.response.data.errorMessage
-        const errorData = error.response.data
-        const errorStatus = error.response.status
-        const errorHeaders = error.response.headers
-
-        console.log('errorMessage', errorData);
-        console.log('errorStatus', errorStatus);
-        console.log('errorHeaders', errorHeaders);
-
-        switch (errorStatus) {
-          case 401: {
-            errorMessage = 'Login Incorrect!'
-            break
-            //const message = response.data
-            //this.setLoginResponseData(type, responseMessage, true)
-          }
-          case 500: {
-            errorMessage = 'Server Error!'
-            //const message = response.data
-            break
-          }
-          default: {
-            errorMessage = 'Default Error!'
-          }
-        }
-        this.setLoginResponseData('error', errorMessage, true)
-      }
-
-    },*/
+    
     clearLoginResponse() {
       this.setLoginResponseData('', '', false)
       /*this.login_response_alert.has_response = false
@@ -478,76 +313,153 @@ export default {
 }
 
 .magic-auth-card {
-  background: rgba(12, 14, 30, 0.88) !important;
+  background: rgba(12, 14, 30, 0.92) !important;
   border: 1px solid rgba(255,255,255,0.08);
-  border-radius: 18px;
+  border-radius: 24px;
   box-shadow: 0 24px 48px rgba(8, 9, 20, 0.6);
+  overflow: hidden;
 }
 
 .magic-auth-card-title {
   font-family: "Cinzel", serif;
   color: #f7f4ff;
+  font-size: 1.5rem;
+  padding: 24px 24px 8px;
 }
 
 .magic-auth-alert {
-  margin-left: 16px;
-  min-width: 180px;
+  border-radius: 12px;
 }
 
-.magic-form-title {
-  font-family: "Space Grotesk", sans-serif;
-  color: rgba(230, 225, 255, 0.75);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-  margin-bottom: 12px;
-}
-
-.magic-toggle {
+/* Tabs */
+.magic-tabs {
   display: flex;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.magic-toggle-btn {
-  border-radius: 999px;
-  text-transform: none;
-  font-weight: 600;
-  color: #f7f4ff !important;
-  border: 1px solid rgba(255,255,255,0.16);
-  background: rgba(255,255,255,0.06) !important;
-}
-
-.magic-social-card {
-  margin-top: 18px;
-  padding: 16px 18px 8px 18px;
-  background: rgba(12, 14, 30, 0.75) !important;
-  border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
   border-radius: 16px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.magic-tab {
+  flex: 1;
+  padding: 14px 20px;
+  background: transparent;
+  border: none;
+  color: rgba(230, 225, 255, 0.6);
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1;
+  border-radius: 12px;
+}
+
+.magic-tab:hover:not(.active) {
+  color: rgba(230, 225, 255, 0.85);
+}
+
+.magic-tab.active {
+  color: #1b1833;
+}
+
+.magic-tab-indicator {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: calc(50% - 4px);
+  height: calc(100% - 8px);
+  background: linear-gradient(120deg, #f6d365, #fda085);
+  border-radius: 12px;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 12px rgba(246, 211, 101, 0.3);
+}
+
+.magic-tab-indicator.right {
+  transform: translateX(100%);
+}
+
+/* Form container */
+.magic-form-container {
+  min-height: 280px;
+  position: relative;
+}
+
+.magic-form-wrapper {
+  width: 100%;
+}
+
+/* Social card */
+.magic-social-card {
+  margin-top: 16px;
+  padding: 20px;
+  background: rgba(12, 14, 30, 0.75) !important;
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 20px;
 }
 
 .magic-social-title {
   font-family: "Space Grotesk", sans-serif;
-  color: rgba(230, 225, 255, 0.7);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 0.7rem;
-  margin-bottom: 12px;
+  color: rgba(230, 225, 255, 0.5);
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.magic-social-line {
+  flex: 1;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .magic-social-btn {
   text-transform: none;
   border-radius: 14px;
   font-weight: 600;
+  min-height: 52px;
   color: #f7f4ff !important;
-  border: 1px solid rgba(255,255,255,0.08);
-  background: rgba(255,255,255,0.05) !important;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.04) !important;
+  transition: all 0.25s ease;
 }
 
-.magic-social-btn.facebook { background: rgba(59, 89, 152, 0.25) !important; }
-.magic-social-btn.instagram { background: rgba(214, 41, 118, 0.2) !important; }
-.magic-social-btn.google { background: rgba(66, 133, 244, 0.2) !important; }
+.magic-social-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+}
 
+.magic-social-btn.facebook {
+  background: rgba(59, 89, 152, 0.2) !important;
+  border-color: rgba(59, 89, 152, 0.4);
+}
+.magic-social-btn.facebook:hover {
+  background: rgba(59, 89, 152, 0.35) !important;
+}
+
+.magic-social-btn.instagram {
+  background: rgba(214, 41, 118, 0.15) !important;
+  border-color: rgba(214, 41, 118, 0.4);
+}
+.magic-social-btn.instagram:hover {
+  background: rgba(214, 41, 118, 0.3) !important;
+}
+
+.magic-social-btn.google {
+  background: rgba(66, 133, 244, 0.15) !important;
+  border-color: rgba(66, 133, 244, 0.4);
+}
+.magic-social-btn.google:hover {
+  background: rgba(66, 133, 244, 0.3) !important;
+}
+
+/* Orb */
 .magic-auth-orb {
   margin-top: 24px;
   width: 180px;
@@ -576,6 +488,42 @@ export default {
   animation-duration: 26s;
 }
 
+/* Transitions */
+.slide-left-enter-active,
+.slide-left-leave-active,
+.slide-right-enter-active,
+.slide-right-leave-active {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-left-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+.slide-left-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+.slide-right-enter-from {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+.slide-right-leave-to {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: all 0.3s ease;
+}
+.slide-fade-enter-from,
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
 @keyframes spin {
   to { transform: rotate(360deg); }
 }
@@ -589,5 +537,6 @@ export default {
 @media (max-width: 960px) {
   .magic-auth-wrap { padding-top: 32px; }
   .magic-auth-orb { margin-bottom: 24px; }
+  .magic-tab { padding: 12px 16px; font-size: 0.85rem; }
 }
 </style>
