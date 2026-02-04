@@ -53,7 +53,7 @@
           <v-col>
             <div class="body-1 font-weight-regular magic-username" style="padding-top: 10px;">{{ userName }}</div>
           </v-col>
-          <v-col @click="goTo('/cabinet')" style="cursor: pointer;">
+          <v-col @click="goTo('/profile')" style="cursor: pointer;">
             <v-avatar color="#2b2550">
               <img v-if="userPic" :src="userPic" alt="User">
               <v-icon v-else color="#f7f4ff">mdi-account-circle</v-icon>
@@ -62,7 +62,7 @@
         </v-row>
       </div>
       <!--//userName-->
-      <v-btn icon @click="goTo('/cabinet')" v-else>
+      <v-btn icon @click="goTo('/auth')" v-else>
         <v-icon>mdi-login</v-icon>
       </v-btn>
     </v-app-bar>
@@ -87,7 +87,8 @@ export default {
       menuLinks: [
         {icon: 'mdi-airplay', text: 'Main page', link: '/'},
         {icon: 'mdi-fingerprint', text: 'MyBase', link: '/mybase'},
-        {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/auth'},
+        {icon: 'mdi-account-circle-outline', text: 'Profile', link: '/profile'},
+        {icon: 'mdi-login', text: 'Auth', link: '/auth'},
         {icon: 'mdi-instagram', text: 'Instagram', link: '/instagram'},
         {icon: 'mdi-currency-usd', text: 'Spending', link: '/spending'},
         {icon: 'mdi-menu', text: 'The Logs', link: '/thelogs'},
